@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Юрій Клебан">
+
+<title>Основи роботи з даними в R - 5&nbsp; XML</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./23-r-xlsx.html" rel="prev">
+<link href="./img/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Основи роботи з даними в R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/kleban/data-r/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="" title="Share" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-share"></i></a>
+    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+            <i class="bi bi-bi-twitter pe-1"></i>
+          Twitter
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+            <i class="bi bi-bi-facebook pe-1"></i>
+          Facebook
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+            <i class="bi bi-bi-linkedin pe-1"></i>
+          LinkedIn
+          </a>
+        </li>
+    </ul>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Про посібник</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">Вступ</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Тема 1. Вступ до аналізу даних</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Вступ</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Тема 2. Читання даних: типи файлів, формати, пакети R, сервіси</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-data-read.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Презентація до лекції</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">Список використаних джерел</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Зміст</h2>
+   
+  <ul>
+  <li><a href="#xml-extensible-markup-language" id="toc-xml-extensible-markup-language" class="nav-link active" data-scroll-target="#xml-extensible-markup-language"><span class="toc-section-number">5.1</span>  XML (eXtensible Markup Language)</a></li>
+  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="toc-section-number">5.2</span>  Набори даних</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="toc-section-number">5.3</span>  References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Автор</div>
+    <div class="quarto-title-meta-contents">
+             <p>Юрій Клебан </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p>You need this packages for code execution:</p>
+<div class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages("XML")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">invisible</span>(<span class="fu">Sys.setlocale</span>(<span class="st">"LC_ALL"</span>, <span class="st">"Ukrainian"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">invisible</span>(<span class="fu">options</span>(<span class="at">warn=</span><span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="xml-extensible-markup-language" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="xml-extensible-markup-language"><span class="header-section-number">5.1</span> XML (eXtensible Markup Language)</h2>
+<p>For our example we will use data from <code>data/employes.xml</code>. File contains records with info:</p>
+<pre><code>&lt;RECORDS&gt;
+   &lt;EMPLOYEE&gt;
+      &lt;ID&gt;1&lt;/ID&gt;
+      &lt;NAME&gt;Rick&lt;/NAME&gt;
+      &lt;SALARY&gt;623.3&lt;/SALARY&gt;
+      &lt;STARTDATE&gt;1/1/2012&lt;/STARTDATE&gt;
+      &lt;DEPT&gt;IT&lt;/DEPT&gt;
+   &lt;/EMPLOYEE&gt;
+   ...
+&lt;/RECORDS&gt;</code></pre>
+<div class="cell" data-execution_count="146">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">#install.packages("XML")</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">library</span>(<span class="st">"XML"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#install.packages("methods")</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="fu">library</span>(<span class="st">"methods"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="147">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>result <span class="ot">&lt;-</span> <span class="fu">xmlParse</span>(<span class="at">file =</span> <span class="st">"../../data/employes.xml"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;?xml version="1.0"?&gt;
+&lt;RECORDS&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;1&lt;/ID&gt;
+    &lt;NAME&gt;Rick&lt;/NAME&gt;
+    &lt;SALARY&gt;623.3&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;1/1/2012&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;IT&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;2&lt;/ID&gt;
+    &lt;NAME&gt;Dan&lt;/NAME&gt;
+    &lt;SALARY&gt;515.2&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;9/23/2013&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;Operations&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;3&lt;/ID&gt;
+    &lt;NAME&gt;Michelle&lt;/NAME&gt;
+    &lt;SALARY&gt;611&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;11/15/2014&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;IT&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;4&lt;/ID&gt;
+    &lt;NAME&gt;Ryan&lt;/NAME&gt;
+    &lt;SALARY&gt;729&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;5/11/2014&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;HR&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;5&lt;/ID&gt;
+    &lt;NAME&gt;Gary&lt;/NAME&gt;
+    &lt;SALARY&gt;843.25&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;3/27/2015&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;Finance&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;6&lt;/ID&gt;
+    &lt;NAME&gt;Nina&lt;/NAME&gt;
+    &lt;SALARY&gt;578&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;5/21/2013&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;IT&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;7&lt;/ID&gt;
+    &lt;NAME&gt;Simon&lt;/NAME&gt;
+    &lt;SALARY&gt;632.8&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;7/30/2013&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;Operations&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+  &lt;EMPLOYEE&gt;
+    &lt;ID&gt;8&lt;/ID&gt;
+    &lt;NAME&gt;Guru&lt;/NAME&gt;
+    &lt;SALARY&gt;722.5&lt;/SALARY&gt;
+    &lt;STARTDATE&gt;6/17/2014&lt;/STARTDATE&gt;
+    &lt;DEPT&gt;Finance&lt;/DEPT&gt;
+  &lt;/EMPLOYEE&gt;
+&lt;/RECORDS&gt;
+ </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="148">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>rootnode <span class="ot">&lt;-</span> <span class="fu">xmlRoot</span>(result) <span class="co"># reading rootnode of xml document</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>rootnode[[<span class="dv">1</span>]] <span class="co"># reading first record</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;EMPLOYEE&gt;
+  &lt;ID&gt;1&lt;/ID&gt;
+  &lt;NAME&gt;Rick&lt;/NAME&gt;
+  &lt;SALARY&gt;623.3&lt;/SALARY&gt;
+  &lt;STARTDATE&gt;1/1/2012&lt;/STARTDATE&gt;
+  &lt;DEPT&gt;IT&lt;/DEPT&gt;
+&lt;/EMPLOYEE&gt; </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="149">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>rootnode[[<span class="dv">1</span>]][[<span class="dv">2</span>]] <span class="co"># reading first record in root node and second tag, its &lt;NAME&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;NAME&gt;Rick&lt;/NAME&gt; </code></pre>
+</div>
+</div>
+<p>For us the best way is to get dataframe:</p>
+<div class="cell" data-execution_count="150">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>xmldataframe <span class="ot">&lt;-</span> <span class="fu">xmlToDataFrame</span>(<span class="st">"../../data/employes.xml"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>xmldataframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+<caption>A data.frame: 8 × 5</caption>
+<thead>
+    <tr><th scope="col">ID</th><th scope="col">NAME</th><th scope="col">SALARY</th><th scope="col">STARTDATE</th><th scope="col">DEPT</th></tr>
+    <tr><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+</thead>
+<tbody>
+    <tr><td>1</td><td>Rick    </td><td>623.3 </td><td>1/1/2012  </td><td>IT        </td></tr>
+    <tr><td>2</td><td>Dan     </td><td>515.2 </td><td>9/23/2013 </td><td>Operations</td></tr>
+    <tr><td>3</td><td>Michelle</td><td>611   </td><td>11/15/2014</td><td>IT        </td></tr>
+    <tr><td>4</td><td>Ryan    </td><td>729   </td><td>5/11/2014 </td><td>HR        </td></tr>
+    <tr><td>5</td><td>Gary    </td><td>843.25</td><td>3/27/2015 </td><td>Finance   </td></tr>
+    <tr><td>6</td><td>Nina    </td><td>578   </td><td>5/21/2013 </td><td>IT        </td></tr>
+    <tr><td>7</td><td>Simon   </td><td>632.8 </td><td>7/30/2013 </td><td>Operations</td></tr>
+    <tr><td>8</td><td>Guru    </td><td>722.5 </td><td>6/17/2014 </td><td>Finance   </td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+</section>
+<section id="набори-даних" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="набори-даних"><span class="header-section-number">5.2</span> Набори даних</h2>
+<ol type="1">
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/telecom_users.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/telecom_sers.xlsx</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/Default_Fin.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/employes.xml</li>
+</ol>
+<hr>
+</section>
+<section id="references" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="references"><span class="header-section-number">5.3</span> References</h2>
+<ol type="1">
+<li><a href="https://www.datacamp.com/community/tutorials/sqlite-in-r">SQLite in R. Datacamp</a></li>
+<li><a href="https://www.tidyverse.org/blog/2020/05/googlesheets4-0-2-0/">Tidyverse googlesheets4 0.2.0</a> <!-- 3. [Telecom users dataset. Practice classification with a telco dataset.Kaggle](https://www.kaggle.com/radmirzosimov/telecom-users-dataset) --></li>
+<li><a href="https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#klinecandlestick-data">Binanace spot Api Docs</a></li>
+<li><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest">Web Scraping in R: rvest Tutorial</a> by Arvid Kingl</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./23-r-xlsx.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">Список використаних джерел</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">Copyright 2023, Юрій Клебан</div>
+  </div>
+</footer>
+
+
+
+</body></html>
