@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Основи роботи з даними в R - 11&nbsp; Підготовка та очистка даних у R</title>
+<title>Основи роботи з даними в R - 20&nbsp; Підготовка та очистка даних у R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
-<link href="./etl-dplyr.html" rel="prev">
+<link href="./39-r-wide-to-long.html" rel="prev">
 <link href="./img/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -134,11 +134,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <body class="nav-sidebar floating">
 
+
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -262,7 +263,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">ТЕМА 3. ВИБІРКА ТА ТРАНСФОРМАЦІЯ ДАНИХ</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -270,7 +271,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./etl-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Manipulate data with <code>dplyr</code></span></a>
+  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></a>
   </div>
 </li>
       </ul>
@@ -285,7 +331,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-cleaning.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></a>
+  <a href="./data-cleaning.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></a>
   </div>
 </li>
       </ul>
@@ -304,36 +350,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Зміст</h2>
    
   <ul>
-  <li><a href="#поняття-та-виміри-оцінки-якості-даних" id="toc-поняття-та-виміри-оцінки-якості-даних" class="nav-link active" data-scroll-target="#поняття-та-виміри-оцінки-якості-даних"><span class="toc-section-number">11.1</span>  Поняття та виміри оцінки якості даних</a>
+  <li><a href="#поняття-та-виміри-оцінки-якості-даних" id="toc-поняття-та-виміри-оцінки-якості-даних" class="nav-link active" data-scroll-target="#поняття-та-виміри-оцінки-якості-даних"><span class="toc-section-number">20.1</span>  Поняття та виміри оцінки якості даних</a>
   <ul class="collapse">
-  <li><a href="#що-таке-валідація-даних" id="toc-що-таке-валідація-даних" class="nav-link" data-scroll-target="#що-таке-валідація-даних"><span class="toc-section-number">11.1.1</span>  Що таке валідація даних?</a></li>
-  <li><a href="#правильність-accuracy" id="toc-правильність-accuracy" class="nav-link" data-scroll-target="#правильність-accuracy"><span class="toc-section-number">11.1.2</span>  Правильність / (Accuracy)</a></li>
-  <li><a href="#повнота-completeness" id="toc-повнота-completeness" class="nav-link" data-scroll-target="#повнота-completeness"><span class="toc-section-number">11.1.3</span>  Повнота / (Completeness)</a></li>
-  <li><a href="#узгодженість-consistency" id="toc-узгодженість-consistency" class="nav-link" data-scroll-target="#узгодженість-consistency"><span class="toc-section-number">11.1.4</span>  Узгодженість / Consistency</a></li>
-  <li><a href="#відповідність-conformity" id="toc-відповідність-conformity" class="nav-link" data-scroll-target="#відповідність-conformity"><span class="toc-section-number">11.1.5</span>  Відповідність / Conformity</a></li>
-  <li><a href="#цілісність-integrity" id="toc-цілісність-integrity" class="nav-link" data-scroll-target="#цілісність-integrity"><span class="toc-section-number">11.1.6</span>  Цілісність / Integrity</a></li>
-  <li><a href="#своєчасність-timeliness" id="toc-своєчасність-timeliness" class="nav-link" data-scroll-target="#своєчасність-timeliness"><span class="toc-section-number">11.1.7</span>  Своєчасність / Timeliness</a></li>
+  <li><a href="#що-таке-валідація-даних" id="toc-що-таке-валідація-даних" class="nav-link" data-scroll-target="#що-таке-валідація-даних"><span class="toc-section-number">20.1.1</span>  Що таке валідація даних?</a></li>
+  <li><a href="#правильність-accuracy" id="toc-правильність-accuracy" class="nav-link" data-scroll-target="#правильність-accuracy"><span class="toc-section-number">20.1.2</span>  Правильність / (Accuracy)</a></li>
+  <li><a href="#повнота-completeness" id="toc-повнота-completeness" class="nav-link" data-scroll-target="#повнота-completeness"><span class="toc-section-number">20.1.3</span>  Повнота / (Completeness)</a></li>
+  <li><a href="#узгодженість-consistency" id="toc-узгодженість-consistency" class="nav-link" data-scroll-target="#узгодженість-consistency"><span class="toc-section-number">20.1.4</span>  Узгодженість / Consistency</a></li>
+  <li><a href="#відповідність-conformity" id="toc-відповідність-conformity" class="nav-link" data-scroll-target="#відповідність-conformity"><span class="toc-section-number">20.1.5</span>  Відповідність / Conformity</a></li>
+  <li><a href="#цілісність-integrity" id="toc-цілісність-integrity" class="nav-link" data-scroll-target="#цілісність-integrity"><span class="toc-section-number">20.1.6</span>  Цілісність / Integrity</a></li>
+  <li><a href="#своєчасність-timeliness" id="toc-своєчасність-timeliness" class="nav-link" data-scroll-target="#своєчасність-timeliness"><span class="toc-section-number">20.1.7</span>  Своєчасність / Timeliness</a></li>
   </ul></li>
-  <li><a href="#робота-з-неіменованими-та-поганоіменованими-даними" id="toc-робота-з-неіменованими-та-поганоіменованими-даними" class="nav-link" data-scroll-target="#робота-з-неіменованими-та-поганоіменованими-даними"><span class="toc-section-number">11.2</span>  Робота з неіменованими та “поганоіменованими” даними</a>
+  <li><a href="#робота-з-неіменованими-та-поганоіменованими-даними" id="toc-робота-з-неіменованими-та-поганоіменованими-даними" class="nav-link" data-scroll-target="#робота-з-неіменованими-та-поганоіменованими-даними"><span class="toc-section-number">20.2</span>  Робота з неіменованими та “поганоіменованими” даними</a>
   <ul class="collapse">
-  <li><a href="#іменування-даних" id="toc-іменування-даних" class="nav-link" data-scroll-target="#іменування-даних"><span class="toc-section-number">11.2.1</span>  Іменування даних</a></li>
-  <li><a href="#заміна-назв-стовпців-data.frame" id="toc-заміна-назв-стовпців-data.frame" class="nav-link" data-scroll-target="#заміна-назв-стовпців-data.frame"><span class="toc-section-number">11.2.2</span>  Заміна назв стовпців data.frame </a><a class="anchor nav-link" id="id22" data-scroll-target="undefined"></a></li>
-  <li><a href="#підготовка-та-очистка-текстової-інформації" id="toc-підготовка-та-очистка-текстової-інформації" class="nav-link" data-scroll-target="#підготовка-та-очистка-текстової-інформації"><span class="toc-section-number">11.2.3</span>  Підготовка та очистка текстової інформації</a></li>
+  <li><a href="#іменування-даних" id="toc-іменування-даних" class="nav-link" data-scroll-target="#іменування-даних"><span class="toc-section-number">20.2.1</span>  Іменування даних</a></li>
+  <li><a href="#заміна-назв-стовпців-data.frame" id="toc-заміна-назв-стовпців-data.frame" class="nav-link" data-scroll-target="#заміна-назв-стовпців-data.frame"><span class="toc-section-number">20.2.2</span>  Заміна назв стовпців data.frame </a><a class="anchor nav-link" id="id22" data-scroll-target="undefined"></a></li>
+  <li><a href="#підготовка-та-очистка-текстової-інформації" id="toc-підготовка-та-очистка-текстової-інформації" class="nav-link" data-scroll-target="#підготовка-та-очистка-текстової-інформації"><span class="toc-section-number">20.2.3</span>  Підготовка та очистка текстової інформації</a></li>
   </ul></li>
-  <li><a href="#заміна-пропусків-у-даних-missing-value-imputation" id="toc-заміна-пропусків-у-даних-missing-value-imputation" class="nav-link" data-scroll-target="#заміна-пропусків-у-даних-missing-value-imputation"><span class="toc-section-number">11.3</span>  Заміна пропусків у даних (Missing Value Imputation)</a>
+  <li><a href="#заміна-пропусків-у-даних-missing-value-imputation" id="toc-заміна-пропусків-у-даних-missing-value-imputation" class="nav-link" data-scroll-target="#заміна-пропусків-у-даних-missing-value-imputation"><span class="toc-section-number">20.3</span>  Заміна пропусків у даних (Missing Value Imputation)</a>
   <ul class="collapse">
-  <li><a href="#перевірка-наявності-пропусків-у-даних" id="toc-перевірка-наявності-пропусків-у-даних" class="nav-link" data-scroll-target="#перевірка-наявності-пропусків-у-даних"><span class="toc-section-number">11.3.1</span>  Перевірка наявності пропусків у даних</a></li>
-  <li><a href="#видалення-пустих-рядків-та-сповпців-у-data.frame" id="toc-видалення-пустих-рядків-та-сповпців-у-data.frame" class="nav-link" data-scroll-target="#видалення-пустих-рядків-та-сповпців-у-data.frame"><span class="toc-section-number">11.3.2</span>  Видалення пустих рядків та сповпців у <code>data.frame</code></a></li>
-  <li><a href="#заміна-пропусків-у-data.frame" id="toc-заміна-пропусків-у-data.frame" class="nav-link" data-scroll-target="#заміна-пропусків-у-data.frame"><span class="toc-section-number">11.3.3</span>  Заміна пропусків у <code>data.frame</code></a></li>
+  <li><a href="#перевірка-наявності-пропусків-у-даних" id="toc-перевірка-наявності-пропусків-у-даних" class="nav-link" data-scroll-target="#перевірка-наявності-пропусків-у-даних"><span class="toc-section-number">20.3.1</span>  Перевірка наявності пропусків у даних</a></li>
+  <li><a href="#видалення-пустих-рядків-та-сповпців-у-data.frame" id="toc-видалення-пустих-рядків-та-сповпців-у-data.frame" class="nav-link" data-scroll-target="#видалення-пустих-рядків-та-сповпців-у-data.frame"><span class="toc-section-number">20.3.2</span>  Видалення пустих рядків та сповпців у <code>data.frame</code></a></li>
+  <li><a href="#заміна-пропусків-у-data.frame" id="toc-заміна-пропусків-у-data.frame" class="nav-link" data-scroll-target="#заміна-пропусків-у-data.frame"><span class="toc-section-number">20.3.3</span>  Заміна пропусків у <code>data.frame</code></a></li>
   </ul></li>
-  <li><a href="#аналіз-та-обробка-статистичних-викидів-у-даних" id="toc-аналіз-та-обробка-статистичних-викидів-у-даних" class="nav-link" data-scroll-target="#аналіз-та-обробка-статистичних-викидів-у-даних"><span class="toc-section-number">11.4</span>  Аналіз та обробка статистичних викидів у даних</a></li>
-  <li><a href="#додаткові-прийоми-очистки-даних" id="toc-додаткові-прийоми-очистки-даних" class="nav-link" data-scroll-target="#додаткові-прийоми-очистки-даних"><span class="toc-section-number">11.5</span>  Додаткові прийоми очистки даних </a><a class="anchor nav-link" id="id5" data-scroll-target="undefined"></a>
+  <li><a href="#аналіз-та-обробка-статистичних-викидів-у-даних" id="toc-аналіз-та-обробка-статистичних-викидів-у-даних" class="nav-link" data-scroll-target="#аналіз-та-обробка-статистичних-викидів-у-даних"><span class="toc-section-number">20.4</span>  Аналіз та обробка статистичних викидів у даних</a></li>
+  <li><a href="#додаткові-прийоми-очистки-даних" id="toc-додаткові-прийоми-очистки-даних" class="nav-link" data-scroll-target="#додаткові-прийоми-очистки-даних"><span class="toc-section-number">20.5</span>  Додаткові прийоми очистки даних </a><a class="anchor nav-link" id="id5" data-scroll-target="undefined"></a>
   <ul class="collapse">
-  <li><a href="#видалення-дублікатів" id="toc-видалення-дублікатів" class="nav-link" data-scroll-target="#видалення-дублікатів"><span class="toc-section-number">11.5.1</span>  Видалення дублікатів</a></li>
+  <li><a href="#видалення-дублікатів" id="toc-видалення-дублікатів" class="nav-link" data-scroll-target="#видалення-дублікатів"><span class="toc-section-number">20.5.1</span>  Видалення дублікатів</a></li>
   </ul></li>
-  <li><a href="#завдання-для-практики" id="toc-завдання-для-практики" class="nav-link" data-scroll-target="#завдання-для-практики"><span class="toc-section-number">11.6</span>  Завдання для практики</a></li>
-  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="toc-section-number">11.7</span>  Набори даних</a></li>
-  <li><a href="#використані-та-додаткові-джерела" id="toc-використані-та-додаткові-джерела" class="nav-link" data-scroll-target="#використані-та-додаткові-джерела"><span class="toc-section-number">11.8</span>  Використані та додаткові джерела</a></li>
+  <li><a href="#завдання-для-практики" id="toc-завдання-для-практики" class="nav-link" data-scroll-target="#завдання-для-практики"><span class="toc-section-number">20.6</span>  Завдання для практики</a></li>
+  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="toc-section-number">20.7</span>  Набори даних</a></li>
+  <li><a href="#використані-та-додаткові-джерела" id="toc-використані-та-додаткові-джерела" class="nav-link" data-scroll-target="#використані-та-додаткові-джерела"><span class="toc-section-number">20.8</span>  Використані та додаткові джерела</a></li>
   </ul>
 </nav>
     </div>
@@ -342,7 +388,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></h1>
 </div>
 
 
@@ -380,11 +426,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
-<section id="поняття-та-виміри-оцінки-якості-даних" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="поняття-та-виміри-оцінки-якості-даних"><span class="header-section-number">11.1</span> Поняття та виміри оцінки якості даних</h2>
+<section id="поняття-та-виміри-оцінки-якості-даних" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="поняття-та-виміри-оцінки-якості-даних"><span class="header-section-number">20.1</span> Поняття та виміри оцінки якості даних</h2>
 <p>Якість даних залежить від очищення та коригування даних, які відсутні, некоректні, недійсні або нечитабельні. Для забезпечення достовірності даних важливо зрозуміти ключові аспекти якості даних, щоб оцінити, наскільки дані погані/хороші.</p>
-<section id="що-таке-валідація-даних" class="level3" data-number="11.1.1">
-<h3 data-number="11.1.1" class="anchored" data-anchor-id="що-таке-валідація-даних"><span class="header-section-number">11.1.1</span> Що таке валідація даних?</h3>
+<section id="що-таке-валідація-даних" class="level3" data-number="20.1.1">
+<h3 data-number="20.1.1" class="anchored" data-anchor-id="що-таке-валідація-даних"><span class="header-section-number">20.1.1</span> Що таке валідація даних?</h3>
 <p>Валідація даних відноситься до процесу забезпечення точності та якості даних. Він реалізується шляхом вбудовування кількох перевірок у систему або звітування для забезпечення логічної узгодженості введених і збережених даних.</p>
 <p>На перший погляд, очевидно, що перетворення даних до якісних полягає в очищенні поганих даних – даних, які відсутні, неправильні або якимось чином недійсні. Але щоб переконатися, що дані заслуговують довіри, важливо розуміти ключові виміри якості даних, щоб оцінити, наскільки дані є «поганими».</p>
 <p>Окремі компанії мають внутрішні документи, що визначають виміри оцінки якості даних та порядок його проведення - <code>Data Validation Framework</code> або <code>Data Quality Framework</code>.</p>
@@ -400,8 +446,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <hr>
 </section>
-<section id="правильність-accuracy" class="level3" data-number="11.1.2">
-<h3 data-number="11.1.2" class="anchored" data-anchor-id="правильність-accuracy"><span class="header-section-number">11.1.2</span> Правильність / (Accuracy)</h3>
+<section id="правильність-accuracy" class="level3" data-number="20.1.2">
+<h3 data-number="20.1.2" class="anchored" data-anchor-id="правильність-accuracy"><span class="header-section-number">20.1.2</span> Правильність / (Accuracy)</h3>
 <p><strong>Правильність</strong> — це ступінь, до якого дані правильно відображають реальний об’єкт АБО описувану подію.</p>
 <p>Приклади: - [x] Реальною вартістю є ціна продажу одиниці товару. - [x] Адреса співробітника в <code>базі даних співробітників</code> є справжньою адресою.</p>
 <p>Запитання, які ви можете задати собі:</p>
@@ -412,8 +458,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Ці проблеми можуть вплинути на результатати аналітичних звітів, наприклад, неправильні середні значення певних показників.</p>
 <hr>
 </section>
-<section id="повнота-completeness" class="level3" data-number="11.1.3">
-<h3 data-number="11.1.3" class="anchored" data-anchor-id="повнота-completeness"><span class="header-section-number">11.1.3</span> Повнота / (Completeness)</h3>
+<section id="повнота-completeness" class="level3" data-number="20.1.3">
+<h3 data-number="20.1.3" class="anchored" data-anchor-id="повнота-completeness"><span class="header-section-number">20.1.3</span> Повнота / (Completeness)</h3>
 <p>Повнота визначається як очікувана всебічність. Дані можуть бути повними, навіть якщо додаткові дані відсутні. Поки дані відповідають очікуванням, вони вважаються повними.</p>
 <p>Наприклад, ім’я та прізвище замовника є обов’язковими, але прізвище необов’язково; тому запис можна вважати повним, навіть якщо прізвища не існує.</p>
 <p>Питання, які ви можете задати собі:</p>
@@ -424,8 +470,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <hr>
 </section>
-<section id="узгодженість-consistency" class="level3" data-number="11.1.4">
-<h3 data-number="11.1.4" class="anchored" data-anchor-id="узгодженість-consistency"><span class="header-section-number">11.1.4</span> Узгодженість / Consistency</h3>
+<section id="узгодженість-consistency" class="level3" data-number="20.1.4">
+<h3 data-number="20.1.4" class="anchored" data-anchor-id="узгодженість-consistency"><span class="header-section-number">20.1.4</span> Узгодженість / Consistency</h3>
 <p><strong>Узгодженість</strong> означає, що дані в усіх системах/таблицях відображають однакову інформацію та синхронізовані між собою.</p>
 <p>Приклади: - [x] Статус бізнес-підрозділу “закритий”, але є продажі для цього підрозділу. - [x] Статус працівника “звільнено”, але статус випалати заробіної плати містить суму відмінну від 0 за той самий період. - [x] Зафіксовано, що клієнт має у банку депозити, але у даних про депозити записи по клієнту відсутні.</p>
 <p>Запитання, які ви можете поставити собі:</p>
@@ -435,23 +481,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <hr>
 </section>
-<section id="відповідність-conformity" class="level3" data-number="11.1.5">
-<h3 data-number="11.1.5" class="anchored" data-anchor-id="відповідність-conformity"><span class="header-section-number">11.1.5</span> Відповідність / Conformity</h3>
+<section id="відповідність-conformity" class="level3" data-number="20.1.5">
+<h3 data-number="20.1.5" class="anchored" data-anchor-id="відповідність-conformity"><span class="header-section-number">20.1.5</span> Відповідність / Conformity</h3>
 <p><strong>Відповідність</strong> означає, що дані відповідають набору стандартних визначень даних, як-от тип даних, розмір і формат. Наприклад, дата народження клієнта у форматі <code>dd/mm/yyyy</code> або відстань у км числом <code>100</code>, а не записом <code>100км</code>.</p>
 <p>Запитання, які ви можете задати собі: - [x] Чи відповідають значення даних зазначеним форматам? - [x] Якщо так, то чи всі значення даних відповідають цим форматам?</p>
 <p>Важливо підтримувати відповідність конкретним форматам.</p>
 <hr>
 </section>
-<section id="цілісність-integrity" class="level3" data-number="11.1.6">
-<h3 data-number="11.1.6" class="anchored" data-anchor-id="цілісність-integrity"><span class="header-section-number">11.1.6</span> Цілісність / Integrity</h3>
+<section id="цілісність-integrity" class="level3" data-number="20.1.6">
+<h3 data-number="20.1.6" class="anchored" data-anchor-id="цілісність-integrity"><span class="header-section-number">20.1.6</span> Цілісність / Integrity</h3>
 <p><strong>Цілісність</strong> означає достовірність даних у взаємозв’язках і гарантує, що всі дані в базі даних можна відстежити та з’єднати з іншими даними.</p>
 <p>Наприклад, у базі даних клієнтів має бути дійсний клієнт, адреси та відношення/зв’язки між ними. Якщо є дані про зв’язок адреси без клієнта, то ці дані недійсні й вважаються загубленим записом.</p>
 <p>Запитайте себе: - [x] Чи є якісь дані без важливих зв’язків?</p>
 <p>Неможливість пов’язати записи разом може призвести до дублювання у ваших системах.</p>
 <hr>
 </section>
-<section id="своєчасність-timeliness" class="level3" data-number="11.1.7">
-<h3 data-number="11.1.7" class="anchored" data-anchor-id="своєчасність-timeliness"><span class="header-section-number">11.1.7</span> Своєчасність / Timeliness</h3>
+<section id="своєчасність-timeliness" class="level3" data-number="20.1.7">
+<h3 data-number="20.1.7" class="anchored" data-anchor-id="своєчасність-timeliness"><span class="header-section-number">20.1.7</span> Своєчасність / Timeliness</h3>
 <p><strong>Своєчасність</strong> показує, чи є інформація доступною, коли вона очікується та потрібна. Своєчасність даних дуже важлива.</p>
 <p>Це відображається в: - [x] Компанії, які зобов’язані публікувати свої квартальні результати протягом певного періоду часу - [x] Обслуговування клієнтів надає клієнтам актуальну інформацію - [x] Кредитна система перевіряє активність рахунку кредитної картки в режимі реального часу</p>
 <p>Своєчасність залежить від очікувань користувача. Доступність даних в Інтернеті може знадобитися для системи розподілу номерів у сфері готельного бізнесу.</p>
@@ -459,10 +505,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 </section>
 </section>
-<section id="робота-з-неіменованими-та-поганоіменованими-даними" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="робота-з-неіменованими-та-поганоіменованими-даними"><span class="header-section-number">11.2</span> Робота з неіменованими та “поганоіменованими” даними</h2>
-<section id="іменування-даних" class="level3" data-number="11.2.1">
-<h3 data-number="11.2.1" class="anchored" data-anchor-id="іменування-даних"><span class="header-section-number">11.2.1</span> Іменування даних</h3>
+<section id="робота-з-неіменованими-та-поганоіменованими-даними" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="робота-з-неіменованими-та-поганоіменованими-даними"><span class="header-section-number">20.2</span> Робота з неіменованими та “поганоіменованими” даними</h2>
+<section id="іменування-даних" class="level3" data-number="20.2.1">
+<h3 data-number="20.2.1" class="anchored" data-anchor-id="іменування-даних"><span class="header-section-number">20.2.1</span> Іменування даних</h3>
 <p>Першим прикладом проблем у даних можна розгянути читання неіменованих даних, тобто стопці таблиці не мають заголовків у файлі.</p>
 <p>Створимо такий файл у блокноті і зчитаємо його:</p>
 <div class="cell" data-cell_id="ba629ad1cff343a899fe45ae07c40b8d" data-deepnote_cell_height="99" data-deepnote_cell_type="code" data-deepnote_output_heights="[null,219]" data-execution_millis="75" data-execution_start="1650389176553" data-output_cleared="true" data-source_hash="af0c3da" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="46">
@@ -604,8 +650,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <hr>
 </section>
-<section id="заміна-назв-стовпців-data.frame" class="level3" data-number="11.2.2">
-<h3 data-number="11.2.2" class="anchored" data-anchor-id="заміна-назв-стовпців-data.frame"><span class="header-section-number">11.2.2</span> Заміна назв стовпців data.frame <a class="anchor" id="id22"></a></h3><a class="anchor" id="id22">
+<section id="заміна-назв-стовпців-data.frame" class="level3" data-number="20.2.2">
+<h3 data-number="20.2.2" class="anchored" data-anchor-id="заміна-назв-стовпців-data.frame"><span class="header-section-number">20.2.2</span> Заміна назв стовпців data.frame <a class="anchor" id="id22"></a></h3><a class="anchor" id="id22">
 <p>Зчитаємо файл, що містить інформацію про осіб, але уже має іменовані стовтці:</p>
 </a><div class="cell" data-cell_id="42a2ae637a1444e2b072683d12de972a" data-deepnote_cell_height="66" data-deepnote_cell_type="code" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="51"><a class="anchor" id="id22">
 </a><div class="sourceCode cell-code" id="cb7"><a class="anchor" id="id22"></a><pre class="sourceCode numberSource r number-lines code-with-copy"><a class="anchor" id="id22"><code class="sourceCode r"><span id="cb7-1"></span></code></a><code class="sourceCode r"><a href="#cb7-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/badtitled.csv"</span>)
@@ -652,8 +698,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <hr>
 </section>
-<section id="підготовка-та-очистка-текстової-інформації" class="level3" data-number="11.2.3">
-<h3 data-number="11.2.3" class="anchored" data-anchor-id="підготовка-та-очистка-текстової-інформації"><span class="header-section-number">11.2.3</span> Підготовка та очистка текстової інформації</h3>
+<section id="підготовка-та-очистка-текстової-інформації" class="level3" data-number="20.2.3">
+<h3 data-number="20.2.3" class="anchored" data-anchor-id="підготовка-та-очистка-текстової-інформації"><span class="header-section-number">20.2.3</span> Підготовка та очистка текстової інформації</h3>
 <p>Зчитаємо інформацію про стать з попереднього прикладу:</p>
 <div class="cell" data-execution_count="53">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/badtitled.csv"</span>)</span>
@@ -1151,8 +1197,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 </section>
 </section>
-<section id="заміна-пропусків-у-даних-missing-value-imputation" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="заміна-пропусків-у-даних-missing-value-imputation"><span class="header-section-number">11.3</span> Заміна пропусків у даних (Missing Value Imputation)</h2>
+<section id="заміна-пропусків-у-даних-missing-value-imputation" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="заміна-пропусків-у-даних-missing-value-imputation"><span class="header-section-number">20.3</span> Заміна пропусків у даних (Missing Value Imputation)</h2>
 <p>Дані реального світу часто мають відсутні значення. Дані можуть мати відсутні значення з ряду причин, таких як спостереження, які не були записані, пошкодження даних тощо.</p>
 <p><strong>Проблема</strong> - [x] Обробка відсутніх даних важлива, оскільки багато алгоритмів машинного навчання або програм для візуалізації та аналізу данихне підтримують дані з відсутніми значеннями.</p>
 <p><strong>Рішення</strong></p>
@@ -1180,8 +1226,8 @@ $ person_gender &lt;chr&gt; "male", "male", "female", "male", "female", "female"
 $ empty         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</code></pre>
 </div>
 </div>
-<section id="перевірка-наявності-пропусків-у-даних" class="level3" data-number="11.3.1">
-<h3 data-number="11.3.1" class="anchored" data-anchor-id="перевірка-наявності-пропусків-у-даних"><span class="header-section-number">11.3.1</span> Перевірка наявності пропусків у даних</h3>
+<section id="перевірка-наявності-пропусків-у-даних" class="level3" data-number="20.3.1">
+<h3 data-number="20.3.1" class="anchored" data-anchor-id="перевірка-наявності-пропусків-у-даних"><span class="header-section-number">20.3.1</span> Перевірка наявності пропусків у даних</h3>
 <p>Пакет <strong>MICE (Multivariate Imputation via Chained Equations)</strong></p>
 <div class="cell" data-execution_count="76">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">library</span>(mice)</span>
@@ -1252,8 +1298,8 @@ $ empty         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</
 <p>Також можна скористатися альтернативними макетами: <code>missForest</code>, <code>mi</code>.</p>
 <hr>
 </section>
-<section id="видалення-пустих-рядків-та-сповпців-у-data.frame" class="level3" data-number="11.3.2">
-<h3 data-number="11.3.2" class="anchored" data-anchor-id="видалення-пустих-рядків-та-сповпців-у-data.frame"><span class="header-section-number">11.3.2</span> Видалення пустих рядків та сповпців у <code>data.frame</code></h3>
+<section id="видалення-пустих-рядків-та-сповпців-у-data.frame" class="level3" data-number="20.3.2">
+<h3 data-number="20.3.2" class="anchored" data-anchor-id="видалення-пустих-рядків-та-сповпців-у-data.frame"><span class="header-section-number">20.3.2</span> Видалення пустих рядків та сповпців у <code>data.frame</code></h3>
 <p>Переглянемо стовпці, що містять пропуски:</p>
 <div class="cell" data-execution_count="79">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Переглянемо список стовпців з пропусками</span></span>
@@ -1343,15 +1389,15 @@ Removing 1 empty columns of 5 columns total (Removed: empty).
 <p>Таким чином пропущені значення будуть видалені з датасети, якщо інформацію переприсвоїти <code>data &lt;- na.omit(data)</code></p>
 <hr>
 </section>
-<section id="заміна-пропусків-у-data.frame" class="level3" data-number="11.3.3">
-<h3 data-number="11.3.3" class="anchored" data-anchor-id="заміна-пропусків-у-data.frame"><span class="header-section-number">11.3.3</span> Заміна пропусків у <code>data.frame</code></h3>
+<section id="заміна-пропусків-у-data.frame" class="level3" data-number="20.3.3">
+<h3 data-number="20.3.3" class="anchored" data-anchor-id="заміна-пропусків-у-data.frame"><span class="header-section-number">20.3.3</span> Заміна пропусків у <code>data.frame</code></h3>
 <p>Існує ряд підходів, що використовуються для заміни пропущених значень у датасеті:</p>
 <p><strong>Заміна на 0</strong> * Вставте пропущені значення нулем</p>
 <p><strong>Заміна на медіану/середнє значення</strong> * Для числових змінних - середнє або медіана, мінімум, максимум * Для категоріальних змінних - мода (бувають випадки, коли моду доцільно використовувати і для цислових)</p>
 <p><strong>Сегментна заміна</strong> * Визначення сегментів * Обчислення середнього/медіани/моди для сегментів * Замінити значення по сегментах * Наприклад, ми можемо сказати, що кількість опадів майже не змінюється для міст у певній області України, у такому випадку ми можемо для усіх міст з пропусками записати значення середнє по регіону.</p>
 <p><strong>Інтелектуальна заміна</strong> (Частковий випадок сегментної заміни) * Заміна значень з використанням методів машинного навчання</p>
-<section id="заміна-пропусків-на-нуль-0" class="level4" data-number="11.3.3.1">
-<h4 data-number="11.3.3.1" class="anchored" data-anchor-id="заміна-пропусків-на-нуль-0"><span class="header-section-number">11.3.3.1</span> 3.3.1. Заміна пропусків на нуль (0)</h4>
+<section id="заміна-пропусків-на-нуль-0" class="level4" data-number="20.3.3.1">
+<h4 data-number="20.3.3.1" class="anchored" data-anchor-id="заміна-пропусків-на-нуль-0"><span class="header-section-number">20.3.3.1</span> 3.3.1. Заміна пропусків на нуль (0)</h4>
 <div class="cell" data-cell_id="1d5ff061612940d393a9da09a412e850" data-deepnote_cell_height="66" data-deepnote_cell_type="code" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="84">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/cleaned_titled2.csv"</span>)</span>
 <span id="cb48-2"><a href="#cb48-2"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1486,8 +1532,8 @@ The following object is masked from 'package:stringdist':
 </div>
 <hr>
 </section>
-<section id="базова-числова-заміна-пропусків" class="level4" data-number="11.3.3.2">
-<h4 data-number="11.3.3.2" class="anchored" data-anchor-id="базова-числова-заміна-пропусків"><span class="header-section-number">11.3.3.2</span> Базова числова заміна пропусків</h4>
+<section id="базова-числова-заміна-пропусків" class="level4" data-number="20.3.3.2">
+<h4 data-number="20.3.3.2" class="anchored" data-anchor-id="базова-числова-заміна-пропусків"><span class="header-section-number">20.3.3.2</span> Базова числова заміна пропусків</h4>
 <p>Заміна на константи або обчислені значення є стандарним підходом. Так, наприклад, заміна певного значення на середнє матиме вигляд:</p>
 <div class="cell" data-execution_count="90">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>data_m <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
@@ -1587,8 +1633,8 @@ The following object is masked from 'package:stringdist':
 </div>
 <hr>
 </section>
-<section id="hot-deck-imputation-як-перекласти" class="level4" data-number="11.3.3.3">
-<h4 data-number="11.3.3.3" class="anchored" data-anchor-id="hot-deck-imputation-як-перекласти"><span class="header-section-number">11.3.3.3</span> Hot deck imputation (як перекласти???)</h4>
+<section id="hot-deck-imputation-як-перекласти" class="level4" data-number="20.3.3.3">
+<h4 data-number="20.3.3.3" class="anchored" data-anchor-id="hot-deck-imputation-як-перекласти"><span class="header-section-number">20.3.3.3</span> Hot deck imputation (як перекласти???)</h4>
 <p>Метод <code>Hot deck imputation</code> передбачає, що пропущені значення обчислюються шляхом копіювання значень із подібних записів у тому ж наборі даних.</p>
 <p>Основне питання при <code>Hot deck imputation</code> полягає в тому, як вибрати значення заміни. Одним із поширених підходів є випадковий відбір:</p>
 <div class="cell" data-execution_count="93">
@@ -1624,8 +1670,8 @@ The following object is masked from 'package:stringdist':
 <p>Вихідне значення залежить від значення <code>seed</code>.</p>
 <hr>
 </section>
-<section id="сегментна-заміна-пропусків" class="level4" data-number="11.3.3.4">
-<h4 data-number="11.3.3.4" class="anchored" data-anchor-id="сегментна-заміна-пропусків"><span class="header-section-number">11.3.3.4</span> Сегментна заміна пропусків</h4>
+<section id="сегментна-заміна-пропусків" class="level4" data-number="20.3.3.4">
+<h4 data-number="20.3.3.4" class="anchored" data-anchor-id="сегментна-заміна-пропусків"><span class="header-section-number">20.3.3.4</span> Сегментна заміна пропусків</h4>
 <p>Заміна по сегментах часто дозволяє будувати точніші математичні моделі, адже групові середні краще описують явища і процеси, ніж загальні для всієї вибірки.</p>
 <p>Знайдемо середні значення ваги за статтю та використаємо ці значення для заміни пропусків у даних.</p>
 <div class="cell" data-execution_count="94">
@@ -1697,8 +1743,8 @@ The following object is masked from 'package:stringdist':
 <p>Іншим варіантом може бути вказання номерів колонок: <code>across(c(1,3), ~replace_na(.x, min(.x, na.rm = TRUE)))</code></p>
 <hr>
 </section>
-<section id="інтелектуальні-методи-заміни" class="level4" data-number="11.3.3.5">
-<h4 data-number="11.3.3.5" class="anchored" data-anchor-id="інтелектуальні-методи-заміни"><span class="header-section-number">11.3.3.5</span> Інтелектуальні методи заміни</h4>
+<section id="інтелектуальні-методи-заміни" class="level4" data-number="20.3.3.5">
+<h4 data-number="20.3.3.5" class="anchored" data-anchor-id="інтелектуальні-методи-заміни"><span class="header-section-number">20.3.3.5</span> Інтелектуальні методи заміни</h4>
 <p>Теоретично інтелектуальні методи заміни пропусків є найкращими, адже враховують математичні залежності у даних.</p>
 <div class="cell" data-execution_count="96">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="fu">library</span>(VIM)</span>
@@ -1761,8 +1807,8 @@ The following object is masked from 'package:stringdist':
 </section>
 </section>
 </section>
-<section id="аналіз-та-обробка-статистичних-викидів-у-даних" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="аналіз-та-обробка-статистичних-викидів-у-даних"><span class="header-section-number">11.4</span> Аналіз та обробка статистичних викидів у даних</h2>
+<section id="аналіз-та-обробка-статистичних-викидів-у-даних" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="аналіз-та-обробка-статистичних-викидів-у-даних"><span class="header-section-number">20.4</span> Аналіз та обробка статистичних викидів у даних</h2>
 <p><strong>Виявлення аномалій</strong>&nbsp;— це сукупність методів, призначених для виявлення незвичайних точок даних, які мають вирішальне значення для виявлення шахрайства та захисту комп’ютерних мереж від зловмисної діяльності.</p>
 <p><strong>Аномалія</strong> - точка даних або набір точок даних, які не мають таку саму структуру та поведінку, що й інші дані.</p>
 <p>Аномалії у даних можуть мати різну природу та по різному себе проявляти:</p>
@@ -2001,10 +2047,10 @@ The following object is masked from 'package:stringdist':
 </div>
 <hr>
 </section>
-<section id="додаткові-прийоми-очистки-даних" class="level2" data-number="11.5">
-<h2 data-number="11.5" class="anchored" data-anchor-id="додаткові-прийоми-очистки-даних"><span class="header-section-number">11.5</span> Додаткові прийоми очистки даних <a class="anchor" id="id5"></a></h2>
-<section id="видалення-дублікатів" class="level3" data-number="11.5.1">
-<h3 data-number="11.5.1" class="anchored" data-anchor-id="видалення-дублікатів"><span class="header-section-number">11.5.1</span> Видалення дублікатів</h3>
+<section id="додаткові-прийоми-очистки-даних" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="додаткові-прийоми-очистки-даних"><span class="header-section-number">20.5</span> Додаткові прийоми очистки даних <a class="anchor" id="id5"></a></h2>
+<section id="видалення-дублікатів" class="level3" data-number="20.5.1">
+<h3 data-number="20.5.1" class="anchored" data-anchor-id="видалення-дублікатів"><span class="header-section-number">20.5.1</span> Видалення дублікатів</h3>
 <div class="cell" data-cell_id="d490e9a9360c42ae987076ffe6c2a38c" data-deepnote_cell_height="66" data-deepnote_cell_type="code" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="114">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">X =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">Y =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>))</span>
 <span id="cb78-2"><a href="#cb78-2"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2050,13 +2096,13 @@ The following object is masked from 'package:stringdist':
 <hr>
 </section>
 </section>
-<section id="завдання-для-практики" class="level2" data-number="11.6">
-<h2 data-number="11.6" class="anchored" data-anchor-id="завдання-для-практики"><span class="header-section-number">11.6</span> Завдання для практики</h2>
+<section id="завдання-для-практики" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="завдання-для-практики"><span class="header-section-number">20.6</span> Завдання для практики</h2>
 <p>!!!</p>
 <hr>
 </section>
-<section id="набори-даних" class="level2" data-number="11.7">
-<h2 data-number="11.7" class="anchored" data-anchor-id="набори-даних"><span class="header-section-number">11.7</span> Набори даних</h2>
+<section id="набори-даних" class="level2" data-number="20.7">
+<h2 data-number="20.7" class="anchored" data-anchor-id="набори-даних"><span class="header-section-number">20.7</span> Набори даних</h2>
 <ol type="1">
 <li>https://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv</li>
 <li>https://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv</li>
@@ -2066,8 +2112,8 @@ The following object is masked from 'package:stringdist':
 </ol>
 <hr>
 </section>
-<section id="використані-та-додаткові-джерела" class="level2" data-number="11.8">
-<h2 data-number="11.8" class="anchored" data-anchor-id="використані-та-додаткові-джерела"><span class="header-section-number">11.8</span> Використані та додаткові джерела</h2>
+<section id="використані-та-додаткові-джерела" class="level2" data-number="20.8">
+<h2 data-number="20.8" class="anchored" data-anchor-id="використані-та-додаткові-джерела"><span class="header-section-number">20.8</span> Використані та додаткові джерела</h2>
 <ol type="1">
 <li><a href="https://www.insidesherpa.com/virtual-internships/m7W4GMqeT3bh9Nb2c">KPMG Virtual Internship</a></li>
 <li><a href="https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf">An introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013</a></li>
@@ -2178,10 +2224,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./etl-dplyr.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Manipulate data with <code>dplyr</code></span></span>
+      <a href="./39-r-wide-to-long.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

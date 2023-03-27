@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/index.html</loc>
-    <lastmod>2023-03-21T07:38:57.347Z</lastmod>
+    <lastmod>2023-03-27T07:28:36.724Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/ml-r/index.html</loc>
@@ -78,6 +78,46 @@
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/data-cleaning.html</loc>
-    <lastmod>2023-03-21T08:31:34.251Z</lastmod>
+    <lastmod>2023-03-27T07:25:28.603Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/30-r-what-is-dplyr.html</loc>
+    <lastmod>2023-03-27T07:25:30.754Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/31-r-data-explore.html</loc>
+    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/32-r-data-slice.html</loc>
+    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/33-r-data-sorting.html</loc>
+    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/34-r-data-mutating.html</loc>
+    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/35-r-data-rename.html</loc>
+    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/36-r-data-grouping.html</loc>
+    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/37-r-data-bind.html</loc>
+    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/38-r-data-join.html</loc>
+    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/39-r-wide-to-long.html</loc>
+    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
   </url>
 </urlset>
