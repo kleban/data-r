@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Основи роботи з даними в R - 19&nbsp; Wide-to-long tables</title>
+<title>Основи роботи з даними в R - 21&nbsp; Робота з неіменованими та “поганоіменованими” даними</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./40-r-data-quality.html" rel="next">
-<link href="./38-r-data-join.html" rel="prev">
+<link href="./42-r-cleaning-text.html" rel="next">
+<link href="./40-r-data-quality.html" rel="prev">
 <link href="./img/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -139,7 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -316,7 +316,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></a>
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></a>
   </div>
 </li>
       </ul>
@@ -336,7 +336,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></a>
+  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -370,7 +370,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Зміст</h2>
    
   <ul>
-  <li><a href="#refences" id="toc-refences" class="nav-link active" data-scroll-target="#refences"><span class="toc-section-number">19.1</span>  Refences</a></li>
+  <li><a href="#іменування-даних" id="toc-іменування-даних" class="nav-link active" data-scroll-target="#іменування-даних"><span class="toc-section-number">21.1</span>  Іменування даних</a></li>
+  <li><a href="#заміна-назв-стовпців-data.frame" id="toc-заміна-назв-стовпців-data.frame" class="nav-link" data-scroll-target="#заміна-назв-стовпців-data.frame"><span class="toc-section-number">21.2</span>  Заміна назв стовпців data.frame </a><a class="anchor nav-link" id="id22" data-scroll-target="undefined"></a></li>
+  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="toc-section-number">21.3</span>  Набори даних</a></li>
+  <li><a href="#використані-та-додаткові-джерела" id="toc-використані-та-додаткові-джерела" class="nav-link" data-scroll-target="#використані-та-додаткові-джерела"><span class="toc-section-number">21.4</span>  Використані та додаткові джерела</a></li>
   </ul>
 </nav>
     </div>
@@ -379,7 +382,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></h1>
 </div>
 
 
@@ -396,261 +399,219 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <p>author: Юрій Клебан</p>
 <hr>
-<p>Before start load packages</p>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Some times your data is not in tidy format. Peole can collect data year by year in each column. It’s problem to use such data for feature engeniering and building prediction models. Let’s generate such data sample (quaterly salary of some people).</p>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>not_good_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Name =</span> <span class="fu">c</span>(<span class="st">"Nick"</span>, <span class="st">"Jake"</span>, <span class="st">"Anna"</span>, <span class="st">"Jane"</span>, <span class="st">"Dina"</span>),</span>
-<span id="cb2-2"><a href="#cb2-2"></a>                           <span class="at">q1_2021 =</span> <span class="fu">c</span>(<span class="dv">12442</span>, <span class="dv">22131</span>, <span class="dv">21343</span>, <span class="dv">22111</span>, <span class="dv">14123</span>),</span>
-<span id="cb2-3"><a href="#cb2-3"></a>                           <span class="at">q2_2021 =</span> <span class="fu">c</span>(<span class="dv">13442</span>, <span class="dv">22871</span>, <span class="dv">20343</span>, <span class="dv">22222</span>, <span class="dv">14456</span>),</span>
-<span id="cb2-4"><a href="#cb2-4"></a>                           <span class="at">q3_2021 =</span> <span class="fu">c</span>(<span class="dv">15482</span>, <span class="dv">22031</span>, <span class="dv">22456</span>, <span class="dv">22444</span>, <span class="dv">14533</span>),</span>
-<span id="cb2-5"><a href="#cb2-5"></a>                           <span class="at">q4_2021 =</span> <span class="fu">c</span>(<span class="dv">14511</span>, <span class="dv">20031</span>, <span class="dv">21741</span>, <span class="dv">22333</span>, <span class="dv">14511</span>))</span>
-<span id="cb2-6"><a href="#cb2-6"></a>not_good_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="іменування-даних" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="іменування-даних"><span class="header-section-number">21.1</span> Іменування даних</h2>
+<p>Першим прикладом проблем у даних можна розгянути читання неіменованих даних, тобто стопці таблиці не мають заголовків у файлі.</p>
+<p>Створимо такий файл у блокноті і зчитаємо його:</p>
+<div class="cell" data-cell_id="ba629ad1cff343a899fe45ae07c40b8d" data-deepnote_cell_height="99" data-deepnote_cell_type="code" data-deepnote_output_heights="[null,219]" data-execution_millis="75" data-execution_start="1650389176553" data-output_cleared="true" data-source_hash="af0c3da" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/untitled.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 
 <table class="dataframe table table-sm table-striped">
-<caption>A data.frame: 5 × 5</caption>
+<caption>A data.frame: 5 × 4</caption>
 <thead>
-    <tr><th scope="col">Name</th><th scope="col">q1_2021</th><th scope="col">q2_2021</th><th scope="col">q3_2021</th><th scope="col">q4_2021</th></tr>
-    <tr><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+    <tr><th scope="col">X23</th><th scope="col">X185</th><th scope="col">X85.7</th><th scope="col">Male</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-    <tr><td>Nick</td><td>12442</td><td>13442</td><td>15482</td><td>14511</td></tr>
-    <tr><td>Jake</td><td>22131</td><td>22871</td><td>22031</td><td>20031</td></tr>
-    <tr><td>Anna</td><td>21343</td><td>20343</td><td>22456</td><td>21741</td></tr>
-    <tr><td>Jane</td><td>22111</td><td>22222</td><td>22444</td><td>22333</td></tr>
-    <tr><td>Dina</td><td>14123</td><td>14456</td><td>14533</td><td>14511</td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>M               </td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female          </td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man             </td></tr>
+    <tr><td>54</td><td>171 </td><td>  NA</td><td>Looks like a man</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F               </td></tr>
 </tbody>
 </table>
 </div>
 </div>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>better_data <span class="ot">&lt;-</span> not_good_data <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>                <span class="fu">gather</span>(quater, salary, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>                <span class="co"># gather(quater, salary, q1_2021:q4_2021) possible code too</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>better_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Зверніть увагу, що у якості стовпців взято перший рядок даних у додано <code>X</code> на початку. Зчитаємо дані із параметром, що вказує на відсутність заголовків:</p>
+<div class="cell" data-cell_id="071784be9f9e4507b487a1ebd15ed904" data-deepnote_cell_height="429.375" data-deepnote_cell_type="code" data-deepnote_output_heights="[null,248]" data-execution_millis="33" data-execution_start="1650389318247" data-owner_user_id="e217be60-8088-4d01-8fcf-08f2a3d75b6d" data-source_hash="d1f77be1" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/untitled.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 
 <table class="dataframe table table-sm table-striped">
-<caption>A data.frame: 20 × 3</caption>
+<caption>A data.frame: 6 × 4</caption>
 <thead>
-    <tr><th scope="col">Name</th><th scope="col">quater</th><th scope="col">salary</th></tr>
-    <tr><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+    <tr><th scope="col">V1</th><th scope="col">V2</th><th scope="col">V3</th><th scope="col">V4</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-    <tr><td>Nick</td><td>q1_2021</td><td>12442</td></tr>
-    <tr><td>Jake</td><td>q1_2021</td><td>22131</td></tr>
-    <tr><td>Anna</td><td>q1_2021</td><td>21343</td></tr>
-    <tr><td>Jane</td><td>q1_2021</td><td>22111</td></tr>
-    <tr><td>Dina</td><td>q1_2021</td><td>14123</td></tr>
-    <tr><td>Nick</td><td>q2_2021</td><td>13442</td></tr>
-    <tr><td>Jake</td><td>q2_2021</td><td>22871</td></tr>
-    <tr><td>Anna</td><td>q2_2021</td><td>20343</td></tr>
-    <tr><td>Jane</td><td>q2_2021</td><td>22222</td></tr>
-    <tr><td>Dina</td><td>q2_2021</td><td>14456</td></tr>
-    <tr><td>Nick</td><td>q3_2021</td><td>15482</td></tr>
-    <tr><td>Jake</td><td>q3_2021</td><td>22031</td></tr>
-    <tr><td>Anna</td><td>q3_2021</td><td>22456</td></tr>
-    <tr><td>Jane</td><td>q3_2021</td><td>22444</td></tr>
-    <tr><td>Dina</td><td>q3_2021</td><td>14533</td></tr>
-    <tr><td>Nick</td><td>q4_2021</td><td>14511</td></tr>
-    <tr><td>Jake</td><td>q4_2021</td><td>20031</td></tr>
-    <tr><td>Anna</td><td>q4_2021</td><td>21741</td></tr>
-    <tr><td>Jane</td><td>q4_2021</td><td>22333</td></tr>
-    <tr><td>Dina</td><td>q4_2021</td><td>14511</td></tr>
+    <tr><td>23</td><td>185 </td><td>85.7</td><td>Male            </td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>M               </td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female          </td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man             </td></tr>
+    <tr><td>54</td><td>171 </td><td>  NA</td><td>Looks like a man</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F               </td></tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>To make our data tidier <code>separate()</code> can split quater column into 2 (<code>quater</code> and <code>year</code>):</p>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>best_data <span class="ot">&lt;-</span> better_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>    <span class="fu">separate</span>(quater, <span class="fu">c</span>(<span class="st">"quater"</span>, <span class="st">"year"</span>), <span class="at">sep =</span> <span class="st">"_"</span>) <span class="sc">%&gt;%</span> <span class="co"># separate</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(year), <span class="co"># convert year to integer</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>           <span class="at">quater =</span> <span class="fu">substr</span>(better_data<span class="sc">$</span>quater, <span class="dv">2</span>,<span class="dv">2</span>), <span class="co"># trim `q` from start</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>           <span class="at">quater =</span> <span class="fu">as.integer</span>(quater), <span class="co"># convert quater to integer</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a>          ) <span class="sc">%&gt;%</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a>    <span class="fu">head</span>(<span class="dv">10</span>)</span>
-<span id="cb4-8"><a href="#cb4-8"></a>best_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Проблема іменування не вирішена, дані ми уже не втратили. Передамо одночасно з читанням інформацію про назви стовпців:</p>
+<div class="cell" data-cell_id="b2f2910a77ec4776aa7d881a36d74863" data-deepnote_cell_height="465.375" data-deepnote_cell_type="code" data-deepnote_output_heights="[null,248]" data-execution_millis="33" data-execution_start="1650389438672" data-source_hash="cba21c26" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/untitled.csv"</span>, </span>
+<span id="cb3-2"><a href="#cb3-2"></a>            <span class="at">header =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>            <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Age"</span>,<span class="st">"Height"</span>, <span class="st">"Weight"</span>, <span class="st">"Gender"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 
 <table class="dataframe table table-sm table-striped">
-<caption>A data.frame: 10 × 4</caption>
+<caption>A data.frame: 6 × 4</caption>
 <thead>
-    <tr><th></th><th scope="col">Name</th><th scope="col">quater</th><th scope="col">year</th><th scope="col">salary</th></tr>
-    <tr><th></th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+    <tr><th scope="col">Age</th><th scope="col">Height</th><th scope="col">Weight</th><th scope="col">Gender</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>Nick</td><td>1</td><td>2021</td><td>12442</td></tr>
-    <tr><th scope="row">2</th><td>Jake</td><td>1</td><td>2021</td><td>22131</td></tr>
-    <tr><th scope="row">3</th><td>Anna</td><td>1</td><td>2021</td><td>21343</td></tr>
-    <tr><th scope="row">4</th><td>Jane</td><td>1</td><td>2021</td><td>22111</td></tr>
-    <tr><th scope="row">5</th><td>Dina</td><td>1</td><td>2021</td><td>14123</td></tr>
-    <tr><th scope="row">6</th><td>Nick</td><td>2</td><td>2021</td><td>13442</td></tr>
-    <tr><th scope="row">7</th><td>Jake</td><td>2</td><td>2021</td><td>22871</td></tr>
-    <tr><th scope="row">8</th><td>Anna</td><td>2</td><td>2021</td><td>20343</td></tr>
-    <tr><th scope="row">9</th><td>Jane</td><td>2</td><td>2021</td><td>22222</td></tr>
-    <tr><th scope="row">10</th><td>Dina</td><td>2</td><td>2021</td><td>14456</td></tr>
+    <tr><td>23</td><td>185 </td><td>85.7</td><td>Male            </td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>M               </td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female          </td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man             </td></tr>
+    <tr><td>54</td><td>171 </td><td>  NA</td><td>Looks like a man</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F               </td></tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>The <code>unite()</code> function concanates two columns into one:</p>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>united_data <span class="ot">&lt;-</span> best_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>                <span class="fu">unite</span>(Qt, quater, year, <span class="at">sep =</span> <span class="st">"#"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a>united_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ще одним варіантом задання назв стовпців є використання функції <code>colnames()</code> як для усіх різом, так і для окремого:</p>
+<div class="cell" data-cell_id="ec3c8040f0dd44b38271c5b8dc30edfc" data-deepnote_cell_height="678" data-deepnote_cell_type="code" data-deepnote_output_heights="[248,248]" data-execution_millis="57" data-execution_start="1650389604515" data-source_hash="d1a601e" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">colnames</span>(data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"height"</span>, <span class="st">"width"</span>, <span class="st">"gender"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>data</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">colnames</span>(data)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">"HEIGHT"</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 
 <table class="dataframe table table-sm table-striped">
-<caption>A data.frame: 10 × 3</caption>
+<caption>A data.frame: 6 × 4</caption>
 <thead>
-    <tr><th></th><th scope="col">Name</th><th scope="col">Qt</th><th scope="col">salary</th></tr>
-    <tr><th></th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+    <tr><th scope="col">age</th><th scope="col">height</th><th scope="col">width</th><th scope="col">gender</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>Nick</td><td>1#2021</td><td>12442</td></tr>
-    <tr><th scope="row">2</th><td>Jake</td><td>1#2021</td><td>22131</td></tr>
-    <tr><th scope="row">3</th><td>Anna</td><td>1#2021</td><td>21343</td></tr>
-    <tr><th scope="row">4</th><td>Jane</td><td>1#2021</td><td>22111</td></tr>
-    <tr><th scope="row">5</th><td>Dina</td><td>1#2021</td><td>14123</td></tr>
-    <tr><th scope="row">6</th><td>Nick</td><td>2#2021</td><td>13442</td></tr>
-    <tr><th scope="row">7</th><td>Jake</td><td>2#2021</td><td>22871</td></tr>
-    <tr><th scope="row">8</th><td>Anna</td><td>2#2021</td><td>20343</td></tr>
-    <tr><th scope="row">9</th><td>Jane</td><td>2#2021</td><td>22222</td></tr>
-    <tr><th scope="row">10</th><td>Dina</td><td>2#2021</td><td>14456</td></tr>
+    <tr><td>23</td><td>185 </td><td>85.7</td><td>Male            </td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>M               </td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female          </td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man             </td></tr>
+    <tr><td>54</td><td>171 </td><td>  NA</td><td>Looks like a man</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F               </td></tr>
 </tbody>
 </table>
 </div>
-</div>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># if dont want remove old columns use remove param</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>united_data <span class="ot">&lt;-</span> best_data <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>                <span class="fu">unite</span>(Qt, quater, year, <span class="at">sep =</span> <span class="st">"#"</span>, <span class="at">remove =</span> F)</span>
-<span id="cb6-4"><a href="#cb6-4"></a>united_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 
 <table class="dataframe table table-sm table-striped">
-<caption>A data.frame: 10 × 5</caption>
+<caption>A data.frame: 6 × 4</caption>
 <thead>
-    <tr><th></th><th scope="col">Name</th><th scope="col">Qt</th><th scope="col">quater</th><th scope="col">year</th><th scope="col">salary</th></tr>
-    <tr><th></th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+    <tr><th scope="col">age</th><th scope="col">HEIGHT</th><th scope="col">width</th><th scope="col">gender</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>Nick</td><td>1#2021</td><td>1</td><td>2021</td><td>12442</td></tr>
-    <tr><th scope="row">2</th><td>Jake</td><td>1#2021</td><td>1</td><td>2021</td><td>22131</td></tr>
-    <tr><th scope="row">3</th><td>Anna</td><td>1#2021</td><td>1</td><td>2021</td><td>21343</td></tr>
-    <tr><th scope="row">4</th><td>Jane</td><td>1#2021</td><td>1</td><td>2021</td><td>22111</td></tr>
-    <tr><th scope="row">5</th><td>Dina</td><td>1#2021</td><td>1</td><td>2021</td><td>14123</td></tr>
-    <tr><th scope="row">6</th><td>Nick</td><td>2#2021</td><td>2</td><td>2021</td><td>13442</td></tr>
-    <tr><th scope="row">7</th><td>Jake</td><td>2#2021</td><td>2</td><td>2021</td><td>22871</td></tr>
-    <tr><th scope="row">8</th><td>Anna</td><td>2#2021</td><td>2</td><td>2021</td><td>20343</td></tr>
-    <tr><th scope="row">9</th><td>Jane</td><td>2#2021</td><td>2</td><td>2021</td><td>22222</td></tr>
-    <tr><th scope="row">10</th><td>Dina</td><td>2#2021</td><td>2</td><td>2021</td><td>14456</td></tr>
+    <tr><td>23</td><td>185 </td><td>85.7</td><td>Male            </td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>M               </td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female          </td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man             </td></tr>
+    <tr><td>54</td><td>171 </td><td>  NA</td><td>Looks like a man</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F               </td></tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>If you need to make table like initial use <code>spread()</code> function:</p>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>not_good_data2 <span class="ot">&lt;-</span> better_data <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>                    <span class="fu">spread</span>(quater, salary)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>not_good_data2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Також змінювати назви стовпців можна за допомогою функції <code>rename()</code> з пакету <code>dplyr</code>:</p>
+<div class="cell" data-cell_id="1c9ee90a85f24140a0a2b08f2e5d4f6d" data-deepnote_cell_height="927.4375" data-deepnote_cell_type="code" data-deepnote_output_heights="[443.3125,40.375]" data-deepnote_to_be_reexecuted="true" data-execution_millis="293" data-execution_start="1650393120222" data-source_hash="dcf4aa68" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">AGE =</span> age)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 
 <table class="dataframe table table-sm table-striped">
-<caption>A data.frame: 5 × 5</caption>
+<caption>A data.frame: 6 × 4</caption>
 <thead>
-    <tr><th scope="col">Name</th><th scope="col">q1_2021</th><th scope="col">q2_2021</th><th scope="col">q3_2021</th><th scope="col">q4_2021</th></tr>
-    <tr><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+    <tr><th scope="col">AGE</th><th scope="col">HEIGHT</th><th scope="col">width</th><th scope="col">gender</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-    <tr><td>Anna</td><td>21343</td><td>20343</td><td>22456</td><td>21741</td></tr>
-    <tr><td>Dina</td><td>14123</td><td>14456</td><td>14533</td><td>14511</td></tr>
-    <tr><td>Jake</td><td>22131</td><td>22871</td><td>22031</td><td>20031</td></tr>
-    <tr><td>Jane</td><td>22111</td><td>22222</td><td>22444</td><td>22333</td></tr>
-    <tr><td>Nick</td><td>12442</td><td>13442</td><td>15482</td><td>14511</td></tr>
+    <tr><td>23</td><td>185 </td><td>85.7</td><td>Male            </td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>M               </td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female          </td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man             </td></tr>
+    <tr><td>54</td><td>171 </td><td>  NA</td><td>Looks like a man</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F               </td></tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>Let’s try to <code>spread()</code> feild <code>pop</code> of <code>gapminder</code> by year:</p>
-<div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>gapminder <span class="sc">%&gt;%</span> <span class="fu">select</span>(country, pop, year) <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>                <span class="fu">spread</span>(year, pop) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>                <span class="fu">head</span>() <span class="co"># for shorter code</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># now you can easy send data to your director in excel :)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
-<caption>A tibble: 6 × 13</caption>
-<thead>
-    <tr><th scope="col">country</th><th scope="col">1952</th><th scope="col">1957</th><th scope="col">1962</th><th scope="col">1967</th><th scope="col">1972</th><th scope="col">1977</th><th scope="col">1982</th><th scope="col">1987</th><th scope="col">1992</th><th scope="col">1997</th><th scope="col">2002</th><th scope="col">2007</th></tr>
-    <tr><th scope="col">&lt;fct&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;int&gt;</th></tr>
-</thead>
-<tbody>
-    <tr><td>Afghanistan</td><td> 8425333</td><td> 9240934</td><td>10267083</td><td>11537966</td><td>13079460</td><td>14880372</td><td>12881816</td><td>13867957</td><td>16317921</td><td>22227415</td><td>25268405</td><td>31889923</td></tr>
-    <tr><td>Albania    </td><td> 1282697</td><td> 1476505</td><td> 1728137</td><td> 1984060</td><td> 2263554</td><td> 2509048</td><td> 2780097</td><td> 3075321</td><td> 3326498</td><td> 3428038</td><td> 3508512</td><td> 3600523</td></tr>
-    <tr><td>Algeria    </td><td> 9279525</td><td>10270856</td><td>11000948</td><td>12760499</td><td>14760787</td><td>17152804</td><td>20033753</td><td>23254956</td><td>26298373</td><td>29072015</td><td>31287142</td><td>33333216</td></tr>
-    <tr><td>Angola     </td><td> 4232095</td><td> 4561361</td><td> 4826015</td><td> 5247469</td><td> 5894858</td><td> 6162675</td><td> 7016384</td><td> 7874230</td><td> 8735988</td><td> 9875024</td><td>10866106</td><td>12420476</td></tr>
-    <tr><td>Argentina  </td><td>17876956</td><td>19610538</td><td>21283783</td><td>22934225</td><td>24779799</td><td>26983828</td><td>29341374</td><td>31620918</td><td>33958947</td><td>36203463</td><td>38331121</td><td>40301927</td></tr>
-    <tr><td>Australia  </td><td> 8691212</td><td> 9712569</td><td>10794968</td><td>11872264</td><td>13177000</td><td>14074100</td><td>15184200</td><td>16257249</td><td>17481977</td><td>18565243</td><td>19546792</td><td>20434176</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Functions table:</p>
-<table class="table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Function</th>
-<th>Objectives</th>
-<th>Arguments</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>gather()</code></td>
-<td>Transform the data from wide to long</td>
-<td>(data, key, value, na.rm = FALSE)</td>
-</tr>
-<tr class="even">
-<td><code>spread()</code></td>
-<td>Transform the data from long to wide</td>
-<td>(data, key, value)</td>
-</tr>
-<tr class="odd">
-<td><code>separate()</code></td>
-<td>Split one variables into two</td>
-<td>(data, col, into, sep= ““, remove = TRUE)</td>
-</tr>
-<tr class="even">
-<td><code>unite()</code></td>
-<td>Unite two variables into one</td>
-<td>(data, col, conc ,sep= ““, remove = TRUE)</td>
-</tr>
-</tbody>
-</table>
 <hr>
-<section id="refences" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="refences"><span class="header-section-number">19.1</span> Refences</h2>
+</section>
+<section id="заміна-назв-стовпців-data.frame" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="заміна-назв-стовпців-data.frame"><span class="header-section-number">21.2</span> Заміна назв стовпців data.frame <a class="anchor" id="id22"></a></h2><a class="anchor" id="id22">
+<p>Зчитаємо файл, що містить інформацію про осіб, але уже має іменовані стовпці:</p>
+</a><div class="cell" data-cell_id="42a2ae637a1444e2b072683d12de972a" data-deepnote_cell_height="66" data-deepnote_cell_type="code" data-tags="[]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16"><a class="anchor" id="id22">
+</a><div class="sourceCode cell-code" id="cb6"><a class="anchor" id="id22"></a><pre class="sourceCode numberSource r number-lines code-with-copy"><a class="anchor" id="id22"><code class="sourceCode r"><span id="cb6-1"></span></code></a><code class="sourceCode r"><a href="#cb6-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/badtitled.csv"</span>)
+<span id="cb6-2"><a href="#cb6-2"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+<caption>A data.frame: 13 × 5</caption>
+<thead>
+    <tr><th scope="col">Person.Age</th><th scope="col">Person__Height</th><th scope="col">person.Weight</th><th scope="col">Person.Gender</th><th scope="col">empty</th></tr>
+    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;lgl&gt;</th></tr>
+</thead>
+<tbody>
+    <tr><td>23</td><td>185 </td><td>  NA</td><td>Male  </td><td>NA</td></tr>
+    <tr><td>41</td><td>175 </td><td>68.3</td><td>   M  </td><td>NA</td></tr>
+    <tr><td>11</td><td>142*</td><td>55.4</td><td>Female</td><td>NA</td></tr>
+    <tr><td>12</td><td>NA  </td><td>48.2</td><td>Man   </td><td>NA</td></tr>
+    <tr><td>54</td><td>191 </td><td>  NA</td><td>female</td><td>NA</td></tr>
+    <tr><td>32</td><td>168 </td><td>78.0</td><td>F     </td><td>NA</td></tr>
+    <tr><td>22</td><td>NA  </td><td>54.0</td><td>male. </td><td>NA</td></tr>
+    <tr><td>21</td><td>165 </td><td>  NA</td><td>m     </td><td>NA</td></tr>
+    <tr><td>14</td><td>NA  </td><td>90.2</td><td>Man   </td><td>NA</td></tr>
+    <tr><td>51</td><td>250 </td><td>  NA</td><td>female</td><td>NA</td></tr>
+    <tr><td>41</td><td>20  </td><td>81.0</td><td>F     </td><td>NA</td></tr>
+    <tr><td>66</td><td>NA  </td><td>59.0</td><td>male. </td><td>NA</td></tr>
+    <tr><td>71</td><td>171 </td><td>  NA</td><td>m     </td><td>NA</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Швидко змінити назви стовпців та привести їх до однакового стилю можна за домогою бібліотеки <code>janitor</code>:</p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">#install.packages("janitor")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>clean <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(data)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="fu">colnames</span>(clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>'person_age'</li><li>'person_height'</li><li>'person_weight'</li><li>'person_gender'</li><li>'empty'</li></ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="набори-даних" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="набори-даних"><span class="header-section-number">21.3</span> Набори даних</h2>
 <ol type="1">
-<li><a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr: A Grammar of Data Manipulation</a> on https://cran.r-project.org/.</li>
-<li><a href="https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf">Data Transformation with splyr::cheat sheet</a>.</li>
-<li><a href="https://www.listendata.com/2016/08/dplyr-tutorial.html">DPLYR TUTORIAL : DATA MANIPULATION (50 EXAMPLES)</a> by Deepanshu Bhalla.</li>
-<li><a href="https://stat545.com/dplyr-intro.html">Dplyr Intro</a> by Stat 545. 6.<a href="https://www.guru99.com/r-dplyr-tutorial.html">R Dplyr Tutorial: Data Manipulation(Join) &amp; Cleaning(Spread)</a>. Introduction to Data Analysis</li>
-<li><a href="https://www.kaggle.com/kmldas/loan-default-prediction">Loan Default Prediction. Beginners data set for financial analytics Kaggle</a></li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv</li>
+</ol>
+<hr>
+</section>
+<section id="використані-та-додаткові-джерела" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="використані-та-додаткові-джерела"><span class="header-section-number">21.4</span> Використані та додаткові джерела</h2>
+<ol type="1">
+<li><a href="https://www.insidesherpa.com/virtual-internships/m7W4GMqeT3bh9Nb2c">KPMG Virtual Internship</a></li>
+<li><a href="https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf">An introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013</a></li>
+<li><a href="datacamp.com/courses/anomaly-detection-in-r">Anomaly Detection in R</a></li>
+<li><a href="https://medium.com/analytics-vidhya/k-nearest-neighbor-the-maths-behind-it-how-it-works-and-an-example-f1de1208546c">K-nearest Neighbor: The maths behind it, how it works and an example</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Quantile">Quantile. Wikipedia</a></li>
 </ol>
 
 
@@ -757,13 +718,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./38-r-data-join.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></span>
+      <a href="./40-r-data-quality.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./40-r-data-quality.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./42-r-cleaning-text.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

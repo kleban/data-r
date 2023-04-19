@@ -719,5 +719,222 @@
     "title": "19  Wide-to-long tables",
     "section": "19.1 Refences",
     "text": "19.1 Refences\n\ndplyr: A Grammar of Data Manipulation on https://cran.r-project.org/.\nData Transformation with splyr::cheat sheet.\nDPLYR TUTORIAL : DATA MANIPULATION (50 EXAMPLES) by Deepanshu Bhalla.\nDplyr Intro by Stat 545. 6.R Dplyr Tutorial: Data Manipulation(Join) & Cleaning(Spread). Introduction to Data Analysis\nLoan Default Prediction. Beginners data set for financial analytics Kaggle"
+  },
+  {
+    "objectID": "40-r-data-quality.html",
+    "href": "40-r-data-quality.html",
+    "title": "20  Оцінки якості даних",
+    "section": "",
+    "text": "author: Юрій Клебан\nМатеріали розділу описують інформацію про виміри оцінки якості даних, підходи до визначення та обробки пропущених значень, а також розглядаються способи боротьби зі статистичними викидами."
+  },
+  {
+    "objectID": "40-r-data-quality.html#що-таке-валідація-даних",
+    "href": "40-r-data-quality.html#що-таке-валідація-даних",
+    "title": "20  Оцінки якості даних",
+    "section": "20.1 Що таке валідація даних?",
+    "text": "20.1 Що таке валідація даних?\nВалідація даних відноситься до процесу забезпечення точності та якості даних. Він реалізується шляхом вбудовування кількох перевірок у систему або звітування для забезпечення логічної узгодженості введених і збережених даних.\n\nЯкість даних залежить від очищення та коригування даних, які відсутні, некоректні, недійсні або нечитабельні. Для забезпечення достовірності даних важливо зрозуміти ключові аспекти якості даних, щоб оцінити, наскільки дані погані/хороші.\nНа перший погляд, очевидно, що перетворення даних до якісних полягає в очищенні поганих даних – даних, які відсутні, неправильні або якимось чином недійсні. Але щоб переконатися, що дані заслуговують довіри, важливо розуміти ключові виміри якості даних, щоб оцінити, наскільки дані є «поганими».\nОкремі компанії мають внутрішні документи, що визначають виміри оцінки якості даних та порядок його проведення - Data Validation Framework або Data Quality Framework.\nКоли говорять про якість даних, то мається на увазі їх оцінка у кількох вимірах. Розглянемо коротко ці виміри:\n\nПравильність / Accuracy\nПовнота / Completeness\nУзгодженість / Consistency\nВідповідність / Conformity\nЦілісність / Integrity\nСвоєчасність / Timeliness\nУнікальність / Uniqueness"
+  },
+  {
+    "objectID": "40-r-data-quality.html#правильність-accuracy",
+    "href": "40-r-data-quality.html#правильність-accuracy",
+    "title": "20  Оцінки якості даних",
+    "section": "20.2 Правильність / (Accuracy)",
+    "text": "20.2 Правильність / (Accuracy)\nПравильність — це ступінь, до якого дані правильно відображають реальний об’єкт АБО описувану подію.\nПриклади: - [x] Реальною вартістю є ціна продажу одиниці товару. - [x] Адреса співробітника в базі даних співробітників є справжньою адресою.\nЗапитання, які ви можете задати собі:\n\nЧи об’єкти даних точно представляють значення «реального світу», які вони повинні моделювати? Наприклад, чи правильно вказувати вік у сотнях тисяч років?\nЧи присутнє неправильне написання назв товарів чи осіб, адрес і навіть несвоєчасних чи неактуальних даних?\n\nЦі проблеми можуть вплинути на результатати аналітичних звітів, наприклад, неправильні середні значення певних показників."
+  },
+  {
+    "objectID": "40-r-data-quality.html#повнота-completeness",
+    "href": "40-r-data-quality.html#повнота-completeness",
+    "title": "20  Оцінки якості даних",
+    "section": "20.3 Повнота / (Completeness)",
+    "text": "20.3 Повнота / (Completeness)\nПовнота визначається як очікувана всебічність. Дані можуть бути повними, навіть якщо додаткові дані відсутні. Поки дані відповідають очікуванням, вони вважаються повними.\nНаприклад, ім’я та прізвище замовника є обов’язковими, але прізвище необов’язково; тому запис можна вважати повним, навіть якщо прізвища не існує.\nПитання, які ви можете задати собі:\n\nЧи доступна вся необхідна інформація?\nЧи мають якісь дані відсутні елементи?\nАбо вони перебувають у непридатному для роботи вигляді?"
+  },
+  {
+    "objectID": "40-r-data-quality.html#узгодженість-consistency",
+    "href": "40-r-data-quality.html#узгодженість-consistency",
+    "title": "20  Оцінки якості даних",
+    "section": "20.4 Узгодженість / Consistency",
+    "text": "20.4 Узгодженість / Consistency\nУзгодженість означає, що дані в усіх системах/таблицях відображають однакову інформацію та синхронізовані між собою.\nПриклади: - [x] Статус бізнес-підрозділу “закритий”, але є продажі для цього підрозділу. - [x] Статус працівника “звільнено”, але статус випалати заробіної плати містить суму відмінну від 0 за той самий період. - [x] Зафіксовано, що клієнт має у банку депозити, але у даних про депозити записи по клієнту відсутні.\nЗапитання, які ви можете поставити собі:\n\nЧи однакові значення даних у наборах даних?\nЧи існують якісь різні випадки, коли однакові екземпляри даних надають суперечливу інформацію?"
+  },
+  {
+    "objectID": "40-r-data-quality.html#відповідність-conformity",
+    "href": "40-r-data-quality.html#відповідність-conformity",
+    "title": "20  Оцінки якості даних",
+    "section": "20.5 Відповідність / Conformity",
+    "text": "20.5 Відповідність / Conformity\nВідповідність означає, що дані відповідають набору стандартних визначень даних, як-от тип даних, розмір і формат. Наприклад, дата народження клієнта у форматі dd/mm/yyyy або відстань у км числом 100, а не записом 100км.\nЗапитання, які ви можете задати собі: - [x] Чи відповідають значення даних зазначеним форматам? - [x] Якщо так, то чи всі значення даних відповідають цим форматам?\nВажливо підтримувати відповідність конкретним форматам."
+  },
+  {
+    "objectID": "40-r-data-quality.html#цілісність-integrity",
+    "href": "40-r-data-quality.html#цілісність-integrity",
+    "title": "20  Оцінки якості даних",
+    "section": "20.6 Цілісність / Integrity",
+    "text": "20.6 Цілісність / Integrity\nЦілісність означає достовірність даних у взаємозв’язках і гарантує, що всі дані в базі даних можна відстежити та з’єднати з іншими даними.\nНаприклад, у базі даних клієнтів має бути дійсний клієнт, адреси та відношення/зв’язки між ними. Якщо є дані про зв’язок адреси без клієнта, то ці дані недійсні й вважаються загубленим записом.\nЗапитайте себе: - [x] Чи є якісь дані без важливих зв’язків?\nНеможливість пов’язати записи разом може призвести до дублювання у ваших системах."
+  },
+  {
+    "objectID": "40-r-data-quality.html#своєчасність-timeliness",
+    "href": "40-r-data-quality.html#своєчасність-timeliness",
+    "title": "20  Оцінки якості даних",
+    "section": "20.7 Своєчасність / Timeliness",
+    "text": "20.7 Своєчасність / Timeliness\nСвоєчасність показує, чи є інформація доступною, коли вона очікується та потрібна. Своєчасність даних дуже важлива.\nЦе відображається в: - [x] Компанії, які зобов’язані публікувати свої квартальні результати протягом певного періоду часу - [x] Обслуговування клієнтів надає клієнтам актуальну інформацію - [x] Кредитна система перевіряє активність рахунку кредитної картки в режимі реального часу\nСвоєчасність залежить від очікувань користувача. Доступність даних в Інтернеті може знадобитися для системи розподілу номерів у сфері готельного бізнесу.\nЯк бачите, якість даних є важливим питанням, яке слід враховувати, починаючи від етапу визначення цілей проекту, аж до впровадження, обслуговування та використання готово рішення у виробничі процесі підприємства."
+  },
+  {
+    "objectID": "40-r-data-quality.html#набори-даних",
+    "href": "40-r-data-quality.html#набори-даних",
+    "title": "20  Оцінки якості даних",
+    "section": "20.8 Набори даних",
+    "text": "20.8 Набори даних\n\nhttps://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv"
+  },
+  {
+    "objectID": "40-r-data-quality.html#використані-та-додаткові-джерела",
+    "href": "40-r-data-quality.html#використані-та-додаткові-джерела",
+    "title": "20  Оцінки якості даних",
+    "section": "20.9 Використані та додаткові джерела",
+    "text": "20.9 Використані та додаткові джерела\n\nKPMG Virtual Internship\nAn introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013\nAnomaly Detection in R\nK-nearest Neighbor: The maths behind it, how it works and an example\nQuantile. Wikipedia"
+  },
+  {
+    "objectID": "41-r-data-naming.html",
+    "href": "41-r-data-naming.html",
+    "title": "21  Робота з неіменованими та “поганоіменованими” даними",
+    "section": "",
+    "text": "author: Юрій Клебан"
+  },
+  {
+    "objectID": "41-r-data-naming.html#іменування-даних",
+    "href": "41-r-data-naming.html#іменування-даних",
+    "title": "21  Робота з неіменованими та “поганоіменованими” даними",
+    "section": "21.1 Іменування даних",
+    "text": "21.1 Іменування даних\nПершим прикладом проблем у даних можна розгянути читання неіменованих даних, тобто стопці таблиці не мають заголовків у файлі.\nСтворимо такий файл у блокноті і зчитаємо його:\n\ndata <- read.csv(\"data/untitled.csv\")\ndata\n\n\n\nA data.frame: 5 × 4\n\n    X23X185X85.7Male\n    <int><chr><dbl><chr>\n\n\n    41175 68.3M               \n    11142*55.4Female          \n    12NA  48.2Man             \n    54171   NALooks like a man\n    32168 78.0F               \n\n\n\n\nЗверніть увагу, що у якості стовпців взято перший рядок даних у додано X на початку. Зчитаємо дані із параметром, що вказує на відсутність заголовків:\n\ndata <- read.csv(\"data/untitled.csv\", header = FALSE)\ndata\n\n\n\nA data.frame: 6 × 4\n\n    V1V2V3V4\n    <int><chr><dbl><chr>\n\n\n    23185 85.7Male            \n    41175 68.3M               \n    11142*55.4Female          \n    12NA  48.2Man             \n    54171   NALooks like a man\n    32168 78.0F               \n\n\n\n\nПроблема іменування не вирішена, дані ми уже не втратили. Передамо одночасно з читанням інформацію про назви стовпців:\n\ndata <- read.csv(\"data/untitled.csv\", \n            header = FALSE,\n            col.names = c(\"Age\",\"Height\", \"Weight\", \"Gender\"))\ndata\n\n\n\nA data.frame: 6 × 4\n\n    AgeHeightWeightGender\n    <int><chr><dbl><chr>\n\n\n    23185 85.7Male            \n    41175 68.3M               \n    11142*55.4Female          \n    12NA  48.2Man             \n    54171   NALooks like a man\n    32168 78.0F               \n\n\n\n\nЩе одним варіантом задання назв стовпців є використання функції colnames() як для усіх різом, так і для окремого:\n\ncolnames(data) <- c(\"age\", \"height\", \"width\", \"gender\")\ndata\ncolnames(data)[2] <- \"HEIGHT\"\ndata\n\n\n\nA data.frame: 6 × 4\n\n    ageheightwidthgender\n    <int><chr><dbl><chr>\n\n\n    23185 85.7Male            \n    41175 68.3M               \n    11142*55.4Female          \n    12NA  48.2Man             \n    54171   NALooks like a man\n    32168 78.0F               \n\n\n\n\n\n\nA data.frame: 6 × 4\n\n    ageHEIGHTwidthgender\n    <int><chr><dbl><chr>\n\n\n    23185 85.7Male            \n    41175 68.3M               \n    11142*55.4Female          \n    12NA  48.2Man             \n    54171   NALooks like a man\n    32168 78.0F               \n\n\n\n\nТакож змінювати назви стовпців можна за допомогою функції rename() з пакету dplyr:\n\nlibrary(dplyr)\n\ndata <- data |> rename(AGE = age)\ndata\n\n\n\nA data.frame: 6 × 4\n\n    AGEHEIGHTwidthgender\n    <int><chr><dbl><chr>\n\n\n    23185 85.7Male            \n    41175 68.3M               \n    11142*55.4Female          \n    12NA  48.2Man             \n    54171   NALooks like a man\n    32168 78.0F"
+  },
+  {
+    "objectID": "41-r-data-naming.html#заміна-назв-стовпців-data.frame",
+    "href": "41-r-data-naming.html#заміна-назв-стовпців-data.frame",
+    "title": "21  Робота з неіменованими та “поганоіменованими” даними",
+    "section": "21.2 Заміна назв стовпців data.frame ",
+    "text": "21.2 Заміна назв стовпців data.frame \nЗчитаємо файл, що містить інформацію про осіб, але уже має іменовані стовпці:\n\ndata <- read.csv(\"data/badtitled.csv\")\ndata\n\n\n\nA data.frame: 13 × 5\n\n    Person.AgePerson__Heightperson.WeightPerson.Genderempty\n    <int><chr><dbl><chr><lgl>\n\n\n    23185   NAMale  NA\n    41175 68.3   M  NA\n    11142*55.4FemaleNA\n    12NA  48.2Man   NA\n    54191   NAfemaleNA\n    32168 78.0F     NA\n    22NA  54.0male. NA\n    21165   NAm     NA\n    14NA  90.2Man   NA\n    51250   NAfemaleNA\n    4120  81.0F     NA\n    66NA  59.0male. NA\n    71171   NAm     NA\n\n\n\n\nШвидко змінити назви стовпців та привести їх до однакового стилю можна за домогою бібліотеки janitor:\n\n#install.packages(\"janitor\")\n\n\nlibrary(janitor)\nclean <- clean_names(data)\ncolnames(clean)\n\n\n'person_age''person_height''person_weight''person_gender''empty'"
+  },
+  {
+    "objectID": "41-r-data-naming.html#набори-даних",
+    "href": "41-r-data-naming.html#набори-даних",
+    "title": "21  Робота з неіменованими та “поганоіменованими” даними",
+    "section": "21.3 Набори даних",
+    "text": "21.3 Набори даних\n\nhttps://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv"
+  },
+  {
+    "objectID": "41-r-data-naming.html#використані-та-додаткові-джерела",
+    "href": "41-r-data-naming.html#використані-та-додаткові-джерела",
+    "title": "21  Робота з неіменованими та “поганоіменованими” даними",
+    "section": "21.4 Використані та додаткові джерела",
+    "text": "21.4 Використані та додаткові джерела\n\nKPMG Virtual Internship\nAn introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013\nAnomaly Detection in R\nK-nearest Neighbor: The maths behind it, how it works and an example\nQuantile. Wikipedia"
+  },
+  {
+    "objectID": "42-r-cleaning-text.html",
+    "href": "42-r-cleaning-text.html",
+    "title": "22  Підготовка та очистка текстової інформації",
+    "section": "",
+    "text": "author: Юрій Клебан\nЗчитаємо інформацію про стать з попереднього прикладу:\nСхоже, що ці дані насправді мають всього 2 записи, проте у базу даних їх вносили різні люди або вони були зібрані з різних джерел інформації. Це досить поширена проблема у роботі з даними. Особливо коли відбуваєть заміна людей на рочих місцях або перехід на інше програмне забезпечення.\nЯкщо це буде розглядатися як факторна змінна без будь-якої попередньої обробки, очевидно, що 8, а не 2 класи будуть збережені. Тому завдання полягає в тому, щоб автоматично розпізнавати наведені вище дані про те, чи відноситься кожен елемент до чоловічої чи жіночої статі. У статистичних контекстах класифікацію таких “безладні” текстові рядки в ряд фіксованих категорій часто називають кодуванням.\nОпишемо два взаємодоповнюючих підходи до кодування рядків: нормалізація (string normalization) рядків і аналіз схожості тексту (approximate text matching).\nРозглянемо наступні підходи до очистки текстових даних:\nРобота з текстом у R здійснюється за допомогою пакету stringr.\nВидалення пробілів на початку або в кінці здійснюється за допомогою функції str_trim().\nОбрізання/збільшення рядків до певної ширини здійснюється за допомогою функції str_pad().\nПеретворення у верхній/нижній регістр\nПошук рядків, що містять прості шаблони (підрядки)\nСкористаємося функцієя grep() та grepl() для пошуку підрядків у інформації про стать:\nПошук “відстані” між ряжками - це аналіз рядків на схожіть з визначенням рівня співпадінь.\nДавайте проаналізуємо інформацію про стать з точки зору схожості текстів:\nПримінимо інформацію про відстані до “нечистих” даних про стать:\nЯк альтернативу для знаходження відстаней між рядками можна використовувати функції з бібліотеки stringdist.\nСпробуємо “очистити” дані, які ми отримали з допомогою функції amatch():\nМісія виконана! Замінимо та збережемо інформацію у файл для майбутніх експериментів по цій темі:\nЗамінимо також висоту на числове значення, а не текст:"
+  },
+  {
+    "objectID": "42-r-cleaning-text.html#набори-даних",
+    "href": "42-r-cleaning-text.html#набори-даних",
+    "title": "22  Підготовка та очистка текстової інформації",
+    "section": "22.1 Набори даних",
+    "text": "22.1 Набори даних\n\nhttps://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv"
+  },
+  {
+    "objectID": "42-r-cleaning-text.html#використані-та-додаткові-джерела",
+    "href": "42-r-cleaning-text.html#використані-та-додаткові-джерела",
+    "title": "22  Підготовка та очистка текстової інформації",
+    "section": "22.2 Використані та додаткові джерела",
+    "text": "22.2 Використані та додаткові джерела\n\nKPMG Virtual Internship\nAn introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013\nAnomaly Detection in R\nK-nearest Neighbor: The maths behind it, how it works and an example\nQuantile. Wikipedia"
+  },
+  {
+    "objectID": "43-r-missing-data.html",
+    "href": "43-r-missing-data.html",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "",
+    "text": "author: Юрій Клебан\nДані реального світу часто мають відсутні значення. Дані можуть мати відсутні значення з ряду причин, таких як спостереження, які не були записані, пошкодження даних, неспівставність форматів даних тощо.\nПроблема - [x] Обробка відсутніх даних важлива, оскільки багато алгоритмів машинного навчання або програм для візуалізації та аналізу даних не підтримують дані з відсутніми значеннями.\nРішення\nПримітка\nНекоректна інформація в даних може бути записана різними способами, наприклад у датасеті ці дані можуть бутьу визначені як NA <NA> NULL undefinded Undefined. Перед обробкою таких даних усі невизначені записи варто конвертувати у NA.\nЩоб переглянути список усіх стовпців, що мають пропуски даних можна скористатися наступним кодом:"
+  },
+  {
+    "objectID": "43-r-missing-data.html#перевірка-наявності-пропусків-у-даних",
+    "href": "43-r-missing-data.html#перевірка-наявності-пропусків-у-даних",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.1 Перевірка наявності пропусків у даних",
+    "text": "23.1 Перевірка наявності пропусків у даних\nПакет MICE (Multivariate Imputation via Chained Equations)\n\nlibrary(mice)\nmd.pattern(data)\n\n\n\nA matrix: 4 × 6 of type dbl\n\n    person_ageperson_genderperson_heightperson_weightempty\n\n\n    41111 0 1\n    51110 0 2\n    41101 0 2\n    00451322\n\n\n\n\n\n\n\n\n#install.packages(\"VIM\")\n\n\nlibrary(VIM)\nmice_plot <- aggr(data, \n                  col=c('navyblue','yellow'),\n                  numbers=TRUE, \n                  sortVars=TRUE,\n                  labels=names(data), \n                  cex.axis=.7,\n                  gap=3, \n                  ylab=c(\"Missing data\",\"Pattern\"))\nmice_plot\n\n\n Variables sorted by number of missings: \n      Variable     Count\n         empty 1.0000000\n person_weight 0.3846154\n person_height 0.3076923\n    person_age 0.0000000\n person_gender 0.0000000\n\n\n\n Missings in variables:\n      Variable Count\n person_height     4\n person_weight     5\n         empty    13\n\n\n\n\n\n\n#install.packages(\"Amalia\")\n\n\nlibrary(Amelia)\nAmelia::missmap(data)\n\n\n\n\nТакож можна скористатися альтернативними макетами: missForest, mi."
+  },
+  {
+    "objectID": "43-r-missing-data.html#видалення-пустих-рядків-та-сповпців-у-data.frame",
+    "href": "43-r-missing-data.html#видалення-пустих-рядків-та-сповпців-у-data.frame",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.2 Видалення пустих рядків та сповпців у data.frame",
+    "text": "23.2 Видалення пустих рядків та сповпців у data.frame\nПереглянемо стовпці, що містять пропуски:\n\n# Переглянемо список стовпців з пропусками\ncolnames(data)[apply(data, 2, anyNA)]\n\nYour code contains a unicode char which cannot be displayed in your\ncurrent locale and R will silently convert it to an escaped form when the\nR kernel executes this code. This can lead to subtle errors if you use\nsuch chars to do comparisons. For more information, please see\nhttps://github.com/IRkernel/repr/wiki/Problems-with-unicode-on-windows\n\n\n\n'person_height''person_weight''empty'\n\n\nФункція complete.cases повертає логічні значення\n\ncomplete.cases(data) # бо є стовпець Empty\n\nYour code contains a unicode char which cannot be displayed in your\ncurrent locale and R will silently convert it to an escaped form when the\nR kernel executes this code. This can lead to subtle errors if you use\nsuch chars to do comparisons. For more information, please see\nhttps://github.com/IRkernel/repr/wiki/Problems-with-unicode-on-windows\n\n\n\nFALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSE\n\n\nТакож видаляти стовпці та рядки з data.frame можна за допомогою пакету janitor.\n\nlibrary(janitor)\ndata_cleaned <- remove_empty(data, which = c(\"rows\",\"cols\"), quiet = FALSE)\ndata_cleaned\n# Видаляємо повністю пусті\n\nYour code contains a unicode char which cannot be displayed in your\ncurrent locale and R will silently convert it to an escaped form when the\nR kernel executes this code. This can lead to subtle errors if you use\nsuch chars to do comparisons. For more information, please see\nhttps://github.com/IRkernel/repr/wiki/Problems-with-unicode-on-windowsNo empty rows to remove.\n\nRemoving 1 empty columns of 5 columns total (Removed: empty).\n\n\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    123185  NAmale  \n    24117568.3male  \n    31114255.4female\n    412 NA48.2male  \n    554191  NAfemale\n    63216878.0female\n    722 NA54.0male  \n    821165  NAmale  \n    914 NA90.2male  \n    1051250  NAfemale\n    1141 2081.0female\n    1266 NA59.0male  \n    1371171  NAmale  \n\n\n\n\n\nwrite.csv(data_cleaned, file = \"data/cleaned_titled2.csv\", row.names = F)\n\nЯк бачимо, колонка empty була видалена.\nЩоб переглянути усі записи, що не мають пропусків скористаємося функцією na.omit():\n\nna.omit(data_cleaned)\n\n\n\nA data.frame: 4 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    24117568.3male  \n    31114255.4female\n    63216878.0female\n    1141 2081.0female\n\n\n\n\nТаким чином пропущені значення будуть видалені з датасети, якщо інформацію переприсвоїти data <- na.omit(data)"
+  },
+  {
+    "objectID": "43-r-missing-data.html#заміна-пропусків-у-data.frame",
+    "href": "43-r-missing-data.html#заміна-пропусків-у-data.frame",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.3 Заміна пропусків у data.frame",
+    "text": "23.3 Заміна пропусків у data.frame\nІснує ряд підходів, що використовуються для заміни пропущених значень у датасеті:\nЗаміна на 0 * Вставте пропущені значення нулем\nЗаміна на медіану/середнє значення * Для числових змінних - середнє або медіана, мінімум, максимум * Для категоріальних змінних - мода (бувають випадки, коли моду доцільно використовувати і для числових)\nСегментна заміна * Визначення сегментів * Обчислення середнього/медіани/моди для сегментів * Замінити значення по сегментах * Наприклад, ми можемо сказати, що кількість опадів майже не змінюється для міст у певній області України, у такому випадку ми можемо для усіх міст з пропусками записати значення середнє по регіону.\nІнтелектуальна заміна (Частковий випадок сегментної заміни) * Заміна значень з використанням методів машинного навчання\n\n23.3.1 Заміна пропусків на нуль (0)\n\ndata <- read.csv(\"data/cleaned_titled2.csv\")\ndata\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    23185  NAmale  \n    4117568.3male  \n    1114255.4female\n    12 NA48.2male  \n    54191  NAfemale\n    3216878.0female\n    22 NA54.0male  \n    21165  NAmale  \n    14 NA90.2male  \n    51250  NAfemale\n    41 2081.0female\n    66 NA59.0male  \n    71171  NAmale  \n\n\n\n\nЗамінимо інформацію про вагу з пропусками на 0:\n\ndata_w0 <- data |> \n    mutate(person_weight = ifelse(is.na(person_weight), 0, person_weight))\ndata_w0\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    23185 0.0male  \n    4117568.3male  \n    1114255.4female\n    12 NA48.2male  \n    54191 0.0female\n    3216878.0female\n    22 NA54.0male  \n    21165 0.0male  \n    14 NA90.2male  \n    51250 0.0female\n    41 2081.0female\n    66 NA59.0male  \n    71171 0.0male  \n\n\n\n\n\n# Без dplyr\ndata_w0 <- data\ndata_w0[is.na(data_w0$person_weight), \"person_weight\"] <- 0\ndata_w0\n\nYour code contains a unicode char which cannot be displayed in your\ncurrent locale and R will silently convert it to an escaped form when the\nR kernel executes this code. This can lead to subtle errors if you use\nsuch chars to do comparisons. For more information, please see\nhttps://github.com/IRkernel/repr/wiki/Problems-with-unicode-on-windows\n\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    23185 0.0male  \n    4117568.3male  \n    1114255.4female\n    12 NA48.2male  \n    54191 0.0female\n    3216878.0female\n    22 NA54.0male  \n    21165 0.0male  \n    14 NA90.2male  \n    51250 0.0female\n    41 2081.0female\n    66 NA59.0male  \n    71171 0.0male  \n\n\n\n\nЗробити заміну для усіх числових стовпців:\n\nlibrary(tidyr) # for replace_na()\ndata_all <- data |> \n    mutate_if(is.numeric , replace_na, replace = 0)\ndata_all\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    23185 0.0male  \n    4117568.3male  \n    1114255.4female\n    12  048.2male  \n    54191 0.0female\n    3216878.0female\n    22  054.0male  \n    21165 0.0male  \n    14  090.2male  \n    51250 0.0female\n    41 2081.0female\n    66  059.0male  \n    71171 0.0male"
+  },
+  {
+    "objectID": "43-r-missing-data.html#числова-заміна-пропусків",
+    "href": "43-r-missing-data.html#числова-заміна-пропусків",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.4 Числова заміна пропусків",
+    "text": "23.4 Числова заміна пропусків\nЗаміна на константи або обчислені значення є стандарним підходом. Так, наприклад, заміна певного значення на середнє матиме вигляд:\n\ndata_m <- data |> \n    mutate(person_weight = ifelse(is.na(person_weight), mean(data$person_weight, na.rm = T), person_weight))\ndata_m\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    2318566.7625male  \n    4117568.3000male  \n    1114255.4000female\n    12 NA48.2000male  \n    5419166.7625female\n    3216878.0000female\n    22 NA54.0000male  \n    2116566.7625male  \n    14 NA90.2000male  \n    5125066.7625female\n    41 2081.0000female\n    66 NA59.0000male  \n    7117166.7625male  \n\n\n\n\nЗаміна на min, max, median не відрізняється.\nЯкщо виникає потреба замінити, наприклад, усі значення на медіану у всіх стовпцях за один прохід можна скористатися функцією mutate_if():\n\ndata_all <- data |> \n    mutate_if(is.numeric, function(x) ifelse(is.na(x), median(x, na.rm = T), x))\ndata_all\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    2318563.65male  \n    4117568.30male  \n    1114255.40female\n    1217148.20male  \n    5419163.65female\n    3216878.00female\n    2217154.00male  \n    2116563.65male  \n    1417190.20male  \n    5125063.65female\n    41 2081.00female\n    6617159.00male  \n    7117163.65male  \n\n\n\n\nРозглянемо кілька бібліотек для перевірки даних на наявність пропусків…\nЩе одним із варіантів заміни значень може бути використання бібліотеки Hmisc:\n\n#install.packages(\"Hmisc\")\n\n\nlibrary(Hmisc)\ndata_wm <- data |> \n    mutate(person_weight = impute(data$person_weight, fun = mean)) # mean imputation\n# Аналогічно можна замінити на min,max, median чи інші функції\ndata_wm \n# * Значення із * - замінені\n\nYour code contains a unicode char which cannot be displayed in your\ncurrent locale and R will silently convert it to an escaped form when the\nR kernel executes this code. This can lead to subtle errors if you use\nsuch chars to do comparisons. For more information, please see\nhttps://github.com/IRkernel/repr/wiki/Problems-with-unicode-on-windows\n\n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><impute><chr>\n\n\n    2318566.7625male  \n    4117568.3000male  \n    1114255.4000female\n    12 NA48.2000male  \n    5419166.7625female\n    3216878.0000female\n    22 NA54.0000male  \n    2116566.7625male  \n    14 NA90.2000male  \n    5125066.7625female\n    41 2081.0000female\n    66 NA59.0000male  \n    7117166.7625male  \n\n\n\n\n\n\n23.4.0.1 Hot deck imputation (як перекласти???)\nМетод Hot deck imputation передбачає, що пропущені значення обчислюються шляхом копіювання значень із подібних записів у тому ж наборі даних.\nОсновне питання при Hot deck imputation полягає в тому, як вибрати значення заміни. Одним із поширених підходів є випадковий відбір:\n\n# set.seed(1)\ndata_hot <- data |> \n    mutate(person_weight = impute(data$person_weight, \"random\")) \ndata_hot \n\n\n\nA data.frame: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><impute><chr>\n\n\n    2318559.0male  \n    4117568.3male  \n    1114255.4female\n    12 NA48.2male  \n    5419155.4female\n    3216878.0female\n    22 NA54.0male  \n    2116554.0male  \n    14 NA90.2male  \n    5125090.2female\n    41 2081.0female\n    66 NA59.0male  \n    7117154.0male  \n\n\n\n\nВихідне значення залежить від значення seed."
+  },
+  {
+    "objectID": "43-r-missing-data.html#сегментна-заміна-пропусків",
+    "href": "43-r-missing-data.html#сегментна-заміна-пропусків",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.5 Сегментна заміна пропусків",
+    "text": "23.5 Сегментна заміна пропусків\nЗаміна по сегментах часто дозволяє будувати точніші математичні моделі, адже групові середні краще описують явища і процеси, ніж загальні для всієї вибірки.\nЗнайдемо середні значення ваги за статтю та використаємо ці значення для заміни пропусків у даних.\n\ndata_sgm <- data |> \n                group_by(person_gender) |>\n                mutate(person_weight = replace_na(person_weight, mean(person_weight, na.rm = TRUE)))\ndata_sgm\n\n\n\nA grouped_df: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    2318563.94000male  \n    4117568.30000male  \n    1114255.40000female\n    12 NA48.20000male  \n    5419171.46667female\n    3216878.00000female\n    22 NA54.00000male  \n    2116563.94000male  \n    14 NA90.20000male  \n    5125071.46667female\n    41 2081.00000female\n    66 NA59.00000male  \n    7117163.94000male  \n\n\n\n\nТакож можна здійснити заміну значень по усіх стовпцях датасету за один раз. Проте не варто такий підхід використовувати постійно, а враховувати бізнес-логіку процесів, що вивчаються.\n\ndata_sgm2 <- data %>% \n  group_by(person_gender) %>% \n    mutate(\n      across(everything(), ~replace_na(.x, min(.x, na.rm = TRUE)))\n    )\ndata_sgm2\n\n\n\nA grouped_df: 13 × 4\n\n    person_ageperson_heightperson_weightperson_gender\n    <int><int><dbl><chr>\n\n\n    2318548.2male  \n    4117568.3male  \n    1114255.4female\n    1216548.2male  \n    5419155.4female\n    3216878.0female\n    2216554.0male  \n    2116548.2male  \n    1416590.2male  \n    5125055.4female\n    41 2081.0female\n    6616559.0male  \n    7117148.2male  \n\n\n\n\nЯкщо ж є потреба замінювати по окремих стовпцях, то їх можна вказати замість everything(): across(c(\"person_height\", \"person_weight\"), ~replace_na(.x, min(.x, na.rm = TRUE))).\nІншим варіантом може бути вказання номерів колонок: across(c(1,3), ~replace_na(.x, min(.x, na.rm = TRUE)))"
+  },
+  {
+    "objectID": "43-r-missing-data.html#інтелектуальні-методи-заміни",
+    "href": "43-r-missing-data.html#інтелектуальні-методи-заміни",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.6 Інтелектуальні методи заміни",
+    "text": "23.6 Інтелектуальні методи заміни\nТеоретично інтелектуальні методи заміни пропусків є найкращими, адже враховують математичні залежності у даних.\nhttps://medium.com/swlh/k-nearest-neighbor-ca2593d7a3c4\n\nlibrary(VIM)\ndata_knn <- kNN(data)\ndata_knn\n\n\n\nA data.frame: 13 × 8\n\n    person_ageperson_heightperson_weightperson_genderperson_age_impperson_height_impperson_weight_impperson_gender_imp\n    <int><int><dbl><chr><lgl><lgl><lgl><lgl>\n\n\n    2318559.0male  FALSEFALSE TRUEFALSE\n    4117568.3male  FALSEFALSEFALSEFALSE\n    1114255.4femaleFALSEFALSEFALSEFALSE\n    1216848.2male  FALSE TRUEFALSEFALSE\n    5419168.3femaleFALSEFALSE TRUEFALSE\n    3216878.0femaleFALSEFALSEFALSEFALSE\n    2216854.0male  FALSE TRUEFALSEFALSE\n    2116559.0male  FALSEFALSE TRUEFALSE\n    1416890.2male  FALSE TRUEFALSEFALSE\n    5125068.3femaleFALSEFALSE TRUEFALSE\n    41 2081.0femaleFALSEFALSEFALSEFALSE\n    6616859.0male  FALSE TRUEFALSEFALSE\n    7117159.0male  FALSEFALSE TRUEFALSE\n\n\n\n\nЩе одним схожим методом заміни пропусків може бути здійснення прогнозів на основі регресії чи складніших математичних методів пропусків."
+  },
+  {
+    "objectID": "43-r-missing-data.html#набори-даних",
+    "href": "43-r-missing-data.html#набори-даних",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.7 Набори даних",
+    "text": "23.7 Набори даних\n\nhttps://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv"
+  },
+  {
+    "objectID": "43-r-missing-data.html#використані-та-додаткові-джерела",
+    "href": "43-r-missing-data.html#використані-та-додаткові-джерела",
+    "title": "23  Заміна пропусків у даних (Missing Value Imputation)",
+    "section": "23.8 Використані та додаткові джерела",
+    "text": "23.8 Використані та додаткові джерела\n\nKPMG Virtual Internship\nAn introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013\nAnomaly Detection in R\nK-nearest Neighbor: The maths behind it, how it works and an example\nQuantile. Wikipedia"
+  },
+  {
+    "objectID": "44-r-outliers.html",
+    "href": "44-r-outliers.html",
+    "title": "24  Аналіз та обробка статистичних викидів у даних",
+    "section": "",
+    "text": "author: Юрій Клебан\nВиявлення аномалій — це сукупність методів, призначених для виявлення незвичайних точок даних.\nАномалія - точка даних або набір точок даних, які не мають таку саму структуру та поведінку, що й інші дані.\nАномалії у даних можуть мати різну природу та по різному себе проявляти:\nПриклад: одна добова висока температура 41°С серед ряду звичайних весняних днів\nОпишемо набір даних, до використовуватиметься надалі для прикладів.\nriver_eco - це data.frame, що містить такі три стовпці: - [x] index - цілі числа, що описують порядок спостережень нітратів; - [x] nitrate - місячні концентрації розчинених нітратів у річці; - [x] month - змінна, що містить місяць для кожного спостереження нітратів\nНам потрібно дослідити стовпець nitrate, щоб оцінити наявність точкових аномалій у даних.\nПереглянемо описову статистику показника нітрати:\nЯк видно, медіана та середнє відрізняються не дуже.\nДалі перевіримо наявність викидів у даних за допомогою boxplot:\nТакож виведемо номери рядків спостереженнь, що є викидами:\nМіж Q1 та Q3 зосереджено 50% усіх спостережень. Персентиль відображає кількість спостережень, що зосереджені з ним включно. Нижче розміщено більше інформації для ознайомлення з інформацією про квантилі.\nQuantile. Wikipedia\nДжерело: https://en.wikipedia.org/wiki/Interquartile_range\nДжерело: https://makemeanalyst.com/explore-your-data-range-interquartile-range-and-box-plot/\nВизначивши викиди у даних з ними можна здійснити кілька операцій:\nТаким чином, усі значення вище та нище деякого показника можемо замінити на потрібні нам значення, наприклад, середні за поточний місяць.\nЗдійснимо заміну значень у наборі даних на основі квантилей:"
+  },
+  {
+    "objectID": "44-r-outliers.html#додаткові-прийоми-очистки-даних",
+    "href": "44-r-outliers.html#додаткові-прийоми-очистки-даних",
+    "title": "24  Аналіз та обробка статистичних викидів у даних",
+    "section": "24.1 Додаткові прийоми очистки даних ",
+    "text": "24.1 Додаткові прийоми очистки даних \n\n24.1.1 Видалення дублікатів\n\ndf <- data.frame(X = c(1,1,2,1,3,2,1), Y = c(\"A\", \"B\", \"C\", \"A\", \"B\", \"C\", \"A\"))\ndf\n\n\n\nA data.frame: 7 × 2\n\n    XY\n    <dbl><chr>\n\n\n    1A\n    1B\n    2C\n    1A\n    3B\n    2C\n    1A\n\n\n\n\n\ndf |> distinct()\n\n\n\nA data.frame: 4 × 2\n\n    XY\n    <dbl><chr>\n\n\n    1A\n    1B\n    2C\n    3B"
+  },
+  {
+    "objectID": "44-r-outliers.html#набори-даних",
+    "href": "44-r-outliers.html#набори-даних",
+    "title": "24  Аналіз та обробка статистичних викидів у даних",
+    "section": "24.2 Набори даних",
+    "text": "24.2 Набори даних\n\nhttps://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv\nhttps://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv"
+  },
+  {
+    "objectID": "44-r-outliers.html#використані-та-додаткові-джерела",
+    "href": "44-r-outliers.html#використані-та-додаткові-джерела",
+    "title": "24  Аналіз та обробка статистичних викидів у даних",
+    "section": "24.3 Використані та додаткові джерела",
+    "text": "24.3 Використані та додаткові джерела\n\nKPMG Virtual Internship\nAn introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013\nAnomaly Detection in R\nK-nearest Neighbor: The maths behind it, how it works and an example\nQuantile. Wikipedia"
   }
 ]

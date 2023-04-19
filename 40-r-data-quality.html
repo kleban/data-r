@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Основи роботи з даними в R - 20&nbsp; Оцінки якості даних</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./41-r-data-naming.html" rel="next">
+<link href="./39-r-wide-to-long.html" rel="prev">
+<link href="./img/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Основи роботи з даними в R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/kleban/data-r/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="" title="Share" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-share"></i></a>
+    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+            <i class="bi bi-bi-twitter pe-1"></i>
+          Twitter
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+            <i class="bi bi-bi-facebook pe-1"></i>
+          Facebook
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+            <i class="bi bi-bi-linkedin pe-1"></i>
+          LinkedIn
+          </a>
+        </li>
+    </ul>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Про посібник</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">Вступ</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ТЕМА 2. ЧИТАННЯ ДАНИХ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./40-r-data-quality.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./42-r-cleaning-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./43-r-missing-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Заміна пропусків у даних (Missing Value Imputation)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./44-r-outliers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Аналіз та обробка статистичних викидів у даних</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">Список використаних джерел</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Зміст</h2>
+   
+  <ul>
+  <li><a href="#що-таке-валідація-даних" id="toc-що-таке-валідація-даних" class="nav-link active" data-scroll-target="#що-таке-валідація-даних"><span class="toc-section-number">20.1</span>  Що таке валідація даних?</a></li>
+  <li><a href="#правильність-accuracy" id="toc-правильність-accuracy" class="nav-link" data-scroll-target="#правильність-accuracy"><span class="toc-section-number">20.2</span>  Правильність / (Accuracy)</a></li>
+  <li><a href="#повнота-completeness" id="toc-повнота-completeness" class="nav-link" data-scroll-target="#повнота-completeness"><span class="toc-section-number">20.3</span>  Повнота / (Completeness)</a></li>
+  <li><a href="#узгодженість-consistency" id="toc-узгодженість-consistency" class="nav-link" data-scroll-target="#узгодженість-consistency"><span class="toc-section-number">20.4</span>  Узгодженість / Consistency</a></li>
+  <li><a href="#відповідність-conformity" id="toc-відповідність-conformity" class="nav-link" data-scroll-target="#відповідність-conformity"><span class="toc-section-number">20.5</span>  Відповідність / Conformity</a></li>
+  <li><a href="#цілісність-integrity" id="toc-цілісність-integrity" class="nav-link" data-scroll-target="#цілісність-integrity"><span class="toc-section-number">20.6</span>  Цілісність / Integrity</a></li>
+  <li><a href="#своєчасність-timeliness" id="toc-своєчасність-timeliness" class="nav-link" data-scroll-target="#своєчасність-timeliness"><span class="toc-section-number">20.7</span>  Своєчасність / Timeliness</a></li>
+  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="toc-section-number">20.8</span>  Набори даних</a></li>
+  <li><a href="#використані-та-додаткові-джерела" id="toc-використані-та-додаткові-джерела" class="nav-link" data-scroll-target="#використані-та-додаткові-джерела"><span class="toc-section-number">20.9</span>  Використані та додаткові джерела</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p>author: Юрій Клебан</p>
+<hr>
+<p>Матеріали розділу описують інформацію про виміри оцінки якості даних, підходи до визначення та обробки пропущених значень, а також розглядаються способи боротьби зі статистичними викидами.</p>
+<section id="що-таке-валідація-даних" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="що-таке-валідація-даних"><span class="header-section-number">20.1</span> Що таке валідація даних?</h2>
+<p>Валідація даних відноситься до процесу забезпечення точності та якості даних. Він реалізується шляхом вбудовування кількох перевірок у систему або звітування для забезпечення логічної узгодженості введених і збережених даних.</p>
+<hr>
+<p>Якість даних залежить від очищення та коригування даних, які відсутні, некоректні, недійсні або нечитабельні. Для забезпечення достовірності даних важливо зрозуміти ключові аспекти якості даних, щоб оцінити, наскільки дані погані/хороші.</p>
+<p>На перший погляд, очевидно, що перетворення даних до якісних полягає в очищенні поганих даних – даних, які відсутні, неправильні або якимось чином недійсні. Але щоб переконатися, що дані заслуговують довіри, важливо розуміти ключові виміри якості даних, щоб оцінити, наскільки дані є «поганими».</p>
+<p>Окремі компанії мають внутрішні документи, що визначають виміри оцінки якості даних та порядок його проведення - <code>Data Validation Framework</code> або <code>Data Quality Framework</code>.</p>
+<p>Коли говорять про якість даних, то мається на увазі їх оцінка у кількох вимірах. Розглянемо коротко ці виміри:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="">Правильність / <code>Accuracy</code></li>
+<li><input type="checkbox" disabled="" checked="">Повнота / <code>Completeness</code></li>
+<li><input type="checkbox" disabled="" checked="">Узгодженість / <code>Consistency</code></li>
+<li><input type="checkbox" disabled="" checked="">Відповідність / <code>Conformity</code></li>
+<li><input type="checkbox" disabled="" checked="">Цілісність / <code>Integrity</code></li>
+<li><input type="checkbox" disabled="" checked="">Своєчасність / <code>Timeliness</code></li>
+<li><input type="checkbox" disabled="" checked="">Унікальність / <code>Uniqueness</code></li>
+</ul>
+<hr>
+</section>
+<section id="правильність-accuracy" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="правильність-accuracy"><span class="header-section-number">20.2</span> Правильність / (Accuracy)</h2>
+<p><strong>Правильність</strong> — це ступінь, до якого дані правильно відображають реальний об’єкт АБО описувану подію.</p>
+<p>Приклади: - [x] Реальною вартістю є ціна продажу одиниці товару. - [x] Адреса співробітника в <code>базі даних співробітників</code> є справжньою адресою.</p>
+<p>Запитання, які ви можете задати собі:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="">Чи об’єкти даних точно представляють значення «реального світу», які вони повинні моделювати? <em>Наприклад, чи правильно вказувати вік у сотнях тисяч років?</em></li>
+<li><input type="checkbox" disabled="" checked="">Чи присутнє неправильне написання назв товарів чи осіб, адрес і навіть несвоєчасних чи неактуальних даних?</li>
+</ul>
+<p>Ці проблеми можуть вплинути на результатати аналітичних звітів, наприклад, неправильні середні значення певних показників.</p>
+<hr>
+</section>
+<section id="повнота-completeness" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="повнота-completeness"><span class="header-section-number">20.3</span> Повнота / (Completeness)</h2>
+<p>Повнота визначається як очікувана всебічність. Дані можуть бути повними, навіть якщо додаткові дані відсутні. Поки дані відповідають очікуванням, вони вважаються повними.</p>
+<p>Наприклад, ім’я та прізвище замовника є обов’язковими, але прізвище необов’язково; тому запис можна вважати повним, навіть якщо прізвища не існує.</p>
+<p>Питання, які ви можете задати собі:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="">Чи доступна вся необхідна інформація?</li>
+<li><input type="checkbox" disabled="" checked="">Чи мають якісь дані відсутні елементи?</li>
+<li><input type="checkbox" disabled="" checked="">Або вони перебувають у непридатному для роботи вигляді?</li>
+</ul>
+<hr>
+</section>
+<section id="узгодженість-consistency" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="узгодженість-consistency"><span class="header-section-number">20.4</span> Узгодженість / Consistency</h2>
+<p><strong>Узгодженість</strong> означає, що дані в усіх системах/таблицях відображають однакову інформацію та синхронізовані між собою.</p>
+<p>Приклади: - [x] Статус бізнес-підрозділу “закритий”, але є продажі для цього підрозділу. - [x] Статус працівника “звільнено”, але статус випалати заробіної плати містить суму відмінну від 0 за той самий період. - [x] Зафіксовано, що клієнт має у банку депозити, але у даних про депозити записи по клієнту відсутні.</p>
+<p>Запитання, які ви можете поставити собі:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="">Чи однакові значення даних у наборах даних?</li>
+<li><input type="checkbox" disabled="" checked="">Чи існують якісь різні випадки, коли однакові екземпляри даних надають суперечливу інформацію?</li>
+</ul>
+<hr>
+</section>
+<section id="відповідність-conformity" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="відповідність-conformity"><span class="header-section-number">20.5</span> Відповідність / Conformity</h2>
+<p><strong>Відповідність</strong> означає, що дані відповідають набору стандартних визначень даних, як-от тип даних, розмір і формат. Наприклад, дата народження клієнта у форматі <code>dd/mm/yyyy</code> або відстань у км числом <code>100</code>, а не записом <code>100км</code>.</p>
+<p>Запитання, які ви можете задати собі: - [x] Чи відповідають значення даних зазначеним форматам? - [x] Якщо так, то чи всі значення даних відповідають цим форматам?</p>
+<p>Важливо підтримувати відповідність конкретним форматам.</p>
+<hr>
+</section>
+<section id="цілісність-integrity" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="цілісність-integrity"><span class="header-section-number">20.6</span> Цілісність / Integrity</h2>
+<p><strong>Цілісність</strong> означає достовірність даних у взаємозв’язках і гарантує, що всі дані в базі даних можна відстежити та з’єднати з іншими даними.</p>
+<p>Наприклад, у базі даних клієнтів має бути дійсний клієнт, адреси та відношення/зв’язки між ними. Якщо є дані про зв’язок адреси без клієнта, то ці дані недійсні й вважаються загубленим записом.</p>
+<p>Запитайте себе: - [x] Чи є якісь дані без важливих зв’язків?</p>
+<p>Неможливість пов’язати записи разом може призвести до дублювання у ваших системах.</p>
+<hr>
+</section>
+<section id="своєчасність-timeliness" class="level2" data-number="20.7">
+<h2 data-number="20.7" class="anchored" data-anchor-id="своєчасність-timeliness"><span class="header-section-number">20.7</span> Своєчасність / Timeliness</h2>
+<p><strong>Своєчасність</strong> показує, чи є інформація доступною, коли вона очікується та потрібна. Своєчасність даних дуже важлива.</p>
+<p>Це відображається в: - [x] Компанії, які зобов’язані публікувати свої квартальні результати протягом певного періоду часу - [x] Обслуговування клієнтів надає клієнтам актуальну інформацію - [x] Кредитна система перевіряє активність рахунку кредитної картки в режимі реального часу</p>
+<p>Своєчасність залежить від очікувань користувача. Доступність даних в Інтернеті може знадобитися для системи розподілу номерів у сфері готельного бізнесу.</p>
+<p>Як бачите, якість даних є важливим питанням, яке слід враховувати, починаючи від етапу визначення цілей проекту, аж до впровадження, обслуговування та використання готово рішення у виробничі процесі підприємства.</p>
+<hr>
+</section>
+<section id="набори-даних" class="level2" data-number="20.8">
+<h2 data-number="20.8" class="anchored" data-anchor-id="набори-даних"><span class="header-section-number">20.8</span> Набори даних</h2>
+<ol type="1">
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/untitled.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/badtitled.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/cleaned_titled2.csv</li>
+<li>https://github.com/kleban/r-book-published/tree/main/datasets/river_eco.csv</li>
+</ol>
+<hr>
+</section>
+<section id="використані-та-додаткові-джерела" class="level2" data-number="20.9">
+<h2 data-number="20.9" class="anchored" data-anchor-id="використані-та-додаткові-джерела"><span class="header-section-number">20.9</span> Використані та додаткові джерела</h2>
+<ol type="1">
+<li><a href="https://www.insidesherpa.com/virtual-internships/m7W4GMqeT3bh9Nb2c">KPMG Virtual Internship</a></li>
+<li><a href="https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf">An introduction to data cleaning with R / Edwin de Jonge, Mark van der Loo, 2013</a></li>
+<li><a href="datacamp.com/courses/anomaly-detection-in-r">Anomaly Detection in R</a></li>
+<li><a href="https://medium.com/analytics-vidhya/k-nearest-neighbor-the-maths-behind-it-how-it-works-and-an-example-f1de1208546c">K-nearest Neighbor: The maths behind it, how it works and an example</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Quantile">Quantile. Wikipedia</a></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./39-r-wide-to-long.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./41-r-data-naming.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">Copyright 2023, Юрій Клебан</div>
+  </div>
+</footer>
+
+
+
+</body></html>
