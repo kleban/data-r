@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Основи роботи з даними в R - 26&nbsp; Data Split: Train, Test and Validation sets</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./etl-feature-engineering.html" rel="prev">
+<link href="./img/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Основи роботи з даними в R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/kleban/data-r/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="" title="Share" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-share"></i></a>
+    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+            <i class="bi bi-bi-twitter pe-1"></i>
+          Twitter
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+            <i class="bi bi-bi-facebook pe-1"></i>
+          Facebook
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+            <i class="bi bi-bi-linkedin pe-1"></i>
+          LinkedIn
+          </a>
+        </li>
+    </ul>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Про посібник</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">Вступ</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ТЕМА 2. ЧИТАННЯ ДАНИХ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./40-r-data-quality.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./42-r-cleaning-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./43-r-missing-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Заміна пропусків у даних (Missing Value Imputation)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./44-r-outliers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Аналіз та обробка статистичних викидів у даних</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">ТЕМА 5. КОНСТРУЮВАННЯ ОЗНАК</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./etl-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">ТЕМА 6. ПОДІЛ ВИБІРКИ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./train-test-validation-samples.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">Список використаних джерел</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Зміст</h2>
+   
+  <ul>
+  <li><a href="#whats-train-validation-test-datasets" id="toc-whats-train-validation-test-datasets" class="nav-link active" data-scroll-target="#whats-train-validation-test-datasets"><span class="toc-section-number">26.1</span>  What’s Train, Validation, Test datasets</a></li>
+  <li><a href="#splitting-data-in-r" id="toc-splitting-data-in-r" class="nav-link" data-scroll-target="#splitting-data-in-r"><span class="toc-section-number">26.2</span>  Splitting data in R</a>
+  <ul class="collapse">
+  <li><a href="#split-with-sample" id="toc-split-with-sample" class="nav-link" data-scroll-target="#split-with-sample"><span class="toc-section-number">26.2.1</span>  Split with <code>sample()</code></a></li>
+  <li><a href="#split-with-sample_frac-from-dplyr" id="toc-split-with-sample_frac-from-dplyr" class="nav-link" data-scroll-target="#split-with-sample_frac-from-dplyr"><span class="toc-section-number">26.2.2</span>  Split with <code>sample_frac</code> from <code>dplyr</code></a></li>
+  <li><a href="#split-with-createdatapartition-from-caret" id="toc-split-with-createdatapartition-from-caret" class="nav-link" data-scroll-target="#split-with-createdatapartition-from-caret"><span class="toc-section-number">26.2.3</span>  Split with <code>createDataPartition()</code> from <code>caret</code></a></li>
+  <li><a href="#split-with-sample.split-from-catools" id="toc-split-with-sample.split-from-catools" class="nav-link" data-scroll-target="#split-with-sample.split-from-catools"><span class="toc-section-number">26.2.4</span>  Split with <code>sample.split</code> from <code>caTools</code></a></li>
+  </ul></li>
+  <li><a href="#splitting-for-n-folds" id="toc-splitting-for-n-folds" class="nav-link" data-scroll-target="#splitting-for-n-folds"><span class="toc-section-number">26.3</span>  Splitting for n-folds</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="toc-section-number">26.4</span>  References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p>You need this packages for code execution:</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages("dplyr")</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># install.packages("caret")</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># install.packages("caTools")</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># install.packages("gmodels")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(<span class="st">"dplyr"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(<span class="st">"caret"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(<span class="st">"caTools"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(<span class="st">"gmodels"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">invisible</span>(<span class="fu">Sys.setlocale</span>(<span class="st">"LC_ALL"</span>, <span class="st">"Ukrainian"</span>))</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">invisible</span>(<span class="fu">options</span>(<span class="at">warn=</span><span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<section id="whats-train-validation-test-datasets" class="level2" data-number="26.1">
+<h2 data-number="26.1" class="anchored" data-anchor-id="whats-train-validation-test-datasets"><span class="header-section-number">26.1</span> What’s Train, Validation, Test datasets</h2>
+<p>Before model fitting and some stages of features engeniering we shoudl split out dataset on 2 or 3 parts:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked=""><code>Training</code> dataset: The sample of data used to fit the model.</li>
+</ul>
+<p>The model sees and learns from this data.</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked=""><code>Validation</code> dataset: The sample of data used to provide an unbiased evaluation of a model fit on the training dataset while tuning model hyperparameters. The evaluation becomes more biased as skill on the validation dataset is incorporated into the model configuration.</li>
+</ul>
+<p>The validation set is used to evaluate a given model, but this is for frequent evaluation. We, as machine learning engineers, use this data to fine-tune the model hyperparameters. Hence the model occasionally sees this data, but never does it “Learn” from this. We use the validation set results, and update higher level hyperparameters. So the validation set affects a model, but only indirectly. The validation set is also known as the Dev set or the Development set. This makes sense since this dataset helps during the “development” stage of the model.</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked=""><code>Testing</code> dataset: Test Dataset: The sample of data used to provide an unbiased evaluation of a final model fit on the training dataset.</li>
+</ul>
+<p>The Test dataset provides the gold standard used to evaluate the model. It is only used once a model is completely trained(using the train and validation sets). The test set is generally what is used to evaluate competing models (For example on many Kaggle competitions, the validation set is released initially along with the training set and the actual test set is only released when the competition is about to close, and it is the result of the the model on the Test set that decides the winner). Many a times the validation set is used as the test set, but it is not good practice. The test set is generally well curated. It contains carefully sampled data that spans the various classes that the model would face, when used in the real world.</p>
+<p><img src="img/da-split/train_test1.png" class="img-fluid"></p>
+<p>You can also find papers with splitting only for <code>train</code>/<code>test</code>. In this case <code>test</code> means <code>validation</code>.</p>
+<p><img src="img/da-split/train_test2.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="splitting-data-in-r" class="level2" data-number="26.2">
+<h2 data-number="26.2" class="anchored" data-anchor-id="splitting-data-in-r"><span class="header-section-number">26.2</span> Splitting data in R</h2>
+<p>Lets describe some conditions before start studiyng splitting data functions in R:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="">We will use same seed for all splittings to control results reproduction, for example, let it be 2021.</li>
+<li><input type="checkbox" disabled="" checked="">We will use dataset for client churn prediction <code>Telco Customer Churn</code>: https://www.kaggle.com/blastchar/telco-customer-churn</li>
+</ul>
+<p>Short dataset description:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked=""><code>customerID</code> - Customer ID</li>
+<li><input type="checkbox" disabled="" checked=""><code>gender</code> Whether the customer is a male or a female</li>
+<li><input type="checkbox" disabled="" checked=""><code>SeniorCitizen</code> - Whether the customer is a senior citizen or not (1, 0)</li>
+<li><input type="checkbox" disabled="" checked=""><code>Partner</code> - Whether the customer has a partner or not (Yes, No)</li>
+<li><input type="checkbox" disabled="" checked=""><code>Dependents</code> - Whether the customer has dependents or not (Yes, No)</li>
+<li><input type="checkbox" disabled="" checked=""><code>tenure</code> - Number of months the customer has stayed with the company</li>
+<li><input type="checkbox" disabled="" checked=""><code>PhoneService</code> - Whether the customer has a phone service or not (Yes, No)</li>
+<li><input type="checkbox" disabled="" checked=""><code>MultipleLines</code> - Whether the customer has multiple lines or not (Yes, No, No phone service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>InternetService</code> - Customer’s internet service provider (DSL, Fiber optic, No)</li>
+<li><input type="checkbox" disabled="" checked=""><code>OnlineSecurity</code> - Whether the customer has online security or not (Yes, No, No internet service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>OnlineBackup</code> - Whether the customer has online backup or not (Yes, No, No internet service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>DeviceProtection</code> - Whether the customer has device protection or not (Yes, No, No internet service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>TechSupport</code> - Whether the customer has tech support or not (Yes, No, No internet service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>StreamingTV</code> - Whether the customer has streaming TV or not (Yes, No, No internet service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>StreamingMovies</code> - Whether the customer has streaming movies or not (Yes, No, No internet service)</li>
+<li><input type="checkbox" disabled="" checked=""><code>Contract</code> - The contract term of the customer (Month-to-month, One year, Two year)</li>
+<li><input type="checkbox" disabled="" checked=""><code>PaperlessBilling</code> - Whether the customer has paperless billing or not (Yes, No)</li>
+<li><input type="checkbox" disabled="" checked=""><code>PaymentMethod</code> - The customer’s payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))</li>
+<li><input type="checkbox" disabled="" checked=""><code>MonthlyCharges</code> - The amount charged to the customer monthly</li>
+<li><input type="checkbox" disabled="" checked=""><code>TotalCharges</code> - The total amount charged to the customer</li>
+<li><input type="checkbox" disabled="" checked=""><code>Churn</code> - Whether the customer churned or not (Yes or No)</li>
+</ul>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># read data</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>telecom_users <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/telecom_users.csv"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">head</span>(telecom_users)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+<caption>A data.frame: 6 × 22</caption>
+<thead>
+    <tr><th></th><th scope="col">X</th><th scope="col">customerID</th><th scope="col">gender</th><th scope="col">SeniorCitizen</th><th scope="col">Partner</th><th scope="col">Dependents</th><th scope="col">tenure</th><th scope="col">PhoneService</th><th scope="col">MultipleLines</th><th scope="col">InternetService</th><th scope="col">⋯</th><th scope="col">DeviceProtection</th><th scope="col">TechSupport</th><th scope="col">StreamingTV</th><th scope="col">StreamingMovies</th><th scope="col">Contract</th><th scope="col">PaperlessBilling</th><th scope="col">PaymentMethod</th><th scope="col">MonthlyCharges</th><th scope="col">TotalCharges</th><th scope="col">Churn</th></tr>
+    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">⋯</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+</thead>
+<tbody>
+    <tr><th scope="row">1</th><td>1869</td><td>7010-BRBUU</td><td>Male  </td><td>0</td><td>Yes</td><td>Yes</td><td>72</td><td>Yes</td><td>Yes             </td><td>No         </td><td>⋯</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>Two year      </td><td>No </td><td>Credit card (automatic)  </td><td>24.1 </td><td>1734.65</td><td>No </td></tr>
+    <tr><th scope="row">2</th><td>4528</td><td>9688-YGXVR</td><td>Female</td><td>0</td><td>No </td><td>No </td><td>44</td><td>Yes</td><td>No              </td><td>Fiber optic</td><td>⋯</td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Credit card (automatic)  </td><td>88.15</td><td>3973.20</td><td>No </td></tr>
+    <tr><th scope="row">3</th><td>6344</td><td>9286-DOJGF</td><td>Female</td><td>1</td><td>Yes</td><td>No </td><td>38</td><td>Yes</td><td>Yes             </td><td>Fiber optic</td><td>⋯</td><td>No                 </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Bank transfer (automatic)</td><td>74.95</td><td>2869.85</td><td>Yes</td></tr>
+    <tr><th scope="row">4</th><td>6739</td><td>6994-KERXL</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 4</td><td>Yes</td><td>No              </td><td>DSL        </td><td>⋯</td><td>No                 </td><td>No                 </td><td>No                 </td><td>Yes                </td><td>Month-to-month</td><td>Yes</td><td>Electronic check         </td><td>55.9 </td><td> 238.50</td><td>No </td></tr>
+    <tr><th scope="row">5</th><td> 432</td><td>2181-UAESM</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 2</td><td>Yes</td><td>No              </td><td>DSL        </td><td>⋯</td><td>Yes                </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>No </td><td>Electronic check         </td><td>53.45</td><td> 119.50</td><td>No </td></tr>
+    <tr><th scope="row">6</th><td>2215</td><td>4312-GVYNH</td><td>Female</td><td>0</td><td>Yes</td><td>No </td><td>70</td><td>No </td><td>No phone service</td><td>DSL        </td><td>⋯</td><td>Yes                </td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>Two year      </td><td>Yes</td><td>Bank transfer (automatic)</td><td>49.85</td><td>3370.20</td><td>No </td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Lets check the proportion of column <code>Churn == Yes</code> and <code>Churn == No</code> in dataset with <code>CrossTable()</code> function from <code>gmodels</code> package.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># install.packages("gmodels")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(gmodels)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">CrossTable</span>(telecom_users<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  5986 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      4399 |      1587 | 
+          |     0.735 |     0.265 | 
+          |-----------|-----------|
+
+
+
+ </code></pre>
+</div>
+</div>
+<p>You can also use <code>CrossTable()</code> to check cross proportions by other fields. Lets check crosstable for <code>TechSupport</code> and <code>Churn</code>:</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">CrossTable</span>(telecom_users<span class="sc">$</span>Churn, telecom_users<span class="sc">$</span>TechSupport) <span class="co"># for example</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+| Chi-square contribution |
+|           N / Row Total |
+|           N / Col Total |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  5986 
+
+ 
+                    | telecom_users$TechSupport 
+telecom_users$Churn |                  No | No internet service |                 Yes |           Row Total | 
+--------------------|---------------------|---------------------|---------------------|---------------------|
+                 No |                1738 |                1192 |                1469 |                4399 | 
+                    |              87.892 |              62.377 |              29.512 |                     | 
+                    |               0.395 |               0.271 |               0.334 |               0.735 | 
+                    |               0.587 |               0.923 |               0.847 |                     | 
+                    |               0.290 |               0.199 |               0.245 |                     | 
+--------------------|---------------------|---------------------|---------------------|---------------------|
+                Yes |                1222 |                  99 |                 266 |                1587 | 
+                    |             243.627 |             172.904 |              81.805 |                     | 
+                    |               0.770 |               0.062 |               0.168 |               0.265 | 
+                    |               0.413 |               0.077 |               0.153 |                     | 
+                    |               0.204 |               0.017 |               0.044 |                     | 
+--------------------|---------------------|---------------------|---------------------|---------------------|
+       Column Total |                2960 |                1291 |                1735 |                5986 | 
+                    |               0.494 |               0.216 |               0.290 |                     | 
+--------------------|---------------------|---------------------|---------------------|---------------------|
+
+ </code></pre>
+</div>
+</div>
+<p>You can see that most part of Churn 1222 of 1587</p>
+<p>Next, we will check 6 possible ways to split data for train/test sets.</p>
+<hr>
+<section id="split-with-sample" class="level3" data-number="26.2.1">
+<h3 data-number="26.2.1" class="anchored" data-anchor-id="split-with-sample"><span class="header-section-number">26.2.1</span> Split with <code>sample()</code></h3>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>sample_size <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">nrow</span>(telecom_users)<span class="sc">*</span>.<span class="dv">70</span>) <span class="co"># setting what is 70%</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Size: "</span>, sample_size))</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a>index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(telecom_users), <span class="at">size =</span> sample_size)</span>
+<span id="cb10-5"><a href="#cb10-5"></a> </span>
+<span id="cb10-6"><a href="#cb10-6"></a>train <span class="ot">&lt;-</span> telecom_users[index, ] <span class="co"># index is numbers of selected rows from dataset</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>test <span class="ot">&lt;-</span>telecom_users[<span class="sc">-</span>index, ] <span class="co"># -index select only rows not in index</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Size: 4190"</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  4190 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      3063 |      1127 | 
+          |     0.731 |     0.269 | 
+          |-----------|-----------|
+
+
+
+ </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  1796 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      1336 |       460 | 
+          |     0.744 |     0.256 | 
+          |-----------|-----------|
+
+
+
+ </code></pre>
+</div>
+</div>
+<p>Its 0.260 for train and 0.276 for test. Diffrence is 1,6%, so, its close.</p>
+<hr>
+</section>
+<section id="split-with-sample_frac-from-dplyr" class="level3" data-number="26.2.2">
+<h3 data-number="26.2.2" class="anchored" data-anchor-id="split-with-sample_frac-from-dplyr"><span class="header-section-number">26.2.2</span> Split with <code>sample_frac</code> from <code>dplyr</code></h3>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">set.seed</span>(<span class="dv">2022</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># Using the above function to create 70 - 30 slipt into test and train</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a></span>
+<span id="cb16-6"><a href="#cb16-6"></a>tu <span class="ot">&lt;-</span> telecom_users <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Id =</span> <span class="fu">row_number</span>())</span>
+<span id="cb16-7"><a href="#cb16-7"></a></span>
+<span id="cb16-8"><a href="#cb16-8"></a>train <span class="ot">&lt;-</span> tu <span class="sc">%&gt;%</span> <span class="fu">sample_frac</span>(.<span class="dv">70</span>)</span>
+<span id="cb16-9"><a href="#cb16-9"></a>test <span class="ot">&lt;-</span> tu[<span class="sc">-</span>train<span class="sc">$</span>Id, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">nrow</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+4190
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  4190 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      3103 |      1087 | 
+          |     0.741 |     0.259 | 
+          |-----------|-----------|
+
+
+
+ 
+
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  1796 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      1296 |       500 | 
+          |     0.722 |     0.278 | 
+          |-----------|-----------|
+
+
+
+ </code></pre>
+</div>
+</div>
+<p><code>sample_n</code> made other proportion of <code>Churn == Yes/No</code> and difference just 0.7%.</p>
+<hr>
+</section>
+<section id="split-with-createdatapartition-from-caret" class="level3" data-number="26.2.3">
+<h3 data-number="26.2.3" class="anchored" data-anchor-id="split-with-createdatapartition-from-caret"><span class="header-section-number">26.2.3</span> Split with <code>createDataPartition()</code> from <code>caret</code></h3>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">#install.packages("caret")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Updating HTML index of packages in '.Library'
+
+Making 'packages.html' ...
+ done
+</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="fu">set.seed</span>(<span class="dv">2021</span>)</span>
+<span id="cb22-3"><a href="#cb22-3"></a> </span>
+<span id="cb22-4"><a href="#cb22-4"></a>index <span class="ot">=</span> <span class="fu">createDataPartition</span>(telecom_users<span class="sc">$</span>Churn, <span class="at">p =</span> <span class="fl">0.70</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-5"><a href="#cb22-5"></a>train <span class="ot">=</span> telecom_users[index, ]</span>
+<span id="cb22-6"><a href="#cb22-6"></a>test <span class="ot">=</span> telecom_users[<span class="sc">-</span>index, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  4191 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      3080 |      1111 | 
+          |     0.735 |     0.265 | 
+          |-----------|-----------|
+
+
+
+ 
+
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  1795 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      1319 |       476 | 
+          |     0.735 |     0.265 | 
+          |-----------|-----------|
+
+
+
+ </code></pre>
+</div>
+</div>
+<p>Ckeck the proportion of target variable. Caret trying to make the same split for both train and test. This is one of the best split methods in R.</p>
+<hr>
+</section>
+<section id="split-with-sample.split-from-catools" class="level3" data-number="26.2.4">
+<h3 data-number="26.2.4" class="anchored" data-anchor-id="split-with-sample.split-from-catools"><span class="header-section-number">26.2.4</span> Split with <code>sample.split</code> from <code>caTools</code></h3>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">#install.packages("caTools")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">library</span>(caTools)</span>
+<span id="cb26-2"><a href="#cb26-2"></a> </span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="fu">set.seed</span>(<span class="dv">2022</span>)</span>
+<span id="cb26-4"><a href="#cb26-4"></a>sample <span class="ot">=</span> <span class="fu">sample.split</span>(telecom_users<span class="sc">$</span>Churn, <span class="at">SplitRatio =</span> .<span class="dv">70</span>)</span>
+<span id="cb26-5"><a href="#cb26-5"></a></span>
+<span id="cb26-6"><a href="#cb26-6"></a>train <span class="ot">=</span> telecom_users[sample, ]</span>
+<span id="cb26-7"><a href="#cb26-7"></a>test  <span class="ot">=</span> telecom_users[<span class="sc">!</span>sample, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  4190 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      3079 |      1111 | 
+          |     0.735 |     0.265 | 
+          |-----------|-----------|
+
+
+
+ 
+
+ 
+   Cell Contents
+|-------------------------|
+|                       N |
+|         N / Table Total |
+|-------------------------|
+
+ 
+Total Observations in Table:  1796 
+
+ 
+          |        No |       Yes | 
+          |-----------|-----------|
+          |      1320 |       476 | 
+          |     0.735 |     0.265 | 
+          |-----------|-----------|
+
+
+
+ </code></pre>
+</div>
+</div>
+<hr>
+<div class="alert alert-danger">
+Для нашого курсу це не потрібно поки! Переходимо до наступної теми. Цей матеріал в детелях буде розглянуто під час вивчення крос-валідації.
+</div>
+</section>
+</section>
+<section id="splitting-for-n-folds" class="level2" data-number="26.3">
+<h2 data-number="26.3" class="anchored" data-anchor-id="splitting-for-n-folds"><span class="header-section-number">26.3</span> Splitting for n-folds</h2>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># read data again</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="fu">library</span>(caret)</span>
+<span id="cb29-3"><a href="#cb29-3"></a>telecom_users <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/telecom_users.csv"</span>)</span>
+<span id="cb29-4"><a href="#cb29-4"></a><span class="fu">nrow</span>(telecom_users)</span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="fu">head</span>(telecom_users)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+5986
+</div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+<caption>A data.frame: 6 × 22</caption>
+<thead>
+    <tr><th></th><th scope="col">X</th><th scope="col">customerID</th><th scope="col">gender</th><th scope="col">SeniorCitizen</th><th scope="col">Partner</th><th scope="col">Dependents</th><th scope="col">tenure</th><th scope="col">PhoneService</th><th scope="col">MultipleLines</th><th scope="col">InternetService</th><th scope="col">...</th><th scope="col">DeviceProtection</th><th scope="col">TechSupport</th><th scope="col">StreamingTV</th><th scope="col">StreamingMovies</th><th scope="col">Contract</th><th scope="col">PaperlessBilling</th><th scope="col">PaymentMethod</th><th scope="col">MonthlyCharges</th><th scope="col">TotalCharges</th><th scope="col">Churn</th></tr>
+    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">...</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+</thead>
+<tbody>
+    <tr><th scope="row">1</th><td>1869</td><td>7010-BRBUU</td><td>Male  </td><td>0</td><td>Yes</td><td>Yes</td><td>72</td><td>Yes</td><td>Yes             </td><td>No         </td><td>...</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>Two year      </td><td>No </td><td>Credit card (automatic)  </td><td>24.1 </td><td>1734.65</td><td>No </td></tr>
+    <tr><th scope="row">2</th><td>4528</td><td>9688-YGXVR</td><td>Female</td><td>0</td><td>No </td><td>No </td><td>44</td><td>Yes</td><td>No              </td><td>Fiber optic</td><td>...</td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Credit card (automatic)  </td><td>88.15</td><td>3973.20</td><td>No </td></tr>
+    <tr><th scope="row">3</th><td>6344</td><td>9286-DOJGF</td><td>Female</td><td>1</td><td>Yes</td><td>No </td><td>38</td><td>Yes</td><td>Yes             </td><td>Fiber optic</td><td>...</td><td>No                 </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Bank transfer (automatic)</td><td>74.95</td><td>2869.85</td><td>Yes</td></tr>
+    <tr><th scope="row">4</th><td>6739</td><td>6994-KERXL</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 4</td><td>Yes</td><td>No              </td><td>DSL        </td><td>...</td><td>No                 </td><td>No                 </td><td>No                 </td><td>Yes                </td><td>Month-to-month</td><td>Yes</td><td>Electronic check         </td><td>55.9 </td><td> 238.50</td><td>No </td></tr>
+    <tr><th scope="row">5</th><td> 432</td><td>2181-UAESM</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 2</td><td>Yes</td><td>No              </td><td>DSL        </td><td>...</td><td>Yes                </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>No </td><td>Electronic check         </td><td>53.45</td><td> 119.50</td><td>No </td></tr>
+    <tr><th scope="row">6</th><td>2215</td><td>4312-GVYNH</td><td>Female</td><td>0</td><td>Yes</td><td>No </td><td>70</td><td>No </td><td>No phone service</td><td>DSL        </td><td>...</td><td>Yes                </td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>Two year      </td><td>Yes</td><td>Bank transfer (automatic)</td><td>49.85</td><td>3370.20</td><td>No </td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">createFolds</span>(telecom_users)</span>
+<span id="cb30-2"><a href="#cb30-2"></a>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<dl>
+    <dt>$Fold01</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>1</li><li>10</li></ol>
+</dd>
+    <dt>$Fold02</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>3</li><li>4</li><li>15</li></ol>
+</dd>
+    <dt>$Fold03</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>2</li><li>17</li></ol>
+</dd>
+    <dt>$Fold04</dt>
+        <dd>8</dd>
+    <dt>$Fold05</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>16</li><li>22</li></ol>
+</dd>
+    <dt>$Fold06</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>9</li><li>18</li></ol>
+</dd>
+    <dt>$Fold07</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>19</li><li>20</li></ol>
+</dd>
+    <dt>$Fold08</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>5</li><li>12</li><li>14</li></ol>
+</dd>
+    <dt>$Fold09</dt>
+        <dd>11</dd>
+    <dt>$Fold10</dt>
+        <dd><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>6</li><li>7</li><li>13</li><li>21</li></ol>
+</dd>
+</dl>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">#library(caret)</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="co">#library(mlbench)</span></span>
+<span id="cb31-3"><a href="#cb31-3"></a><span class="co">#data(Sonar)</span></span>
+<span id="cb31-4"><a href="#cb31-4"></a> </span>
+<span id="cb31-5"><a href="#cb31-5"></a><span class="co">#folds &lt;- createFolds(Sonar$Class)</span></span>
+<span id="cb31-6"><a href="#cb31-6"></a><span class="co">#str(folds)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="references" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="references"><span class="header-section-number">26.4</span> References</h2>
+<ol type="1">
+<li>About Train, Validation and Test Sets in Machine Learning by Tarang Shah. Url: https://towardsdatascience.com/train-validation-and-test-sets-72cb40cba9e7</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./etl-feature-engineering.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">Список використаних джерел</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">Copyright 2023, Юрій Клебан</div>
+  </div>
+</footer>
+
+
+
+</body></html>
