@@ -1,151 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kleban.github.io/r-intro/index.html</loc>
-    <lastmod>2023-03-19T17:58:02.191Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/r-intro/00-intro.html</loc>
-    <lastmod>2023-03-19T17:58:02.195Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/r-intro/references.html</loc>
-    <lastmod>2023-03-19T17:58:02.198Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/index.html</loc>
-    <lastmod>2023-04-19T07:41:55.039Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/ml-r/index.html</loc>
-    <lastmod>2023-03-19T18:17:18.259Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/10-intro.html</loc>
-    <lastmod>2023-03-21T07:50:23.118Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/21-data-read.html</loc>
-    <lastmod>2023-03-21T07:50:28.463Z</lastmod>
-  </url>
-  <url>
     <loc>https://kleban.github.io/data-r/22-r-csv.html</loc>
-    <lastmod>2023-03-21T07:50:37.555Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/23-r-xml.html</loc>
-    <lastmod>2023-03-21T07:38:10.962Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/00-intro.html</loc>
-    <lastmod>2023-03-21T07:40:17.396Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.778Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/23-r-xlsx.html</loc>
-    <lastmod>2023-03-21T07:50:57.878Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.778Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/24-r-xml.html</loc>
-    <lastmod>2023-03-21T07:51:12.218Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/10-r-data-read-intro.html</loc>
-    <lastmod>2023-03-21T08:44:22.598Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/20-r-data-read-intro.html</loc>
-    <lastmod>2023-03-21T08:44:47.030Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.778Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/25-r-api-json.html</loc>
-    <lastmod>2023-03-21T08:29:56.995Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.779Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/26-r-google.html</loc>
-    <lastmod>2023-03-21T08:29:56.999Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.779Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/27-r-sql.html</loc>
-    <lastmod>2023-03-21T08:29:57.000Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.780Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/28-r-html.html</loc>
-    <lastmod>2023-03-21T08:29:57.002Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/etl-dplyr.html</loc>
-    <lastmod>2023-03-21T08:29:57.031Z</lastmod>
-  </url>
-  <url>
-    <loc>https://kleban.github.io/data-r/data-cleaning.html</loc>
-    <lastmod>2023-03-27T07:25:28.603Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.780Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/30-r-what-is-dplyr.html</loc>
-    <lastmod>2023-03-27T07:25:30.754Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.780Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/31-r-data-explore.html</loc>
-    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.782Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/32-r-data-slice.html</loc>
-    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.782Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/33-r-data-sorting.html</loc>
-    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.782Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/34-r-data-mutating.html</loc>
-    <lastmod>2023-03-27T07:25:28.558Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.783Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/35-r-data-rename.html</loc>
-    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.783Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/36-r-data-grouping.html</loc>
-    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.783Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/37-r-data-bind.html</loc>
-    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.784Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/38-r-data-join.html</loc>
-    <lastmod>2023-03-27T07:25:28.573Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.784Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/39-r-wide-to-long.html</loc>
-    <lastmod>2023-04-19T06:55:48.686Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.784Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/40-r-data-quality.html</loc>
-    <lastmod>2023-04-19T07:42:04.947Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.785Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/41-r-data-naming.html</loc>
-    <lastmod>2023-04-19T07:50:14.204Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.785Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/42-r-cleaning-text.html</loc>
-    <lastmod>2023-04-19T08:23:40.315Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.786Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/43-r-missing-data.html</loc>
-    <lastmod>2023-04-19T08:26:26.184Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.787Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/44-r-outliers.html</loc>
-    <lastmod>2023-04-19T06:55:45.719Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.789Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/etl-feature-engineering.html</loc>
-    <lastmod>2023-05-10T08:47:46.122Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.837Z</lastmod>
   </url>
   <url>
     <loc>https://kleban.github.io/data-r/train-test-validation-samples.html</loc>
-    <lastmod>2023-05-10T08:47:36.134Z</lastmod>
+    <lastmod>2024-09-25T06:27:07.872Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/eda.html</loc>
+    <lastmod>2024-09-25T08:58:22.987Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/eda-charts.html</loc>
+    <lastmod>2024-09-25T08:51:23.681Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/eda-dlookr.html</loc>
+    <lastmod>2024-09-25T08:51:26.470Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/edainspectdf.html</loc>
+    <lastmod>2024-09-25T08:52:44.538Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/index.html</loc>
+    <lastmod>2024-09-25T06:27:07.871Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/00-intro.html</loc>
+    <lastmod>2024-09-25T06:27:07.776Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/10-r-data-read-intro.html</loc>
+    <lastmod>2024-09-25T06:27:07.776Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/20-r-data-read-intro.html</loc>
+    <lastmod>2024-09-25T06:27:07.777Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kleban.github.io/data-r/references.html</loc>
+    <lastmod>2024-09-25T06:27:07.872Z</lastmod>
   </url>
 </urlset>

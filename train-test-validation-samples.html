@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Основи роботи з даними в R - 26&nbsp; Data Split: Train, Test and Validation sets</title>
+<title>26&nbsp; Data Split: Train, Test and Validation sets – Основи роботи з даними в R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,11 +17,12 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -46,54 +47,24 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./eda.html" rel="next">
 <link href="./etl-feature-engineering.html" rel="prev">
 <link href="./img/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -111,7 +82,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -120,12 +97,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -134,14 +113,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <body class="nav-sidebar floating">
 
-
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./train-test-validation-samples.html">ТЕМА 6. ПОДІЛ ВИБІРКИ</a></li><li class="breadcrumb-item"><a href="./train-test-validation-samples.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -149,276 +132,349 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Основи роботи з даними в R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/kleban/data-r/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
-    <a href="" title="Share" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-share"></i></a>
-    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
-        <li>
-          <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
-            <i class="bi bi-bi-twitter pe-1"></i>
-          Twitter
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
-            <i class="bi bi-bi-facebook pe-1"></i>
-          Facebook
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
-            <i class="bi bi-bi-linkedin pe-1"></i>
-          LinkedIn
-          </a>
-        </li>
-    </ul>
+    <a href="https://github.com/kleban/data-r/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
 </div>
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">Про посібник</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Про посібник</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">Вступ</a>
+  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Вступ</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ТЕМА 2. ЧИТАННЯ ДАНИХ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 2. ЧИТАННЯ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></a>
+  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></a>
+  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></a>
+  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></a>
+  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></a>
+  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></a>
+  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></a>
+  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></a>
+  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></a>
+  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></a>
+  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></a>
+  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></a>
+  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></a>
+  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></a>
+  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></a>
+  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></a>
+  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></a>
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./40-r-data-quality.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></a>
+  <a href="./40-r-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></a>
+  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./42-r-cleaning-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></a>
+  <a href="./42-r-cleaning-text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./43-r-missing-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Заміна пропусків у даних (Missing Value Imputation)</span></a>
+  <a href="./43-r-missing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Заміна пропусків у даних (Missing Value Imputation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./44-r-outliers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Аналіз та обробка статистичних викидів у даних</span></a>
+  <a href="./44-r-outliers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Аналіз та обробка статистичних викидів у даних</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">ТЕМА 5. КОНСТРУЮВАННЯ ОЗНАК</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 5. КОНСТРУЮВАННЯ ОЗНАК</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./etl-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></a>
+  <a href="./etl-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">ТЕМА 6. ПОДІЛ ВИБІРКИ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 6. ПОДІЛ ВИБІРКИ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./train-test-validation-samples.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></a>
+  <a href="./train-test-validation-samples.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 7. ОГЛЯДОВИЙ АНАЛІЗ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda-charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">EDA, робота з ggplot2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda-dlookr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">EDA з dlookR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./edainspectdf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">EDA з використанням inspectdf</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">Список використаних джерел</a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Список використаних джерел</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Зміст</h2>
    
   <ul>
-  <li><a href="#whats-train-validation-test-datasets" id="toc-whats-train-validation-test-datasets" class="nav-link active" data-scroll-target="#whats-train-validation-test-datasets"><span class="toc-section-number">26.1</span>  What’s Train, Validation, Test datasets</a></li>
-  <li><a href="#splitting-data-in-r" id="toc-splitting-data-in-r" class="nav-link" data-scroll-target="#splitting-data-in-r"><span class="toc-section-number">26.2</span>  Splitting data in R</a>
+  <li><a href="#whats-train-validation-test-datasets" id="toc-whats-train-validation-test-datasets" class="nav-link active" data-scroll-target="#whats-train-validation-test-datasets"><span class="header-section-number">26.1</span> What’s Train, Validation, Test datasets</a></li>
+  <li><a href="#splitting-data-in-r" id="toc-splitting-data-in-r" class="nav-link" data-scroll-target="#splitting-data-in-r"><span class="header-section-number">26.2</span> Splitting data in R</a>
   <ul class="collapse">
-  <li><a href="#split-with-sample" id="toc-split-with-sample" class="nav-link" data-scroll-target="#split-with-sample"><span class="toc-section-number">26.2.1</span>  Split with <code>sample()</code></a></li>
-  <li><a href="#split-with-sample_frac-from-dplyr" id="toc-split-with-sample_frac-from-dplyr" class="nav-link" data-scroll-target="#split-with-sample_frac-from-dplyr"><span class="toc-section-number">26.2.2</span>  Split with <code>sample_frac</code> from <code>dplyr</code></a></li>
-  <li><a href="#split-with-createdatapartition-from-caret" id="toc-split-with-createdatapartition-from-caret" class="nav-link" data-scroll-target="#split-with-createdatapartition-from-caret"><span class="toc-section-number">26.2.3</span>  Split with <code>createDataPartition()</code> from <code>caret</code></a></li>
-  <li><a href="#split-with-sample.split-from-catools" id="toc-split-with-sample.split-from-catools" class="nav-link" data-scroll-target="#split-with-sample.split-from-catools"><span class="toc-section-number">26.2.4</span>  Split with <code>sample.split</code> from <code>caTools</code></a></li>
+  <li><a href="#split-with-sample" id="toc-split-with-sample" class="nav-link" data-scroll-target="#split-with-sample"><span class="header-section-number">26.2.1</span> Split with <code>sample()</code></a></li>
+  <li><a href="#split-with-sample_frac-from-dplyr" id="toc-split-with-sample_frac-from-dplyr" class="nav-link" data-scroll-target="#split-with-sample_frac-from-dplyr"><span class="header-section-number">26.2.2</span> Split with <code>sample_frac</code> from <code>dplyr</code></a></li>
+  <li><a href="#split-with-createdatapartition-from-caret" id="toc-split-with-createdatapartition-from-caret" class="nav-link" data-scroll-target="#split-with-createdatapartition-from-caret"><span class="header-section-number">26.2.3</span> Split with <code>createDataPartition()</code> from <code>caret</code></a></li>
+  <li><a href="#split-with-sample.split-from-catools" id="toc-split-with-sample.split-from-catools" class="nav-link" data-scroll-target="#split-with-sample.split-from-catools"><span class="header-section-number">26.2.4</span> Split with <code>sample.split</code> from <code>caTools</code></a></li>
   </ul></li>
-  <li><a href="#splitting-for-n-folds" id="toc-splitting-for-n-folds" class="nav-link" data-scroll-target="#splitting-for-n-folds"><span class="toc-section-number">26.3</span>  Splitting for n-folds</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="toc-section-number">26.4</span>  References</a></li>
+  <li><a href="#splitting-for-n-folds" id="toc-splitting-for-n-folds" class="nav-link" data-scroll-target="#splitting-for-n-folds"><span class="header-section-number">26.3</span> Splitting for n-folds</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">26.4</span> References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./train-test-validation-samples.html">ТЕМА 6. ПОДІЛ ВИБІРКИ</a></li><li class="breadcrumb-item"><a href="./train-test-validation-samples.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></h1>
+<h1 class="title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></h1>
 </div>
 
 
@@ -426,27 +482,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
+  
     
   </div>
   
 
+
 </header>
+
 
 <hr>
 <p>You need this packages for code execution:</p>
-<div class="cell" data-execution_count="7">
+<div id="b35dc8ff-9df9-49ed-82aa-bdce4325054d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages("dplyr")</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="co"># install.packages("caret")</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="co"># install.packages("caTools")</span></span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="co"># install.packages("gmodels")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="9">
+<div id="ae402762-815d-4684-bdfb-ce01d839ac3a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(<span class="st">"dplyr"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(<span class="st">"caret"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(<span class="st">"caTools"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(<span class="st">"gmodels"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
+<div id="a1fc18f3-91aa-42ec-b2ee-0e78e66f2f72" class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">invisible</span>(<span class="fu">Sys.setlocale</span>(<span class="st">"LC_ALL"</span>, <span class="st">"Ukrainian"</span>))</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="fu">invisible</span>(<span class="fu">options</span>(<span class="at">warn=</span><span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -455,15 +514,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 data-number="26.1" class="anchored" data-anchor-id="whats-train-validation-test-datasets"><span class="header-section-number">26.1</span> What’s Train, Validation, Test datasets</h2>
 <p>Before model fitting and some stages of features engeniering we shoudl split out dataset on 2 or 3 parts:</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked=""><code>Training</code> dataset: The sample of data used to fit the model.</li>
+<li><label><input type="checkbox" checked=""><code>Training</code> dataset: The sample of data used to fit the model.</label></li>
 </ul>
 <p>The model sees and learns from this data.</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked=""><code>Validation</code> dataset: The sample of data used to provide an unbiased evaluation of a model fit on the training dataset while tuning model hyperparameters. The evaluation becomes more biased as skill on the validation dataset is incorporated into the model configuration.</li>
+<li><label><input type="checkbox" checked=""><code>Validation</code> dataset: The sample of data used to provide an unbiased evaluation of a model fit on the training dataset while tuning model hyperparameters. The evaluation becomes more biased as skill on the validation dataset is incorporated into the model configuration.</label></li>
 </ul>
 <p>The validation set is used to evaluate a given model, but this is for frequent evaluation. We, as machine learning engineers, use this data to fine-tune the model hyperparameters. Hence the model occasionally sees this data, but never does it “Learn” from this. We use the validation set results, and update higher level hyperparameters. So the validation set affects a model, but only indirectly. The validation set is also known as the Dev set or the Development set. This makes sense since this dataset helps during the “development” stage of the model.</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked=""><code>Testing</code> dataset: Test Dataset: The sample of data used to provide an unbiased evaluation of a final model fit on the training dataset.</li>
+<li><label><input type="checkbox" checked=""><code>Testing</code> dataset: Test Dataset: The sample of data used to provide an unbiased evaluation of a final model fit on the training dataset.</label></li>
 </ul>
 <p>The Test dataset provides the gold standard used to evaluate the model. It is only used once a model is completely trained(using the train and validation sets). The test set is generally what is used to evaluate competing models (For example on many Kaggle competitions, the validation set is released initially along with the training set and the actual test set is only released when the competition is about to close, and it is the result of the the model on the Test set that decides the winner). Many a times the validation set is used as the test set, but it is not good practice. The test set is generally well curated. It contains carefully sampled data that spans the various classes that the model would face, when used in the real world.</p>
 <p><img src="img/da-split/train_test1.png" class="img-fluid"></p>
@@ -475,61 +534,244 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 data-number="26.2" class="anchored" data-anchor-id="splitting-data-in-r"><span class="header-section-number">26.2</span> Splitting data in R</h2>
 <p>Lets describe some conditions before start studiyng splitting data functions in R:</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked="">We will use same seed for all splittings to control results reproduction, for example, let it be 2021.</li>
-<li><input type="checkbox" disabled="" checked="">We will use dataset for client churn prediction <code>Telco Customer Churn</code>: https://www.kaggle.com/blastchar/telco-customer-churn</li>
+<li><label><input type="checkbox" checked="">We will use same seed for all splittings to control results reproduction, for example, let it be 2021.</label></li>
+<li><label><input type="checkbox" checked="">We will use dataset for client churn prediction <code>Telco Customer Churn</code>: https://www.kaggle.com/blastchar/telco-customer-churn</label></li>
 </ul>
 <p>Short dataset description:</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked=""><code>customerID</code> - Customer ID</li>
-<li><input type="checkbox" disabled="" checked=""><code>gender</code> Whether the customer is a male or a female</li>
-<li><input type="checkbox" disabled="" checked=""><code>SeniorCitizen</code> - Whether the customer is a senior citizen or not (1, 0)</li>
-<li><input type="checkbox" disabled="" checked=""><code>Partner</code> - Whether the customer has a partner or not (Yes, No)</li>
-<li><input type="checkbox" disabled="" checked=""><code>Dependents</code> - Whether the customer has dependents or not (Yes, No)</li>
-<li><input type="checkbox" disabled="" checked=""><code>tenure</code> - Number of months the customer has stayed with the company</li>
-<li><input type="checkbox" disabled="" checked=""><code>PhoneService</code> - Whether the customer has a phone service or not (Yes, No)</li>
-<li><input type="checkbox" disabled="" checked=""><code>MultipleLines</code> - Whether the customer has multiple lines or not (Yes, No, No phone service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>InternetService</code> - Customer’s internet service provider (DSL, Fiber optic, No)</li>
-<li><input type="checkbox" disabled="" checked=""><code>OnlineSecurity</code> - Whether the customer has online security or not (Yes, No, No internet service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>OnlineBackup</code> - Whether the customer has online backup or not (Yes, No, No internet service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>DeviceProtection</code> - Whether the customer has device protection or not (Yes, No, No internet service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>TechSupport</code> - Whether the customer has tech support or not (Yes, No, No internet service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>StreamingTV</code> - Whether the customer has streaming TV or not (Yes, No, No internet service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>StreamingMovies</code> - Whether the customer has streaming movies or not (Yes, No, No internet service)</li>
-<li><input type="checkbox" disabled="" checked=""><code>Contract</code> - The contract term of the customer (Month-to-month, One year, Two year)</li>
-<li><input type="checkbox" disabled="" checked=""><code>PaperlessBilling</code> - Whether the customer has paperless billing or not (Yes, No)</li>
-<li><input type="checkbox" disabled="" checked=""><code>PaymentMethod</code> - The customer’s payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))</li>
-<li><input type="checkbox" disabled="" checked=""><code>MonthlyCharges</code> - The amount charged to the customer monthly</li>
-<li><input type="checkbox" disabled="" checked=""><code>TotalCharges</code> - The total amount charged to the customer</li>
-<li><input type="checkbox" disabled="" checked=""><code>Churn</code> - Whether the customer churned or not (Yes or No)</li>
+<li><label><input type="checkbox" checked=""><code>customerID</code> - Customer ID</label></li>
+<li><label><input type="checkbox" checked=""><code>gender</code> Whether the customer is a male or a female</label></li>
+<li><label><input type="checkbox" checked=""><code>SeniorCitizen</code> - Whether the customer is a senior citizen or not (1, 0)</label></li>
+<li><label><input type="checkbox" checked=""><code>Partner</code> - Whether the customer has a partner or not (Yes, No)</label></li>
+<li><label><input type="checkbox" checked=""><code>Dependents</code> - Whether the customer has dependents or not (Yes, No)</label></li>
+<li><label><input type="checkbox" checked=""><code>tenure</code> - Number of months the customer has stayed with the company</label></li>
+<li><label><input type="checkbox" checked=""><code>PhoneService</code> - Whether the customer has a phone service or not (Yes, No)</label></li>
+<li><label><input type="checkbox" checked=""><code>MultipleLines</code> - Whether the customer has multiple lines or not (Yes, No, No phone service)</label></li>
+<li><label><input type="checkbox" checked=""><code>InternetService</code> - Customer’s internet service provider (DSL, Fiber optic, No)</label></li>
+<li><label><input type="checkbox" checked=""><code>OnlineSecurity</code> - Whether the customer has online security or not (Yes, No, No internet service)</label></li>
+<li><label><input type="checkbox" checked=""><code>OnlineBackup</code> - Whether the customer has online backup or not (Yes, No, No internet service)</label></li>
+<li><label><input type="checkbox" checked=""><code>DeviceProtection</code> - Whether the customer has device protection or not (Yes, No, No internet service)</label></li>
+<li><label><input type="checkbox" checked=""><code>TechSupport</code> - Whether the customer has tech support or not (Yes, No, No internet service)</label></li>
+<li><label><input type="checkbox" checked=""><code>StreamingTV</code> - Whether the customer has streaming TV or not (Yes, No, No internet service)</label></li>
+<li><label><input type="checkbox" checked=""><code>StreamingMovies</code> - Whether the customer has streaming movies or not (Yes, No, No internet service)</label></li>
+<li><label><input type="checkbox" checked=""><code>Contract</code> - The contract term of the customer (Month-to-month, One year, Two year)</label></li>
+<li><label><input type="checkbox" checked=""><code>PaperlessBilling</code> - Whether the customer has paperless billing or not (Yes, No)</label></li>
+<li><label><input type="checkbox" checked=""><code>PaymentMethod</code> - The customer’s payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))</label></li>
+<li><label><input type="checkbox" checked=""><code>MonthlyCharges</code> - The amount charged to the customer monthly</label></li>
+<li><label><input type="checkbox" checked=""><code>TotalCharges</code> - The total amount charged to the customer</label></li>
+<li><label><input type="checkbox" checked=""><code>Churn</code> - Whether the customer churned or not (Yes or No)</label></li>
 </ul>
-<div class="cell" data-execution_count="10">
+<div id="c795440c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># read data</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a>telecom_users <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/telecom_users.csv"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="fu">head</span>(telecom_users)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 6 × 22</caption>
 <thead>
-    <tr><th></th><th scope="col">X</th><th scope="col">customerID</th><th scope="col">gender</th><th scope="col">SeniorCitizen</th><th scope="col">Partner</th><th scope="col">Dependents</th><th scope="col">tenure</th><th scope="col">PhoneService</th><th scope="col">MultipleLines</th><th scope="col">InternetService</th><th scope="col">⋯</th><th scope="col">DeviceProtection</th><th scope="col">TechSupport</th><th scope="col">StreamingTV</th><th scope="col">StreamingMovies</th><th scope="col">Contract</th><th scope="col">PaperlessBilling</th><th scope="col">PaymentMethod</th><th scope="col">MonthlyCharges</th><th scope="col">TotalCharges</th><th scope="col">Churn</th></tr>
-    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">⋯</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">X</th>
+<th data-quarto-table-cell-role="th" scope="col">customerID</th>
+<th data-quarto-table-cell-role="th" scope="col">gender</th>
+<th data-quarto-table-cell-role="th" scope="col">SeniorCitizen</th>
+<th data-quarto-table-cell-role="th" scope="col">Partner</th>
+<th data-quarto-table-cell-role="th" scope="col">Dependents</th>
+<th data-quarto-table-cell-role="th" scope="col">tenure</th>
+<th data-quarto-table-cell-role="th" scope="col">PhoneService</th>
+<th data-quarto-table-cell-role="th" scope="col">MultipleLines</th>
+<th data-quarto-table-cell-role="th" scope="col">InternetService</th>
+<th data-quarto-table-cell-role="th" scope="col">⋯</th>
+<th data-quarto-table-cell-role="th" scope="col">DeviceProtection</th>
+<th data-quarto-table-cell-role="th" scope="col">TechSupport</th>
+<th data-quarto-table-cell-role="th" scope="col">StreamingTV</th>
+<th data-quarto-table-cell-role="th" scope="col">StreamingMovies</th>
+<th data-quarto-table-cell-role="th" scope="col">Contract</th>
+<th data-quarto-table-cell-role="th" scope="col">PaperlessBilling</th>
+<th data-quarto-table-cell-role="th" scope="col">PaymentMethod</th>
+<th data-quarto-table-cell-role="th" scope="col">MonthlyCharges</th>
+<th data-quarto-table-cell-role="th" scope="col">TotalCharges</th>
+<th data-quarto-table-cell-role="th" scope="col">Churn</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">⋯</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>1869</td><td>7010-BRBUU</td><td>Male  </td><td>0</td><td>Yes</td><td>Yes</td><td>72</td><td>Yes</td><td>Yes             </td><td>No         </td><td>⋯</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>Two year      </td><td>No </td><td>Credit card (automatic)  </td><td>24.1 </td><td>1734.65</td><td>No </td></tr>
-    <tr><th scope="row">2</th><td>4528</td><td>9688-YGXVR</td><td>Female</td><td>0</td><td>No </td><td>No </td><td>44</td><td>Yes</td><td>No              </td><td>Fiber optic</td><td>⋯</td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Credit card (automatic)  </td><td>88.15</td><td>3973.20</td><td>No </td></tr>
-    <tr><th scope="row">3</th><td>6344</td><td>9286-DOJGF</td><td>Female</td><td>1</td><td>Yes</td><td>No </td><td>38</td><td>Yes</td><td>Yes             </td><td>Fiber optic</td><td>⋯</td><td>No                 </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Bank transfer (automatic)</td><td>74.95</td><td>2869.85</td><td>Yes</td></tr>
-    <tr><th scope="row">4</th><td>6739</td><td>6994-KERXL</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 4</td><td>Yes</td><td>No              </td><td>DSL        </td><td>⋯</td><td>No                 </td><td>No                 </td><td>No                 </td><td>Yes                </td><td>Month-to-month</td><td>Yes</td><td>Electronic check         </td><td>55.9 </td><td> 238.50</td><td>No </td></tr>
-    <tr><th scope="row">5</th><td> 432</td><td>2181-UAESM</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 2</td><td>Yes</td><td>No              </td><td>DSL        </td><td>⋯</td><td>Yes                </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>No </td><td>Electronic check         </td><td>53.45</td><td> 119.50</td><td>No </td></tr>
-    <tr><th scope="row">6</th><td>2215</td><td>4312-GVYNH</td><td>Female</td><td>0</td><td>Yes</td><td>No </td><td>70</td><td>No </td><td>No phone service</td><td>DSL        </td><td>⋯</td><td>Yes                </td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>Two year      </td><td>Yes</td><td>Bank transfer (automatic)</td><td>49.85</td><td>3370.20</td><td>No </td></tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1869</td>
+<td>7010-BRBUU</td>
+<td>Male</td>
+<td>0</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>72</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>⋯</td>
+<td>No internet service</td>
+<td>No internet service</td>
+<td>No internet service</td>
+<td>No internet service</td>
+<td>Two year</td>
+<td>No</td>
+<td>Credit card (automatic)</td>
+<td>24.1</td>
+<td>1734.65</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>4528</td>
+<td>9688-YGXVR</td>
+<td>Female</td>
+<td>0</td>
+<td>No</td>
+<td>No</td>
+<td>44</td>
+<td>Yes</td>
+<td>No</td>
+<td>Fiber optic</td>
+<td>⋯</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>Month-to-month</td>
+<td>Yes</td>
+<td>Credit card (automatic)</td>
+<td>88.15</td>
+<td>3973.20</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>6344</td>
+<td>9286-DOJGF</td>
+<td>Female</td>
+<td>1</td>
+<td>Yes</td>
+<td>No</td>
+<td>38</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Fiber optic</td>
+<td>⋯</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Month-to-month</td>
+<td>Yes</td>
+<td>Bank transfer (automatic)</td>
+<td>74.95</td>
+<td>2869.85</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>6739</td>
+<td>6994-KERXL</td>
+<td>Male</td>
+<td>0</td>
+<td>No</td>
+<td>No</td>
+<td>4</td>
+<td>Yes</td>
+<td>No</td>
+<td>DSL</td>
+<td>⋯</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+<td>Month-to-month</td>
+<td>Yes</td>
+<td>Electronic check</td>
+<td>55.9</td>
+<td>238.50</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>432</td>
+<td>2181-UAESM</td>
+<td>Male</td>
+<td>0</td>
+<td>No</td>
+<td>No</td>
+<td>2</td>
+<td>Yes</td>
+<td>No</td>
+<td>DSL</td>
+<td>⋯</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Month-to-month</td>
+<td>No</td>
+<td>Electronic check</td>
+<td>53.45</td>
+<td>119.50</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>2215</td>
+<td>4312-GVYNH</td>
+<td>Female</td>
+<td>0</td>
+<td>Yes</td>
+<td>No</td>
+<td>70</td>
+<td>No</td>
+<td>No phone service</td>
+<td>DSL</td>
+<td>⋯</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>Two year</td>
+<td>Yes</td>
+<td>Bank transfer (automatic)</td>
+<td>49.85</td>
+<td>3370.20</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Lets check the proportion of column <code>Churn == Yes</code> and <code>Churn == No</code> in dataset with <code>CrossTable()</code> function from <code>gmodels</code> package.</p>
-<div class="cell" data-execution_count="3">
+<div id="942d88ac" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># install.packages("gmodels")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="11">
+<div id="be90746e-4978-4de6-9dbd-323c03e12c65" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(gmodels)</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="fu">CrossTable</span>(telecom_users<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -557,7 +799,7 @@ Total Observations in Table:  5986
 </div>
 </div>
 <p>You can also use <code>CrossTable()</code> to check cross proportions by other fields. Lets check crosstable for <code>TechSupport</code> and <code>Churn</code>:</p>
-<div class="cell" data-execution_count="12">
+<div id="ab192a4f" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">CrossTable</span>(telecom_users<span class="sc">$</span>Churn, telecom_users<span class="sc">$</span>TechSupport) <span class="co"># for example</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -602,7 +844,7 @@ telecom_users$Churn |                  No | No internet service |               
 <hr>
 <section id="split-with-sample" class="level3" data-number="26.2.1">
 <h3 data-number="26.2.1" class="anchored" data-anchor-id="split-with-sample"><span class="header-section-number">26.2.1</span> Split with <code>sample()</code></h3>
-<div class="cell" data-execution_count="13">
+<div id="5c573220" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>sample_size <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">nrow</span>(telecom_users)<span class="sc">*</span>.<span class="dv">70</span>) <span class="co"># setting what is 70%</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Size: "</span>, sample_size))</span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
@@ -614,7 +856,7 @@ telecom_users$Churn |                  No | No internet service |               
 <pre><code>[1] "Size: 4190"</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="14">
+<div id="69109cc2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -632,8 +874,8 @@ Total Observations in Table:  4190
  
           |        No |       Yes | 
           |-----------|-----------|
-          |      3063 |      1127 | 
-          |     0.731 |     0.269 | 
+          |      3074 |      1116 | 
+          |     0.734 |     0.266 | 
           |-----------|-----------|
 
 
@@ -641,7 +883,7 @@ Total Observations in Table:  4190
  </code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="15">
+<div id="cdad3775" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -659,8 +901,8 @@ Total Observations in Table:  1796
  
           |        No |       Yes | 
           |-----------|-----------|
-          |      1336 |       460 | 
-          |     0.744 |     0.256 | 
+          |      1325 |       471 | 
+          |     0.738 |     0.262 | 
           |-----------|-----------|
 
 
@@ -673,9 +915,9 @@ Total Observations in Table:  1796
 </section>
 <section id="split-with-sample_frac-from-dplyr" class="level3" data-number="26.2.2">
 <h3 data-number="26.2.2" class="anchored" data-anchor-id="split-with-sample_frac-from-dplyr"><span class="header-section-number">26.2.2</span> Split with <code>sample_frac</code> from <code>dplyr</code></h3>
-<div class="cell" data-execution_count="17">
+<div id="59b83d23" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">set.seed</span>(<span class="dv">2022</span>)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
 <span id="cb16-3"><a href="#cb16-3"></a></span>
 <span id="cb16-4"><a href="#cb16-4"></a><span class="co"># Using the above function to create 70 - 30 slipt into test and train</span></span>
 <span id="cb16-5"><a href="#cb16-5"></a></span>
@@ -683,17 +925,33 @@ Total Observations in Table:  1796
 <span id="cb16-7"><a href="#cb16-7"></a></span>
 <span id="cb16-8"><a href="#cb16-8"></a>train <span class="ot">&lt;-</span> tu <span class="sc">%&gt;%</span> <span class="fu">sample_frac</span>(.<span class="dv">70</span>)</span>
 <span id="cb16-9"><a href="#cb16-9"></a>test <span class="ot">&lt;-</span> tu[<span class="sc">-</span>train<span class="sc">$</span>Id, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'
+
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+</code></pre>
 </div>
-<div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">nrow</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9b336873-829d-477e-ab6e-74ec76c93b8d" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">nrow</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 4190
 </div>
 </div>
-<div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6df3650f" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  
@@ -709,8 +967,8 @@ Total Observations in Table:  4190
  
           |        No |       Yes | 
           |-----------|-----------|
-          |      3103 |      1087 | 
-          |     0.741 |     0.259 | 
+          |      3099 |      1091 | 
+          |     0.740 |     0.260 | 
           |-----------|-----------|
 
 
@@ -730,8 +988,8 @@ Total Observations in Table:  1796
  
           |        No |       Yes | 
           |-----------|-----------|
-          |      1296 |       500 | 
-          |     0.722 |     0.278 | 
+          |      1300 |       496 | 
+          |     0.724 |     0.276 | 
           |-----------|-----------|
 
 
@@ -744,8 +1002,8 @@ Total Observations in Table:  1796
 </section>
 <section id="split-with-createdatapartition-from-caret" class="level3" data-number="26.2.3">
 <h3 data-number="26.2.3" class="anchored" data-anchor-id="split-with-createdatapartition-from-caret"><span class="header-section-number">26.2.3</span> Split with <code>createDataPartition()</code> from <code>caret</code></h3>
-<div class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">#install.packages("caret")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ce6d2734" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">#install.packages("caret")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Updating HTML index of packages in '.Library'
 
@@ -754,18 +1012,24 @@ Making 'packages.html' ...
 </code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb22-2"><a href="#cb22-2"></a><span class="fu">set.seed</span>(<span class="dv">2021</span>)</span>
-<span id="cb22-3"><a href="#cb22-3"></a> </span>
-<span id="cb22-4"><a href="#cb22-4"></a>index <span class="ot">=</span> <span class="fu">createDataPartition</span>(telecom_users<span class="sc">$</span>Churn, <span class="at">p =</span> <span class="fl">0.70</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb22-5"><a href="#cb22-5"></a>train <span class="ot">=</span> telecom_users[index, ]</span>
-<span id="cb22-6"><a href="#cb22-6"></a>test <span class="ot">=</span> telecom_users[<span class="sc">-</span>index, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a703ec94-11bb-44ff-9ab6-4506fa43b32a" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
+<span id="cb23-3"><a href="#cb23-3"></a> </span>
+<span id="cb23-4"><a href="#cb23-4"></a>index <span class="ot">=</span> <span class="fu">createDataPartition</span>(telecom_users<span class="sc">$</span>Churn, <span class="at">p =</span> <span class="fl">0.70</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-5"><a href="#cb23-5"></a>train <span class="ot">=</span> telecom_users[index, ]</span>
+<span id="cb23-6"><a href="#cb23-6"></a>test <span class="ot">=</span> telecom_users[<span class="sc">-</span>index, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2
+
+Loading required package: lattice
+</code></pre>
 </div>
-<div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
-<span id="cb23-2"><a href="#cb23-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
-<span id="cb23-3"><a href="#cb23-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="f6cc8b66" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  
@@ -816,22 +1080,22 @@ Total Observations in Table:  1795
 </section>
 <section id="split-with-sample.split-from-catools" class="level3" data-number="26.2.4">
 <h3 data-number="26.2.4" class="anchored" data-anchor-id="split-with-sample.split-from-catools"><span class="header-section-number">26.2.4</span> Split with <code>sample.split</code> from <code>caTools</code></h3>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">#install.packages("caTools")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d9a497e0-cc16-4bf6-928a-53f4f2a1a49a" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">#install.packages("caTools")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">library</span>(caTools)</span>
-<span id="cb26-2"><a href="#cb26-2"></a> </span>
-<span id="cb26-3"><a href="#cb26-3"></a><span class="fu">set.seed</span>(<span class="dv">2022</span>)</span>
-<span id="cb26-4"><a href="#cb26-4"></a>sample <span class="ot">=</span> <span class="fu">sample.split</span>(telecom_users<span class="sc">$</span>Churn, <span class="at">SplitRatio =</span> .<span class="dv">70</span>)</span>
-<span id="cb26-5"><a href="#cb26-5"></a></span>
-<span id="cb26-6"><a href="#cb26-6"></a>train <span class="ot">=</span> telecom_users[sample, ]</span>
-<span id="cb26-7"><a href="#cb26-7"></a>test  <span class="ot">=</span> telecom_users[<span class="sc">!</span>sample, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7fe2e723" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">library</span>(caTools)</span>
+<span id="cb28-2"><a href="#cb28-2"></a> </span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
+<span id="cb28-4"><a href="#cb28-4"></a>sample <span class="ot">=</span> <span class="fu">sample.split</span>(telecom_users<span class="sc">$</span>Churn, <span class="at">SplitRatio =</span> .<span class="dv">70</span>)</span>
+<span id="cb28-5"><a href="#cb28-5"></a></span>
+<span id="cb28-6"><a href="#cb28-6"></a>train <span class="ot">=</span> telecom_users[sample, ]</span>
+<span id="cb28-7"><a href="#cb28-7"></a>test  <span class="ot">=</span> telecom_users[<span class="sc">!</span>sample, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="48f3eeb0" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># check Churn == Yes/No proportion in train/test</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="fu">CrossTable</span>(train<span class="sc">$</span>Churn)</span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="fu">CrossTable</span>(test<span class="sc">$</span>Churn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  
@@ -885,37 +1149,220 @@ Total Observations in Table:  1796
 </section>
 <section id="splitting-for-n-folds" class="level2" data-number="26.3">
 <h2 data-number="26.3" class="anchored" data-anchor-id="splitting-for-n-folds"><span class="header-section-number">26.3</span> Splitting for n-folds</h2>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># read data again</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a><span class="fu">library</span>(caret)</span>
-<span id="cb29-3"><a href="#cb29-3"></a>telecom_users <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/telecom_users.csv"</span>)</span>
-<span id="cb29-4"><a href="#cb29-4"></a><span class="fu">nrow</span>(telecom_users)</span>
-<span id="cb29-5"><a href="#cb29-5"></a><span class="fu">head</span>(telecom_users)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e52ce598" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># read data again</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="fu">library</span>(caret)</span>
+<span id="cb31-3"><a href="#cb31-3"></a>telecom_users <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/telecom_users.csv"</span>)</span>
+<span id="cb31-4"><a href="#cb31-4"></a><span class="fu">nrow</span>(telecom_users)</span>
+<span id="cb31-5"><a href="#cb31-5"></a><span class="fu">head</span>(telecom_users)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 5986
 </div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 6 × 22</caption>
 <thead>
-    <tr><th></th><th scope="col">X</th><th scope="col">customerID</th><th scope="col">gender</th><th scope="col">SeniorCitizen</th><th scope="col">Partner</th><th scope="col">Dependents</th><th scope="col">tenure</th><th scope="col">PhoneService</th><th scope="col">MultipleLines</th><th scope="col">InternetService</th><th scope="col">...</th><th scope="col">DeviceProtection</th><th scope="col">TechSupport</th><th scope="col">StreamingTV</th><th scope="col">StreamingMovies</th><th scope="col">Contract</th><th scope="col">PaperlessBilling</th><th scope="col">PaymentMethod</th><th scope="col">MonthlyCharges</th><th scope="col">TotalCharges</th><th scope="col">Churn</th></tr>
-    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">...</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">X</th>
+<th data-quarto-table-cell-role="th" scope="col">customerID</th>
+<th data-quarto-table-cell-role="th" scope="col">gender</th>
+<th data-quarto-table-cell-role="th" scope="col">SeniorCitizen</th>
+<th data-quarto-table-cell-role="th" scope="col">Partner</th>
+<th data-quarto-table-cell-role="th" scope="col">Dependents</th>
+<th data-quarto-table-cell-role="th" scope="col">tenure</th>
+<th data-quarto-table-cell-role="th" scope="col">PhoneService</th>
+<th data-quarto-table-cell-role="th" scope="col">MultipleLines</th>
+<th data-quarto-table-cell-role="th" scope="col">InternetService</th>
+<th data-quarto-table-cell-role="th" scope="col">...</th>
+<th data-quarto-table-cell-role="th" scope="col">DeviceProtection</th>
+<th data-quarto-table-cell-role="th" scope="col">TechSupport</th>
+<th data-quarto-table-cell-role="th" scope="col">StreamingTV</th>
+<th data-quarto-table-cell-role="th" scope="col">StreamingMovies</th>
+<th data-quarto-table-cell-role="th" scope="col">Contract</th>
+<th data-quarto-table-cell-role="th" scope="col">PaperlessBilling</th>
+<th data-quarto-table-cell-role="th" scope="col">PaymentMethod</th>
+<th data-quarto-table-cell-role="th" scope="col">MonthlyCharges</th>
+<th data-quarto-table-cell-role="th" scope="col">TotalCharges</th>
+<th data-quarto-table-cell-role="th" scope="col">Churn</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">...</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>1869</td><td>7010-BRBUU</td><td>Male  </td><td>0</td><td>Yes</td><td>Yes</td><td>72</td><td>Yes</td><td>Yes             </td><td>No         </td><td>...</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>No internet service</td><td>Two year      </td><td>No </td><td>Credit card (automatic)  </td><td>24.1 </td><td>1734.65</td><td>No </td></tr>
-    <tr><th scope="row">2</th><td>4528</td><td>9688-YGXVR</td><td>Female</td><td>0</td><td>No </td><td>No </td><td>44</td><td>Yes</td><td>No              </td><td>Fiber optic</td><td>...</td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Credit card (automatic)  </td><td>88.15</td><td>3973.20</td><td>No </td></tr>
-    <tr><th scope="row">3</th><td>6344</td><td>9286-DOJGF</td><td>Female</td><td>1</td><td>Yes</td><td>No </td><td>38</td><td>Yes</td><td>Yes             </td><td>Fiber optic</td><td>...</td><td>No                 </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>Yes</td><td>Bank transfer (automatic)</td><td>74.95</td><td>2869.85</td><td>Yes</td></tr>
-    <tr><th scope="row">4</th><td>6739</td><td>6994-KERXL</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 4</td><td>Yes</td><td>No              </td><td>DSL        </td><td>...</td><td>No                 </td><td>No                 </td><td>No                 </td><td>Yes                </td><td>Month-to-month</td><td>Yes</td><td>Electronic check         </td><td>55.9 </td><td> 238.50</td><td>No </td></tr>
-    <tr><th scope="row">5</th><td> 432</td><td>2181-UAESM</td><td>Male  </td><td>0</td><td>No </td><td>No </td><td> 2</td><td>Yes</td><td>No              </td><td>DSL        </td><td>...</td><td>Yes                </td><td>No                 </td><td>No                 </td><td>No                 </td><td>Month-to-month</td><td>No </td><td>Electronic check         </td><td>53.45</td><td> 119.50</td><td>No </td></tr>
-    <tr><th scope="row">6</th><td>2215</td><td>4312-GVYNH</td><td>Female</td><td>0</td><td>Yes</td><td>No </td><td>70</td><td>No </td><td>No phone service</td><td>DSL        </td><td>...</td><td>Yes                </td><td>Yes                </td><td>No                 </td><td>Yes                </td><td>Two year      </td><td>Yes</td><td>Bank transfer (automatic)</td><td>49.85</td><td>3370.20</td><td>No </td></tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1869</td>
+<td>7010-BRBUU</td>
+<td>Male</td>
+<td>0</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>72</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>...</td>
+<td>No internet service</td>
+<td>No internet service</td>
+<td>No internet service</td>
+<td>No internet service</td>
+<td>Two year</td>
+<td>No</td>
+<td>Credit card (automatic)</td>
+<td>24.1</td>
+<td>1734.65</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>4528</td>
+<td>9688-YGXVR</td>
+<td>Female</td>
+<td>0</td>
+<td>No</td>
+<td>No</td>
+<td>44</td>
+<td>Yes</td>
+<td>No</td>
+<td>Fiber optic</td>
+<td>...</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>Month-to-month</td>
+<td>Yes</td>
+<td>Credit card (automatic)</td>
+<td>88.15</td>
+<td>3973.20</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>6344</td>
+<td>9286-DOJGF</td>
+<td>Female</td>
+<td>1</td>
+<td>Yes</td>
+<td>No</td>
+<td>38</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Fiber optic</td>
+<td>...</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Month-to-month</td>
+<td>Yes</td>
+<td>Bank transfer (automatic)</td>
+<td>74.95</td>
+<td>2869.85</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>6739</td>
+<td>6994-KERXL</td>
+<td>Male</td>
+<td>0</td>
+<td>No</td>
+<td>No</td>
+<td>4</td>
+<td>Yes</td>
+<td>No</td>
+<td>DSL</td>
+<td>...</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+<td>Month-to-month</td>
+<td>Yes</td>
+<td>Electronic check</td>
+<td>55.9</td>
+<td>238.50</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>432</td>
+<td>2181-UAESM</td>
+<td>Male</td>
+<td>0</td>
+<td>No</td>
+<td>No</td>
+<td>2</td>
+<td>Yes</td>
+<td>No</td>
+<td>DSL</td>
+<td>...</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Month-to-month</td>
+<td>No</td>
+<td>Electronic check</td>
+<td>53.45</td>
+<td>119.50</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>2215</td>
+<td>4312-GVYNH</td>
+<td>Female</td>
+<td>0</td>
+<td>Yes</td>
+<td>No</td>
+<td>70</td>
+<td>No</td>
+<td>No phone service</td>
+<td>DSL</td>
+<td>...</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>Two year</td>
+<td>Yes</td>
+<td>Bank transfer (automatic)</td>
+<td>49.85</td>
+<td>3370.20</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
-<div class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">createFolds</span>(telecom_users)</span>
-<span id="cb30-2"><a href="#cb30-2"></a>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c5d2c6fc" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">createFolds</span>(telecom_users)</span>
+<span id="cb32-2"><a href="#cb32-2"></a>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <dl>
     <dt>$Fold01</dt>
@@ -989,13 +1436,13 @@ Total Observations in Table:  1796
 </dl>
 </div>
 </div>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">#library(caret)</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a><span class="co">#library(mlbench)</span></span>
-<span id="cb31-3"><a href="#cb31-3"></a><span class="co">#data(Sonar)</span></span>
-<span id="cb31-4"><a href="#cb31-4"></a> </span>
-<span id="cb31-5"><a href="#cb31-5"></a><span class="co">#folds &lt;- createFolds(Sonar$Class)</span></span>
-<span id="cb31-6"><a href="#cb31-6"></a><span class="co">#str(folds)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2d0972d6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co">#library(caret)</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="co">#library(mlbench)</span></span>
+<span id="cb33-3"><a href="#cb33-3"></a><span class="co">#data(Sonar)</span></span>
+<span id="cb33-4"><a href="#cb33-4"></a> </span>
+<span id="cb33-5"><a href="#cb33-5"></a><span class="co">#folds &lt;- createFolds(Sonar$Class)</span></span>
+<span id="cb33-6"><a href="#cb33-6"></a><span class="co">#str(folds)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 </section>
@@ -1036,12 +1483,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
     }
-  });
-  clipboard.on('success', function(e) {
+    return false;
+  }
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1050,17 +1500,73 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/kleban\.github\.io\/data-r\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1070,8 +1576,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1083,48 +1598,311 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./etl-feature-engineering.html" class="pagination-link">
+      <a href="./etl-feature-engineering.html" class="pagination-link" aria-label="Feature engineering in R">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">Список використаних джерел</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./eda.html" class="pagination-link" aria-label="EDA на прикладі вина">
+        <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-      <div class="nav-footer-center">Copyright 2023, Юрій Клебан</div>
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2024, Юрій Клебан</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
   </div>
 </footer>
+
 
 
 

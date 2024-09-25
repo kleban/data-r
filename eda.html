@@ -1,0 +1,2407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>27&nbsp; EDA на прикладі вина – Основи роботи з даними в R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./eda-charts.html" rel="next">
+<link href="./train-test-validation-samples.html" rel="prev">
+<link href="./img/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./eda.html">ТЕМА 7. ОГЛЯДОВИЙ АНАЛІЗ ДАНИХ</a></li><li class="breadcrumb-item"><a href="./eda.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Основи роботи з даними в R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/kleban/data-r/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Про посібник</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Вступ</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 2. ЧИТАННЯ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./40-r-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./42-r-cleaning-text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./43-r-missing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Заміна пропусків у даних (Missing Value Imputation)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./44-r-outliers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Аналіз та обробка статистичних викидів у даних</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 5. КОНСТРУЮВАННЯ ОЗНАК</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./etl-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 6. ПОДІЛ ВИБІРКИ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./train-test-validation-samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 7. ОГЛЯДОВИЙ АНАЛІЗ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda-charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">EDA, робота з ggplot2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda-dlookr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">EDA з dlookR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./edainspectdf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">EDA з використанням inspectdf</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Список використаних джерел</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Зміст</h2>
+   
+  <ul>
+  <li><a href="#етапи-дослідницького-аналізу-даних-exploratory-data-analysis" id="toc-етапи-дослідницького-аналізу-даних-exploratory-data-analysis" class="nav-link active" data-scroll-target="#етапи-дослідницького-аналізу-даних-exploratory-data-analysis"><span class="header-section-number">27.1</span> Етапи дослідницького аналізу даних (Exploratory Data Analysis)</a></li>
+  <li><a href="#кроки-для-оволодіння-дослідницьким-аналізом-даних" id="toc-кроки-для-оволодіння-дослідницьким-аналізом-даних" class="nav-link" data-scroll-target="#кроки-для-оволодіння-дослідницьким-аналізом-даних"><span class="header-section-number">27.2</span> Кроки для оволодіння дослідницьким аналізом даних</a>
+  <ul class="collapse">
+  <li><a href="#мета-цього-проекту" id="toc-мета-цього-проекту" class="nav-link" data-scroll-target="#мета-цього-проекту"><span class="header-section-number">27.2.1</span> Мета цього проекту</a></li>
+  <li><a href="#контекст" id="toc-контекст" class="nav-link" data-scroll-target="#контекст"><span class="header-section-number">27.2.2</span> Контекст</a></li>
+  <li><a href="#опис" id="toc-опис" class="nav-link" data-scroll-target="#опис"><span class="header-section-number">27.2.3</span> Опис</a></li>
+  <li><a href="#перший-погляд" id="toc-перший-погляд" class="nav-link" data-scroll-target="#перший-погляд"><span class="header-section-number">27.2.4</span> Перший погляд</a></li>
+  <li><a href="#підсумок" id="toc-підсумок" class="nav-link" data-scroll-target="#підсумок"><span class="header-section-number">27.2.5</span> Підсумок</a></li>
+  </ul></li>
+  <li><a href="#одновимірні-графіки" id="toc-одновимірні-графіки" class="nav-link" data-scroll-target="#одновимірні-графіки"><span class="header-section-number">27.3</span> Одновимірні графіки</a>
+  <ul class="collapse">
+  <li><a href="#якість-quality" id="toc-якість-quality" class="nav-link" data-scroll-target="#якість-quality"><span class="header-section-number">27.3.1</span> Якість (Quality)</a></li>
+  <li><a href="#алкоголь-alcohol" id="toc-алкоголь-alcohol" class="nav-link" data-scroll-target="#алкоголь-alcohol"><span class="header-section-number">27.3.2</span> Алкоголь (Alcohol)</a></li>
+  <li><a href="#залишковий-цукор-residual-sugar" id="toc-залишковий-цукор-residual-sugar" class="nav-link" data-scroll-target="#залишковий-цукор-residual-sugar"><span class="header-section-number">27.3.3</span> Залишковий цукор (Residual Sugar)</a></li>
+  <li><a href="#хлориди-chlorides" id="toc-хлориди-chlorides" class="nav-link" data-scroll-target="#хлориди-chlorides"><span class="header-section-number">27.3.4</span> Хлориди (Chlorides)</a></li>
+  <li><a href="#лимонна-кислота-citric-acid" id="toc-лимонна-кислота-citric-acid" class="nav-link" data-scroll-target="#лимонна-кислота-citric-acid"><span class="header-section-number">27.3.5</span> Лимонна кислота (Citric acid)</a></li>
+  <li><a href="#ph" id="toc-ph" class="nav-link" data-scroll-target="#ph"><span class="header-section-number">27.3.6</span> pH</a></li>
+  <li><a href="#летюча-кислотність-volatile-acidity" id="toc-летюча-кислотність-volatile-acidity" class="nav-link" data-scroll-target="#летюча-кислотність-volatile-acidity"><span class="header-section-number">27.3.7</span> Летюча кислотність (Volatile acidity)</a></li>
+  </ul></li>
+  <li><a href="#двовимірний-аналіз" id="toc-двовимірний-аналіз" class="nav-link" data-scroll-target="#двовимірний-аналіз"><span class="header-section-number">27.4</span> Двовимірний аналіз</a>
+  <ul class="collapse">
+  <li><a href="#алкоголь-і-якість" id="toc-алкоголь-і-якість" class="nav-link" data-scroll-target="#алкоголь-і-якість"><span class="header-section-number">27.4.1</span> Алкоголь і якість</a></li>
+  <li><a href="#змінні-кислотності" id="toc-змінні-кислотності" class="nav-link" data-scroll-target="#змінні-кислотності"><span class="header-section-number">27.4.2</span> Змінні кислотності</a></li>
+  <li><a href="#якість-і-ph" id="toc-якість-і-ph" class="nav-link" data-scroll-target="#якість-і-ph"><span class="header-section-number">27.4.3</span> Якість і pH</a></li>
+  <li><a href="#якість-і-хлориди" id="toc-якість-і-хлориди" class="nav-link" data-scroll-target="#якість-і-хлориди"><span class="header-section-number">27.4.4</span> Якість і хлориди</a></li>
+  <li><a href="#якість-і-залишковий-цукор" id="toc-якість-і-залишковий-цукор" class="nav-link" data-scroll-target="#якість-і-залишковий-цукор"><span class="header-section-number">27.4.5</span> Якість і залишковий цукор</a></li>
+  </ul></li>
+  <li><a href="#багатовимірний-аналіз" id="toc-багатовимірний-аналіз" class="nav-link" data-scroll-target="#багатовимірний-аналіз"><span class="header-section-number">27.5</span> Багатовимірний аналіз</a>
+  <ul class="collapse">
+  <li><a href="#хлориди-та-алкоголь-за-якістю" id="toc-хлориди-та-алкоголь-за-якістю" class="nav-link" data-scroll-target="#хлориди-та-алкоголь-за-якістю"><span class="header-section-number">27.5.1</span> Хлориди та алкоголь за якістю</a></li>
+  <li><a href="#залишковий-цукор-і-алкоголь-за-якістю" id="toc-залишковий-цукор-і-алкоголь-за-якістю" class="nav-link" data-scroll-target="#залишковий-цукор-і-алкоголь-за-якістю"><span class="header-section-number">27.5.2</span> Залишковий цукор і алкоголь за якістю</a></li>
+  <li><a href="#хлориди-та-залишковий-цукор-за-якістю" id="toc-хлориди-та-залишковий-цукор-за-якістю" class="nav-link" data-scroll-target="#хлориди-та-залишковий-цукор-за-якістю"><span class="header-section-number">27.5.3</span> Хлориди та залишковий цукор за якістю</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-алкоголь-за-якістю" id="toc-хлориди-залишковий-цукор-і-алкоголь-за-якістю" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-алкоголь-за-якістю"><span class="header-section-number">27.5.4</span> Хлориди, залишковий цукор і алкоголь за якістю</a></li>
+  <li><a href="#змінні-кислотності-та-якість" id="toc-змінні-кислотності-та-якість" class="nav-link" data-scroll-target="#змінні-кислотності-та-якість"><span class="header-section-number">27.5.5</span> Змінні кислотності та якість</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-кислотність-за-якістю" id="toc-хлориди-залишковий-цукор-і-кислотність-за-якістю" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-кислотність-за-якістю"><span class="header-section-number">27.5.6</span> Хлориди, залишковий цукор і кислотність за якістю</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-щільність-за-якістю" id="toc-хлориди-залишковий-цукор-і-щільність-за-якістю" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-щільність-за-якістю"><span class="header-section-number">27.5.7</span> Хлориди, залишковий цукор і щільність за якістю</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-сульфати-за-якістю" id="toc-хлориди-залишковий-цукор-і-сульфати-за-якістю" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-сульфати-за-якістю"><span class="header-section-number">27.5.8</span> Хлориди, залишковий цукор і сульфати за якістю</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-щільність-за-якістю-1" id="toc-хлориди-залишковий-цукор-і-щільність-за-якістю-1" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-щільність-за-якістю-1"><span class="header-section-number">27.5.9</span> Хлориди, залишковий цукор і щільність за якістю</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-сульфати-за-якістю-1" id="toc-хлориди-залишковий-цукор-і-сульфати-за-якістю-1" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-сульфати-за-якістю-1"><span class="header-section-number">27.5.10</span> Хлориди, залишковий цукор і сульфати за якістю</a></li>
+  <li><a href="#хлориди-залишковий-цукор-і-сірка-за-якістю" id="toc-хлориди-залишковий-цукор-і-сірка-за-якістю" class="nav-link" data-scroll-target="#хлориди-залишковий-цукор-і-сірка-за-якістю"><span class="header-section-number">27.5.11</span> Хлориди, залишковий цукор і сірка за якістю</a></li>
+  <li><a href="#смак-оцту-не-дуже-шукають" id="toc-смак-оцту-не-дуже-шукають" class="nav-link" data-scroll-target="#смак-оцту-не-дуже-шукають"><span class="header-section-number">27.5.12</span> Смак оцту не дуже шукають</a></li>
+  <li><a href="#лимонна-кислота-неефективна-для-якості-білого-вина" id="toc-лимонна-кислота-неефективна-для-якості-білого-вина" class="nav-link" data-scroll-target="#лимонна-кислота-неефективна-для-якості-білого-вина"><span class="header-section-number">27.5.13</span> Лимонна кислота неефективна для якості білого вина</a></li>
+  <li><a href="#отримайте-високий-рівень-алкоголю-та-низький-рівень-сульфатів-для-кращих-білих-вин" id="toc-отримайте-високий-рівень-алкоголю-та-низький-рівень-сульфатів-для-кращих-білих-вин" class="nav-link" data-scroll-target="#отримайте-високий-рівень-алкоголю-та-низький-рівень-сульфатів-для-кращих-білих-вин"><span class="header-section-number">27.5.14</span> Отримайте високий рівень алкоголю та низький рівень сульфатів для кращих білих вин</a></li>
+  <li><a href="#зверніть-увагу-на-меншу-присутність-хлоридів-для-кращого-вина" id="toc-зверніть-увагу-на-меншу-присутність-хлоридів-для-кращого-вина" class="nav-link" data-scroll-target="#зверніть-увагу-на-меншу-присутність-хлоридів-для-кращого-вина"><span class="header-section-number">27.5.15</span> Зверніть увагу на меншу присутність хлоридів для кращого вина</a></li>
+  </ul></li>
+  <li><a href="#остаточні-графіки-та-підсумок" id="toc-остаточні-графіки-та-підсумок" class="nav-link" data-scroll-target="#остаточні-графіки-та-підсумок"><span class="header-section-number">28</span> Остаточні графіки та підсумок</a>
+  <ul class="collapse">
+  <li><a href="#підсумки" id="toc-підсумки" class="nav-link" data-scroll-target="#підсумки"><span class="header-section-number">28.1</span> Підсумки</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./eda.html">ТЕМА 7. ОГЛЯДОВИЙ АНАЛІЗ ДАНИХ</a></li><li class="breadcrumb-item"><a href="./eda.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>https://github.com/Ashish25/EDA_Rmd/blob/master/MyWhiteWine.Rmd</p>
+<p>https://www.knowledgehut.com/blog/data-science/eda-data-science</p>
+<section id="етапи-дослідницького-аналізу-даних-exploratory-data-analysis" class="level2" data-number="27.1">
+<h2 data-number="27.1" class="anchored" data-anchor-id="етапи-дослідницького-аналізу-даних-exploratory-data-analysis"><span class="header-section-number">27.1</span> Етапи дослідницького аналізу даних (Exploratory Data Analysis)</h2>
+<ul>
+<li><strong>Збір даних</strong>з Збір та об’єднання всіх необхідних даних для аналіз у2. **Очищення даних*в: Видалення або виправлення помилок, пропущених значень та аномалій у дан и</li>
+</ul>
+<ol start="3" type="1">
+<li>**Описова статистикао*: Обчислення основних статистичних показників, таких як середнє, медіана, мода, стандартне відхилення т о</li>
+<li><strong>Візуалізація данис</strong>: Створення графіків та діаграм для виявлення закономірностей, трендів та взаємозв’язків у д а.</li>
+<li><strong>Виявлення взаємозв’язкав</strong>: Аналіз кореляцій та інших статистичних взаємозв’язків між змі ни.</li>
+<li><strong>Формулювання гіповез</strong>: Висування гіпотез на основі виявлених закономірностей та взаємозв ’ів.</li>
+<li><strong>Перевірка гіпвтез</strong>: Використання статистичних методів для перевірки висунутих гтез.</li>
+<li><strong>Інтерпретація резульаатів</strong>: Аналіз отриманих результатів та формулювання в и вків.</li>
+<li><strong>Документдвання</strong>: Документування всіх етапів аналізу, включаючи проблеми, рішення та висновки.</li>
+</ol>
+<p>Оволодіння дослідницьким аналізом даних (EDA) є важливим для розуміння ваших даних, виявлення закономірностей та отримання інсайтів, які можуть інформувати подальший аналіз або прийняття рішень. Дані є життєво важливими для передових груп, і здатність витягувати інсайти з даних стала важливим навиком у сучасному світі, орієнтованому на статистику. Дослідницький аналіз даних (EDA) є потужним методом, який дозволяє аналітикам, вченим та дослідникам отримати повне уявлення про свої дані до початку формального моделювання або тестування гіпотез.</p>
+<p>Це ітеративний процес, який включає узагальнення, візуалізацію та дослідження інформації для виявлення закономірностей, аномалій та взаємозв’язків, які можуть бути неочевидними на перший погляд. У цій статті ми зрозуміємо та реалізуємо критичні кроки для виконання дослідницького аналізу даних. Ось кроки, які допоможуть вам оволодіти EDA:</p>
+</section>
+<section id="кроки-для-оволодіння-дослідницьким-аналізом-даних" class="level2" data-number="27.2">
+<h2 data-number="27.2" class="anchored" data-anchor-id="кроки-для-оволодіння-дослідницьким-аналізом-даних"><span class="header-section-number">27.2</span> Кроки для оволодіння дослідницьким аналізом даних</h2>
+<p><strong>Крок 1:</strong> Зрозумійте проблему та дані<br>
+<strong>Крок 2:</strong> Імпортуйте та перевірте дані<br>
+<strong>Крок 3:</strong> Обробка пропущених значень<br>
+<strong>Крок 4:</strong> Дослідження характеристик даних<br>
+<strong>Крок 5:</strong> Виконання трансформації даних<br>
+<strong>Крок 6:</strong> Візуалізація взаємозв’язків даних<br>
+<strong>Крок 7:</strong> Обробка викидів<br>
+<strong>Крок 8:</strong> Комунікація висновків та інсайтів</p>
+<section id="мета-цього-проекту" class="level3" data-number="27.2.1">
+<h3 data-number="27.2.1" class="anchored" data-anchor-id="мета-цього-проекту"><span class="header-section-number">27.2.1</span> Мета цього проекту</h3>
+<p>У цьому проекті ми будемо аналізувати дані про біле вино і намагатися зрозуміти, які змінні відповідають за якість вина. Спочатку ми спробуємо отримати уявлення про змінні самі по собі, а потім спробуємо знайти кореляцію між ними та якістю вина з урахуванням інших факторів.</p>
+<div id="3926cb60-26e0-40c7-bde4-9eb7acb1bc39" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#install.packages("GGally")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="10776a64-8700-44de-a324-c648ef9e6522" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="132f3686-5adc-4e8f-9066-9492d8e1247a" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>white_wines <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'https://raw.githubusercontent.com/Ashish25/EDA_Rmd/refs/heads/master/wineQualityWhites.csv'</span>, </span>
+<span id="cb3-2"><a href="#cb3-2"></a>                        <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-3"><a href="#cb3-3"></a>                        <span class="at">sep =</span> <span class="st">','</span>, </span>
+<span id="cb3-4"><a href="#cb3-4"></a>                        <span class="at">row.names =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="контекст" class="level3" data-number="27.2.2">
+<h3 data-number="27.2.2" class="anchored" data-anchor-id="контекст"><span class="header-section-number">27.2.2</span> Контекст</h3>
+<p>Два набори даних стосуються червоних і білих варіантів португальського вина “Vinho Verde”. Для отримання додаткової інформації зверніться до посилання [Cortez et al., 2009]. Через питання конфіденційності та логістики доступні лише фізико-хімічні (вхідні) та сенсорні (вихідні) змінні (наприклад, немає даних про типи винограду, бренд вина, ціну продажу вина тощо).</p>
+<p>Ці набори даних можна розглядати як завдання класифікації або регресії. Класи впорядковані і не збалансовані (наприклад, набагато більше звичайних вин, ніж відмінних або поганих).</p>
+<p>Цей набір даних також доступний у репозиторії машинного навчання UCI: https://archive.ics.uci.edu/ml/datasets/wine+quality.</p>
+</section>
+<section id="опис" class="level3" data-number="27.2.3">
+<h3 data-number="27.2.3" class="anchored" data-anchor-id="опис"><span class="header-section-number">27.2.3</span> Опис</h3>
+<p>Для отримання додаткової інформації читайте [Cortez et al., 2009].</p>
+<p>Вхідні змінні (на основі фізико-хімічних тестів): 1. <strong>fixed acidity</strong> - фіксована кислотність 2. <strong>volatile acidity</strong> - летка кислотність 3. <strong>citric acid</strong> - лимонна кислота 4. <strong>residual sugar</strong> - залишковий цукор 5. <strong>chlorides</strong> - хлориди 6. <strong>free sulfur dioxide</strong> - вільний діоксид сірки 7. <strong>total sulfur dioxide</strong> - загальний діоксид сірки 8. <strong>density</strong> - густина 9. <strong>pH</strong> - рівень pH 10. <strong>sulphates</strong> - сульфати 11. <strong>alcohol</strong> - вміст алкоголю</p>
+<p>Вихідна змінна (на основі сенсорних даних): 12. <strong>quality</strong> - якість (оцінка від 0 до 10)</p>
+</section>
+<section id="перший-погляд" class="level3" data-number="27.2.4">
+<h3 data-number="27.2.4" class="anchored" data-anchor-id="перший-погляд"><span class="header-section-number">27.2.4</span> Перший погляд</h3>
+<p>Ми маємо наступні змінні:</p>
+<div id="9da95c7c-4be7-4665-97a7-7dd592dddc36" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">names</span>(white_wines)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>'fixed.acidity'</li><li>'volatile.acidity'</li><li>'citric.acid'</li><li>'residual.sugar'</li><li>'chlorides'</li><li>'free.sulfur.dioxide'</li><li>'total.sulfur.dioxide'</li><li>'density'</li><li>'pH'</li><li>'sulphates'</li><li>'alcohol'</li><li>'quality'</li></ol>
+</div>
+</div>
+<div id="4c9f767a-6f26-4cec-b28f-a826efe3c5fb" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">str</span>(white_wines)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   4898 obs. of  12 variables:
+ $ fixed.acidity       : num  7 6.3 8.1 7.2 7.2 8.1 6.2 7 6.3 8.1 ...
+ $ volatile.acidity    : num  0.27 0.3 0.28 0.23 0.23 0.28 0.32 0.27 0.3 0.22 ...
+ $ citric.acid         : num  0.36 0.34 0.4 0.32 0.32 0.4 0.16 0.36 0.34 0.43 ...
+ $ residual.sugar      : num  20.7 1.6 6.9 8.5 8.5 6.9 7 20.7 1.6 1.5 ...
+ $ chlorides           : num  0.045 0.049 0.05 0.058 0.058 0.05 0.045 0.045 0.049 0.044 ...
+ $ free.sulfur.dioxide : num  45 14 30 47 47 30 30 45 14 28 ...
+ $ total.sulfur.dioxide: num  170 132 97 186 186 97 136 170 132 129 ...
+ $ density             : num  1.001 0.994 0.995 0.996 0.996 ...
+ $ pH                  : num  3 3.3 3.26 3.19 3.19 3.26 3.18 3 3.3 3.22 ...
+ $ sulphates           : num  0.45 0.49 0.44 0.4 0.4 0.44 0.47 0.45 0.49 0.45 ...
+ $ alcohol             : num  8.8 9.5 10.1 9.9 9.9 10.1 9.6 8.8 9.5 11 ...
+ $ quality             : int  6 6 6 6 6 6 6 6 6 6 ...</code></pre>
+</div>
+</div>
+<div id="d75915ff-925d-42dd-874a-844fe3054572" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">summary</span>(white_wines)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code> fixed.acidity    volatile.acidity  citric.acid     residual.sugar  
+ Min.   : 3.800   Min.   :0.0800   Min.   :0.0000   Min.   : 0.600  
+ 1st Qu.: 6.300   1st Qu.:0.2100   1st Qu.:0.2700   1st Qu.: 1.700  
+ Median : 6.800   Median :0.2600   Median :0.3200   Median : 5.200  
+ Mean   : 6.855   Mean   :0.2782   Mean   :0.3342   Mean   : 6.391  
+ 3rd Qu.: 7.300   3rd Qu.:0.3200   3rd Qu.:0.3900   3rd Qu.: 9.900  
+ Max.   :14.200   Max.   :1.1000   Max.   :1.6600   Max.   :65.800  
+   chlorides       free.sulfur.dioxide total.sulfur.dioxide    density      
+ Min.   :0.00900   Min.   :  2.00      Min.   :  9.0        Min.   :0.9871  
+ 1st Qu.:0.03600   1st Qu.: 23.00      1st Qu.:108.0        1st Qu.:0.9917  
+ Median :0.04300   Median : 34.00      Median :134.0        Median :0.9937  
+ Mean   :0.04577   Mean   : 35.31      Mean   :138.4        Mean   :0.9940  
+ 3rd Qu.:0.05000   3rd Qu.: 46.00      3rd Qu.:167.0        3rd Qu.:0.9961  
+ Max.   :0.34600   Max.   :289.00      Max.   :440.0        Max.   :1.0390  
+       pH          sulphates         alcohol         quality     
+ Min.   :2.720   Min.   :0.2200   Min.   : 8.00   Min.   :3.000  
+ 1st Qu.:3.090   1st Qu.:0.4100   1st Qu.: 9.50   1st Qu.:5.000  
+ Median :3.180   Median :0.4700   Median :10.40   Median :6.000  
+ Mean   :3.188   Mean   :0.4898   Mean   :10.51   Mean   :5.878  
+ 3rd Qu.:3.280   3rd Qu.:0.5500   3rd Qu.:11.40   3rd Qu.:6.000  
+ Max.   :3.820   Max.   :1.0800   Max.   :14.20   Max.   :9.000  </code></pre>
+</div>
+</div>
+</section>
+<section id="підсумок" class="level3" data-number="27.2.5">
+<h3 data-number="27.2.5" class="anchored" data-anchor-id="підсумок"><span class="header-section-number">27.2.5</span> Підсумок</h3>
+<p>Підсумок показує, що максимальні значення для змінних <strong>residual sugar</strong> (залишковий цукор), <strong>chlorides</strong> (хлориди) та <strong>free sulfur dioxide</strong> (вільний діоксид сірки) значно відрізняються від інших значень. Це можуть бути викиди або проблеми з введенням даних, або ж це можуть бути дійсно особливі вина.</p>
+</section>
+</section>
+<section id="одновимірні-графіки" class="level2" data-number="27.3">
+<h2 data-number="27.3" class="anchored" data-anchor-id="одновимірні-графіки"><span class="header-section-number">27.3</span> Одновимірні графіки</h2>
+<p>Давайте побудуємо розподіл кожної змінної, оскільки я хочу спочатку отримати уявлення про змінні. Виходячи з форми розподілу, тобто нормального, позитивного або негативного перекосу, і кількості викидів, це також допоможе нам зрозуміти, чого очікувати, коли я буду будувати графіки різних змінних одна проти одної.</p>
+<section id="якість-quality" class="level3" data-number="27.3.1">
+<h3 data-number="27.3.1" class="anchored" data-anchor-id="якість-quality"><span class="header-section-number">27.3.1</span> Якість (Quality)</h3>
+<p>Оскільки якість є числовою змінною, ми додамо її як фактор.</p>
+<div id="d940be26-f064-41cf-9f8d-d590a4864e5c" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>white_wines<span class="sc">$</span>quality.lvl<span class="ot">=</span><span class="fu">cut</span>(white_wines<span class="sc">$</span>quality, </span>
+<span id="cb9-2"><a href="#cb9-2"></a>                          <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>), </span>
+<span id="cb9-3"><a href="#cb9-3"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>))</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">fill =</span> <span class="fu">after_stat</span>(count)), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="fu">scale_x_discrete</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-8-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Схоже на нормальний розподіл. Більшість вин мають якість близько 5/6/7. Оскільки вина хорошої та поганої якості майже як викиди, може бути важко отримати точну модель якості вина. Давайте подивимося на інші графіки.</p>
+<hr>
+</section>
+<section id="алкоголь-alcohol" class="level3" data-number="27.3.2">
+<h3 data-number="27.3.2" class="anchored" data-anchor-id="алкоголь-alcohol"><span class="header-section-number">27.3.2</span> Алкоголь (Alcohol)</h3>
+<p>Давайте перевіримо розподіл алкоголю.</p>
+<div id="f7ba877c-ad1d-4bda-a902-d1cceada3dcf" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alcohol, <span class="at">fill =</span> ..count..), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"#fcf4d9"</span>, <span class="at">high =</span> <span class="st">"#f9ae00"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-9-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Набагато більш різнорідний, але ми маємо гарний пік близько 9,5% за об’ємом. Загалом, це все ще виглядає як нормальний розподіл, з невеликим перекосом вліво.</p>
+</section>
+<section id="залишковий-цукор-residual-sugar" class="level3" data-number="27.3.3">
+<h3 data-number="27.3.3" class="anchored" data-anchor-id="залишковий-цукор-residual-sugar"><span class="header-section-number">27.3.3</span> Залишковий цукор (Residual Sugar)</h3>
+<p>Залишковий цукор - це кількість цукру, що залишилася після ферментації.</p>
+<div id="8558b7dd-b954-4875-ba27-e342cbdc0b6c" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>gridExtra<span class="sc">::</span> <span class="fu">grid.arrange</span>(<span class="fu">ggplot</span>(white_wines, <span class="fu">aes</span>( <span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> residual.sugar ) ) <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2"></a>               <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">'blue'</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span> ) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>               <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">color =</span> <span class="st">'red'</span> ) ,</span>
+<span id="cb11-4"><a href="#cb11-4"></a>             <span class="fu">ggplot</span>(white_wines, <span class="fu">aes</span>( <span class="at">x   =</span> residual.sugar  ) ) <span class="sc">+</span> <span class="fu">scale_x_log10</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">30</span>,<span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>                   <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.04</span>),<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-10-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Шкала X в логарифмічному масштабі (log10). Ми маємо той самий тип розподілу, але з довгим хвостом. Пік знаходиться близько 1,5 г/дм³, а дані, здається, доходять до 25 г/дм³. Давайте подивимося на підсумок.</p>
+<div id="9ddb310d-f883-43c6-a34d-97a41c7ef89b" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>residual.sugar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.600   1.700   5.200   6.391   9.900  65.800 </code></pre>
+</div>
+</div>
+<p>Максимальне значення становить 65 (що досить дивно), тоді як третій квартиль знаходиться на рівні 9,9, а медіана - на рівні 5,2. Отже, це досить особливі вина або є якась помилка в даних.</p>
+</section>
+<section id="хлориди-chlorides" class="level3" data-number="27.3.4">
+<h3 data-number="27.3.4" class="anchored" data-anchor-id="хлориди-chlorides"><span class="header-section-number">27.3.4</span> Хлориди (Chlorides)</h3>
+<p>Хлориди - це сіль, і я вважаю, що вони не додають гарного смаку вину.</p>
+<div id="1ea16638-867c-493d-bca7-ad653645ab5a" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>gridExtra<span class="sc">::</span> <span class="fu">grid.arrange</span>(<span class="fu">ggplot</span>(white_wines, <span class="fu">aes</span>( <span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> chlorides ) ) <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2"></a>               <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">'violet'</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span> ) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>               <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">outlier.size =</span> <span class="fl">0.5</span> ) ,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>             <span class="fu">ggplot</span>(white_wines, <span class="fu">aes</span>( <span class="at">x   =</span> chlorides, <span class="at">fill =</span> ..count..) ) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a>               <span class="fu">scale_x_continuous</span>(<span class="at">trans =</span> <span class="st">'log10'</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a>               <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"grey"</span>, <span class="at">high =</span> <span class="st">"steelblue"</span>, <span class="at">midpoint =</span> <span class="dv">100</span>, <span class="at">mid =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a>                   <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>),<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-12-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ми маємо нормальний розподіл після перетворення осі X за допомогою функції log10. Як і у випадку з залишковим цукром, ми маємо правий довгий хвіст даних.</p>
+<div id="63125ce5-aaf7-4179-ad59-0a27ba507ad3" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>chlorides)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00900 0.03600 0.04300 0.04577 0.05000 0.34600 </code></pre>
+</div>
+</div>
+<p>Одиниця виміру така ж, як і для залишкового цукру, але значення набагато нижчі. Медіана становить 0,043 г/дм³. Максимальне значення знову більше ніж у 80 разів вище, що не є нормальним.</p>
+<hr>
+</section>
+<section id="лимонна-кислота-citric-acid" class="level3" data-number="27.3.5">
+<h3 data-number="27.3.5" class="anchored" data-anchor-id="лимонна-кислота-citric-acid"><span class="header-section-number">27.3.5</span> Лимонна кислота (Citric acid)</h3>
+<p>У невеликих кількостях лимонна кислота може додати свіжості та яскравості вину.</p>
+<div id="96af317c-edcd-465a-877c-804fdbc53c7d" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>gridExtra<span class="sc">::</span> <span class="fu">grid.arrange</span>(<span class="fu">ggplot</span>(white_wines, <span class="fu">aes</span>( <span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> citric.acid ) ) <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2"></a>               <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">'blue'</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span> ) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>               <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">outlier.size =</span> <span class="fl">0.5</span> ) ,</span>
+<span id="cb17-4"><a href="#cb17-4"></a>             <span class="fu">ggplot</span>(white_wines, <span class="fu">aes</span>( <span class="at">x   =</span> citric.acid, <span class="at">fill =</span> ..count..) ) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>               <span class="fu">scale_x_continuous</span>(<span class="at">trans =</span> <span class="st">'log10'</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>               <span class="fu">scale_fill_gradient2</span>(<span class="at">mid =</span> <span class="st">"lightgrey"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>                   <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.03</span>),<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in scale_x_continuous(trans = "log10"):
+"log-10 transformation introduced infinite values."
+Warning message:
+"Removed 19 rows containing non-finite outside the scale range (`stat_bin()`)."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-14-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Розглядаючи лимонну кислоту в логарифмічному масштабі (log10), ми знову маємо нормальний розподіл, звісно, з кількома помітними викидами.</p>
+<div id="fde223da-cde0-4b44-9292-fee3960eaa0f" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>citric.acid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.2700  0.3200  0.3342  0.3900  1.6600 </code></pre>
+</div>
+</div>
+<p>Знову ж таки, медіана становить 0,32 г/дм³, тоді як максимальне значення - 1,6, а мінімальне - 0.</p>
+</section>
+<section id="ph" class="level3" data-number="27.3.6">
+<h3 data-number="27.3.6" class="anchored" data-anchor-id="ph"><span class="header-section-number">27.3.6</span> pH</h3>
+<p>Шкала pH від 0 (дуже кислий) до 14 (дуже лужний). Більшість вин мають pH між 3 і 3,5.</p>
+<div id="9369c3e1-e6c6-4e96-b9e4-d2cc341bcbfa" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pH), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>  <span class="fu">geom_bar</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">position =</span> <span class="st">'identity'</span>, <span class="at">fill =</span> <span class="st">'#ffc532'</span>, <span class="at">colour =</span> <span class="st">'grey'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in geom_bar(binwidth = 0.01, position = "identity", fill = "#ffc532", :
+"Ignoring unknown parameters: `binwidth`"</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-16-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>pH має нормальний розподіл з піком без необхідності використання логарифмічної шкали. Ми можемо побачити, що дані досить розсіяні, але, як зазначено в описі, більшість точок даних знаходяться між 3 і 3,5.</p>
+<div id="06e50975-946b-45ec-8d4f-704da6af32b6" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>pH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.720   3.090   3.180   3.188   3.280   3.820 </code></pre>
+</div>
+</div>
+<p>Мінімальне та максимальне значення знову досить далеко від медіани та відповідно першого і третього квартилів, але не так багато варіацій.</p>
+</section>
+<section id="летюча-кислотність-volatile-acidity" class="level3" data-number="27.3.7">
+<h3 data-number="27.3.7" class="anchored" data-anchor-id="летюча-кислотність-volatile-acidity"><span class="header-section-number">27.3.7</span> Летюча кислотність (Volatile acidity)</h3>
+<p>Летюча кислотність - це кількість оцтової кислоти у вині. При високій концентрації вона надає неприємного смаку оцту, що, на мою думку, характерно для вина низької якості.</p>
+<div id="30d1282e-1ed3-418a-bfb4-eb1e0d3712b7" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> volatile.acidity, <span class="at">fill =</span> ..count..), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>  <span class="fu">geom_bar</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">position =</span> <span class="st">'identity'</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"#56B1F7"</span>, <span class="at">high =</span> <span class="st">"#132B43"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in geom_bar(binwidth = 0.01, position = "identity"):
+"Ignoring unknown parameters: `binwidth`"</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-18-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="f5abce7b-690f-4a77-b3b5-1228482baa12" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>volatile.acidity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0800  0.2100  0.2600  0.2782  0.3200  1.1000 </code></pre>
+</div>
+</div>
+<p>Дані все ще мають довгий хвіст з піком близько 0,3 г/дм³ оцтової кислоти.</p>
+<p>Максимальне значення дійсно виходить за межі інших точок даних. Медіана становить 0,26 г/дм³ оцтової кислоти, а середнє значення дуже схоже - 0,2782 г/дм³ оцтової кислоти.</p>
+<div id="18114fc8-c85d-4c04-860c-597010b84a9c" class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="do">### Загальний діоксид сірки (Total Sulfur Dioxide)</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a></span>
+<span id="cb29-3"><a href="#cb29-3"></a>Загальний діоксид сірки <span class="sc">-</span> це сума вільних (для окислення вина) та зв<span class="st">'язаних форм сірки. При високій концентрації він може впливати на смак.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e2a8e22f-c0e0-45f6-85a7-7fe652ffa2ec" class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total.sulfur.dioxide), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>  <span class="fu">geom_bar</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">position =</span> <span class="st">'identity'</span>, <span class="at">fill =</span> <span class="st">"grey25"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3"></a>  <span class="fu">coord_cartesian</span>() <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4"></a>  <span class="fu">scale_x_log10</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">500</span>,<span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Вісь x перетворена за допомогою log10. Ми маємо кілька горбів, але загалом нормальний розподіл. Деякі точки даних здаються ізольованими. Давайте розглянемо підсумок змінної.</p>
+<div id="27569ab8-9430-4ed1-b58c-2081850d6e18" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>total.sulfur.dioxide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    9.0   108.0   134.0   138.4   167.0   440.0 </code></pre>
+</div>
+</div>
+<p>Максимальне значення дійсно занадто високе порівняно з медіаною та третім квартилем. Я думаю, що це помилка у звітуванні/записі даних.</p>
+<p>Основна лінія досліджень буде стосуватися взаємозв’язку між усіма змінними та якістю.</p>
+</section>
+</section>
+<section id="двовимірний-аналіз" class="level2" data-number="27.4">
+<h2 data-number="27.4" class="anchored" data-anchor-id="двовимірний-аналіз"><span class="header-section-number">27.4</span> Двовимірний аналіз</h2>
+<section id="алкоголь-і-якість" class="level3" data-number="27.4.1">
+<h3 data-number="27.4.1" class="anchored" data-anchor-id="алкоголь-і-якість"><span class="header-section-number">27.4.1</span> Алкоголь і якість</h3>
+<p>Чи впливає рівень алкоголю на якість?</p>
+<div id="9c2f1859-a20d-47f0-b4f8-062a91141867" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> alcohol), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour=</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">'blue'</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4"></a>  <span class="fu">ggtitle</span>(<span class="st">"Alcohol by quality"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5"></a></span>
+<span id="cb33-6"><a href="#cb33-6"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>alcohol, white_wines<span class="sc">$</span>quality)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.435574715461373
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-23-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Існує середня кореляція (близько 0,435) між якістю та алкоголем, графік показує, що чим вища якість, тим кращий алкоголь. Це особливо вірно для вин вищого класу.</p>
+<hr>
+</section>
+<section id="змінні-кислотності" class="level3" data-number="27.4.2">
+<h3 data-number="27.4.2" class="anchored" data-anchor-id="змінні-кислотності"><span class="header-section-number">27.4.2</span> Змінні кислотності</h3>
+<p>У нас є 3 типи кислотності:</p>
+<ul>
+<li>Фіксована кислотність: більшість кислот, що містяться у вині, є фіксованими або нелеткими (не випаровуються легко)</li>
+<li>Летюча кислотність: кількість оцтової кислоти у вині, яка при занадто високих рівнях може призвести до неприємного смаку оцту</li>
+<li>Лимонна кислота: зустрічається в невеликих кількостях, лимонна кислота може додати винам “свіжості” та смаку</li>
+</ul>
+<p>Вони всі повинні бути пов’язані з pH, я думаю.</p>
+<div id="897777d8-150c-4114-b76e-4485b02dcb80" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>pH, white_wines<span class="sc">$</span>fixed.acidity)</span>
+<span id="cb34-2"><a href="#cb34-2"></a></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>pH, white_wines<span class="sc">$</span>volatile.acidity)</span>
+<span id="cb34-4"><a href="#cb34-4"></a></span>
+<span id="cb34-5"><a href="#cb34-5"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>pH, white_wines<span class="sc">$</span>citric.acid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.425858290991382
+</div>
+<div class="cell-output cell-output-display">
+-0.0319153682734889
+</div>
+<div class="cell-output cell-output-display">
+-0.163748211400624
+</div>
+</div>
+<p>Отже, фіксована кислотність і лимонна кислота досить сильно корелюють з pH (близько -0,42 і -0,16 відповідно), але не летюча кислотність (близько -0,03).</p>
+<div id="06d41ab1-b0af-4188-9285-d88ddd957e9a" class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pH, <span class="at">y =</span> volatile.acidity), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a>  <span class="fu">geom_smooth</span>(<span class="at">color =</span> <span class="st">'red1'</span>) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">'cyan4'</span>, <span class="at">size =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="#cb35-4"></a>  <span class="fu">ggtitle</span>(<span class="st">"White Wine Volatile acidity by pH"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-25-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Летюча кислотність і pH не пов’язані. Навіть для вин високої якості pH, здається, сильно варіюється. Це підтверджує низьку кореляцію, виявлену раніше.</p>
+</section>
+<section id="якість-і-ph" class="level3" data-number="27.4.3">
+<h3 data-number="27.4.3" class="anchored" data-anchor-id="якість-і-ph"><span class="header-section-number">27.4.3</span> Якість і pH</h3>
+<p>Давайте тепер уважніше розглянемо взаємозв’язок між pH і якістю.</p>
+<div id="703ef18c-117a-4bd6-a546-b48433b3a7d8" class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> pH), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">'orange'</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.color =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.y =</span> <span class="st">"mean"</span>, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">shape =</span> <span class="dv">8</span>, <span class="at">size =</span> <span class="dv">4</span>)</span>
+<span id="cb37-5"><a href="#cb37-5"></a>  <span class="fu">ggtitle</span>(<span class="st">"White Wine pH by quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>$title
+[1] "White Wine pH by quality"
+
+attr(,"class")
+[1] "labels"</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-26-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Чим вища якість, тим вищий pH, але це не дуже чітко видно.</p>
+<div id="bf073bd5-c62a-43d6-90d3-270aeffd663a" class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>pH, white_wines<span class="sc">$</span>quality)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.0994272457366642
+</div>
+</div>
+<p>Коефіцієнт кореляції між ними дуже низький і становить 0,09. Отже, перше враження від графіка насправді не підтверджується числом.</p>
+<p>А як щодо солі? (Хлорид)</p>
+</section>
+<section id="якість-і-хлориди" class="level3" data-number="27.4.4">
+<h3 data-number="27.4.4" class="anchored" data-anchor-id="якість-і-хлориди"><span class="header-section-number">27.4.4</span> Якість і хлориди</h3>
+<p>Нагадаємо, підсумок хлоридів.</p>
+<div id="40de9196-1853-4782-8778-d4e45abf9e3d" class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="fu">summary</span>(white_wines<span class="sc">$</span>chlorides)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00900 0.03600 0.04300 0.04577 0.05000 0.34600 </code></pre>
+</div>
+</div>
+<p>Підсумок показує, що максимальне значення становить 0,346, тоді як третій квартиль становить 0,05. Давайте збільшимо масштаб, щоб отримати кращий огляд.</p>
+<div id="56b42e1a-b509-49f5-b389-18c3a026eea9" class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co">#coloring outlier and limiting the y scale to have a better look</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a></span>
+<span id="cb42-3"><a href="#cb42-3"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> chlorides), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">'orange'</span>, <span class="at">size =</span><span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="#cb42-6"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.y =</span> <span class="st">"mean"</span>, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">shape =</span> <span class="dv">8</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7"></a>  <span class="fu">coord_cartesian</span>() <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8"></a>  <span class="fu">ylim</span>(<span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.05</span>),<span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb42-9"><a href="#cb42-9"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by quality, red outliers"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message:
+"Removed 469 rows containing non-finite outside the scale range (`stat_boxplot()`)."
+Warning message:
+"Removed 469 rows containing non-finite outside the scale range (`stat_summary()`)."
+Warning message:
+"Removed 509 rows containing missing values or values outside the scale range (`geom_point()`)."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-29-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Графік обмежений між 0,05 і 0,95 квантилями. Є деякі перекриття, але чим вища якість, тим менше хлоридів. (Це певною мірою підтверджує нашу попередню гіпотезу, що наявність солі погано впливає на смак вина)</p>
+<div id="c8d089ba-0e93-4ee6-84db-22b30e47dee4" class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>quality,white_wines<span class="sc">$</span>chlorides)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.209934410946761
+</div>
+</div>
+<p>Кореляція дуже низька і становить -0,20. Отже, взаємозв’язок між цими двома змінними не дуже сильний.</p>
+<p>Остання змінна, яка очевидно впливає на смак (а отже, і на якість), на мою думку, це цукор.</p>
+</section>
+<section id="якість-і-залишковий-цукор" class="level3" data-number="27.4.5">
+<h3 data-number="27.4.5" class="anchored" data-anchor-id="якість-і-залишковий-цукор"><span class="header-section-number">27.4.5</span> Якість і залишковий цукор</h3>
+<div id="9a22deb0-5ea3-4421-914f-d7496fc74934" class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> residual.sugar), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">'orange'</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.color=</span><span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="#cb45-4"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.y =</span> <span class="st">"mean"</span>, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">shape =</span> <span class="dv">8</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb45-5"><a href="#cb45-5"></a>  <span class="fu">coord_cartesian</span>() <span class="sc">+</span></span>
+<span id="cb45-6"><a href="#cb45-6"></a>  <span class="fu">ylim</span>(<span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar,<span class="fl">0.05</span>),</span>
+<span id="cb45-7"><a href="#cb45-7"></a>       <span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar,<span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb45-8"><a href="#cb45-8"></a>  <span class="fu">ggtitle</span>(<span class="st">"Residual sugar by quality (0.05 to 0.95 quantile)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message:
+"Removed 411 rows containing non-finite outside the scale range (`stat_boxplot()`)."
+Warning message:
+"Removed 411 rows containing non-finite outside the scale range (`stat_summary()`)."
+Warning message:
+"Removed 481 rows containing missing values or values outside the scale range (`geom_point()`)."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-31-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Немає чіткого взаємозв’язку між цукром і якістю. Точковий графік показує точки по всьому діапазону. Що стосується діаграми розмаху, то медіана здається вищою для середнього діапазону якості, але нічого особливого тут не помітно.</p>
+<div id="2c7772ca-ea53-4941-a015-7d5a85d85c67" class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="fu">cor</span>(white_wines<span class="sc">$</span>quality,white_wines<span class="sc">$</span>residual.sugar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.0975768288946932
+</div>
+</div>
+<p>Кореляція підтверджує, що взаємозв’язок дуже низький (-0,09), майже незначний.</p>
+</section>
+</section>
+<section id="багатовимірний-аналіз" class="level2" data-number="27.5">
+<h2 data-number="27.5" class="anchored" data-anchor-id="багатовимірний-аналіз"><span class="header-section-number">27.5</span> Багатовимірний аналіз</h2>
+<p>Уважніше розглянемо хлориди.</p>
+<section id="хлориди-та-алкоголь-за-якістю" class="level3" data-number="27.5.1">
+<h3 data-number="27.5.1" class="anchored" data-anchor-id="хлориди-та-алкоголь-за-якістю"><span class="header-section-number">27.5.1</span> Хлориди та алкоголь за якістю</h3>
+<div id="ea5c7209-16fb-498d-9028-066359536b2e" class="cell" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>ggplot_base_alcohol.quality<span class="ot">&lt;-</span><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alcohol), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>quality.lvl, <span class="at">scales =</span> <span class="st">'free_y'</span>)</span>
+<span id="cb48-3"><a href="#cb48-3"></a>  </span>
+<span id="cb48-4"><a href="#cb48-4"></a>ggplot_base_alcohol.quality <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5"></a>   <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">y =</span> chlorides), <span class="at">alpha =</span><span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb48-6"><a href="#cb48-6"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">y =</span> chlorides)) <span class="sc">+</span></span>
+<span id="cb48-7"><a href="#cb48-7"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by alcohol facetted by quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+Warning message:
+"Failed to fit group -1.
+Caused by error in `smooth.construct.cr.smooth.spec()`:
+! x has insufficient unique values to support 10 knots: reduce k."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-33-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Загальна тенденція знижується: менше хлоридів при підвищенні рівня алкоголю. Але ми можемо побачити, що для найвищих 4 якостей (6, 7, 8) ми маємо основну концентрацію навколо 10-12, де рівень солі трохи підвищується. Це можуть бути деякі викиди, оскільки ми маємо лише кілька точок для цієї якості.</p>
+<div id="1264d9e4-0001-4f0d-b73f-26892e696bb5" class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">5</span>),<span class="fu">cor</span>(chlorides,alcohol))</span>
+<span id="cb50-2"><a href="#cb50-2"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">6</span>),<span class="fu">cor</span>(chlorides,alcohol))</span>
+<span id="cb50-3"><a href="#cb50-3"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">7</span>),<span class="fu">cor</span>(chlorides,alcohol))</span>
+<span id="cb50-4"><a href="#cb50-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">8</span>),<span class="fu">cor</span>(chlorides,alcohol))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.22310980966467
+</div>
+<div class="cell-output cell-output-display">
+-0.319942402779244
+</div>
+<div class="cell-output cell-output-display">
+-0.554550369137382
+</div>
+<div class="cell-output cell-output-display">
+-0.512482443523902
+</div>
+</div>
+<p>Кореляція між хлоридами та алкоголем становить:</p>
+<ul>
+<li>-0,223 для якості 5</li>
+<li>-0,319 для якості 6</li>
+<li>-0,554 для якості 7</li>
+<li>-0,512 для якості 8</li>
+</ul>
+<p>Кореляції слабкі для 5-го та 6-го рівнів якості, але досить помітні між 7-м і 8-м рівнями.</p>
+</section>
+<section id="залишковий-цукор-і-алкоголь-за-якістю" class="level3" data-number="27.5.2">
+<h3 data-number="27.5.2" class="anchored" data-anchor-id="залишковий-цукор-і-алкоголь-за-якістю"><span class="header-section-number">27.5.2</span> Залишковий цукор і алкоголь за якістю</h3>
+<p>Давайте подивимося на те ж саме з цукром:</p>
+<div id="7595546e-6b87-4b98-8f68-1fb8b2b2de2d" class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>ggplot_base_alcohol.quality <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">y =</span> residual.sugar), <span class="at">alpha =</span><span class="fl">0.2</span>, <span class="at">size =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">y =</span> residual.sugar)) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4"></a>  <span class="fu">ggtitle</span>(<span class="st">"Residual sugar by alcohol facetted by quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+Warning message:
+"Failed to fit group -1.
+Caused by error in `smooth.construct.cr.smooth.spec()`:
+! x has insufficient unique values to support 10 knots: reduce k."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-35-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Загальна тенденція до зниження тут помітна. Давайте підтвердимо це за допомогою кореляції.</p>
+<div id="a79707fc-756b-418a-ab1d-41f05249be69" class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">5</span>),<span class="fu">cor</span>(residual.sugar,alcohol))</span>
+<span id="cb53-2"><a href="#cb53-2"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">6</span>),<span class="fu">cor</span>(residual.sugar,alcohol))</span>
+<span id="cb53-3"><a href="#cb53-3"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">7</span>),<span class="fu">cor</span>(residual.sugar,alcohol))</span>
+<span id="cb53-4"><a href="#cb53-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">8</span>),<span class="fu">cor</span>(residual.sugar,alcohol))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.441482522581375
+</div>
+<div class="cell-output cell-output-display">
+-0.454996081839005
+</div>
+<div class="cell-output cell-output-display">
+-0.480936935895533
+</div>
+<div class="cell-output cell-output-display">
+-0.52201078865539
+</div>
+</div>
+<p>Кореляції не є сильними:</p>
+<ul>
+<li>-0,441 для якості 5</li>
+<li>-0,454 для якості 6</li>
+<li>-0,480 для якості 7</li>
+<li>-0,522 для якості 8</li>
+</ul>
+<p>Кореляція для всіх якостей є досить послідовною, 8-ма якість має вищу кореляцію, але у нас є лише кілька точок даних для цієї якості, тому кореляція може бути зумовлена цим.</p>
+<p>Тенденції на графіках для хлоридів і залишкового цукру виглядають схожими, обидва мають негативну кореляцію. Хлориди та залишковий цукор можуть бути пов’язані.</p>
+</section>
+<section id="хлориди-та-залишковий-цукор-за-якістю" class="level3" data-number="27.5.3">
+<h3 data-number="27.5.3" class="anchored" data-anchor-id="хлориди-та-залишковий-цукор-за-якістю"><span class="header-section-number">27.5.3</span> Хлориди та залишковий цукор за якістю</h3>
+<div id="eba34a8a-df15-4a91-8cfa-bb18c39589a6" class="cell" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> chlorides, <span class="at">y =</span> residual.sugar), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb54-2"><a href="#cb54-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha=</span><span class="fl">0.4</span>, <span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3"></a>  <span class="fu">geom_smooth</span>(<span class="at">color=</span><span class="fu">I</span>(<span class="st">'orange'</span>)) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4"></a>  <span class="fu">xlim</span>(<span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.05</span>), </span>
+<span id="cb54-5"><a href="#cb54-5"></a>       <span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb54-6"><a href="#cb54-6"></a>  <span class="fu">ylim</span>(<span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar,<span class="fl">0.05</span>), </span>
+<span id="cb54-7"><a href="#cb54-7"></a>       <span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar,<span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb54-8"><a href="#cb54-8"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>quality.lvl, <span class="at">scales =</span> <span class="st">'free'</span>) <span class="sc">+</span></span>
+<span id="cb54-9"><a href="#cb54-9"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by residual sugar smoother, .95 quantile"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+Warning message:
+"Removed 841 rows containing non-finite outside the scale range (`stat_smooth()`)."
+Warning message:
+"Failed to fit group -1.
+Caused by error in `smooth.construct.cr.smooth.spec()`:
+! x has insufficient unique values to support 10 knots: reduce k."
+Warning message:
+"Removed 939 rows containing missing values or values outside the scale range (`geom_point()`)."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-37-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Взаємозв’язок між хлоридами та залишковим цукром, здається, стає більш хвилястим (нелінійним) із покращенням якості. Це може зробити смак білого вина неприємним і непередбачуваним у кінцевому підсумку.</p>
+<p>Давайте подивимося, чи допоможе співвідношення цукру до хлоридів:</p>
+<div id="a47961cb-c610-416b-8d36-a593a63cce2b" class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="co">#adding ratio of residual.sugar/chlorides to white_wines dataframe</span></span>
+<span id="cb56-2"><a href="#cb56-2"></a>white_wines<span class="sc">$</span>residual.sugar_chlorides<span class="ot">=</span><span class="fu">with</span>(white_wines,residual.sugar<span class="sc">/</span>chlorides)</span>
+<span id="cb56-3"><a href="#cb56-3"></a></span>
+<span id="cb56-4"><a href="#cb56-4"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> residual.sugar_chlorides, <span class="at">color =</span> density), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb56-5"><a href="#cb56-5"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb56-6"><a href="#cb56-6"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb56-7"><a href="#cb56-7"></a>  <span class="fu">ylim</span>(<span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar_chlorides,<span class="fl">0.05</span>), </span>
+<span id="cb56-8"><a href="#cb56-8"></a>       <span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar_chlorides,<span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb56-9"><a href="#cb56-9"></a>  <span class="fu">ggtitle</span>(<span class="st">"Residual sugar/Chlorides by quality, .95 quantile"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message:
+"Removed 490 rows containing non-finite outside the scale range (`stat_boxplot()`)."
+Warning message:
+"The following aesthetics were dropped during statistical transformation: colour.
+ℹ This can happen when ggplot fails to infer the correct grouping structure in the data.
+ℹ Did you forget to specify a `group` aesthetic or to convert a numerical variable into a factor?"
+Warning message:
+"Removed 490 rows containing missing values or values outside the scale range (`geom_point()`)."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-38-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Немає шансів тут. Я сподівався на деякі кластери точок для кожного рівня якості, але вони можуть сильно відрізнятися.</p>
+<div id="d35ea234-425d-4149-89bd-7f705f3faedf" class="cell" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">5</span>),<span class="fu">cor</span>(residual.sugar,chlorides))</span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">6</span>),<span class="fu">cor</span>(residual.sugar,chlorides))</span>
+<span id="cb58-3"><a href="#cb58-3"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">7</span>),<span class="fu">cor</span>(residual.sugar,chlorides))</span>
+<span id="cb58-4"><a href="#cb58-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines, quality.lvl<span class="sc">==</span><span class="dv">8</span>),<span class="fu">cor</span>(residual.sugar,chlorides))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.0225277904423787
+</div>
+<div class="cell-output cell-output-display">
+0.0351203237857836
+</div>
+<div class="cell-output cell-output-display">
+0.275530791594432
+</div>
+<div class="cell-output cell-output-display">
+0.314866893426447
+</div>
+</div>
+<p>Кореляція для якості 5, 6 і 7 є досить низькою (0,02, 0,03 і 0,27 відповідно), але для якості 8 вона значна. Це може бути через те, що у нас менше точок для якості 8, ніж для інших рівнів якості. Крім того, у нас є дуже віддалені значення як для залишкового цукру, так і для хлоридів, давайте обчислимо ті ж значення на підмножині, обмеженій між 0,05 і 0,95 квантилями.</p>
+<div id="089b6616-318b-41a4-8ce1-5994b860c8ee" class="cell" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>white_wines_quant<span class="ot">&lt;-</span><span class="fu">subset</span>(white_wines,</span>
+<span id="cb59-2"><a href="#cb59-2"></a>                        <span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar,<span class="fl">0.05</span>)<span class="sc">&lt;=</span>residual.sugar</span>
+<span id="cb59-3"><a href="#cb59-3"></a>                        <span class="sc">&amp;</span> <span class="fu">quantile</span>(white_wines<span class="sc">$</span>residual.sugar,<span class="fl">0.95</span>)<span class="sc">&gt;=</span>residual.sugar</span>
+<span id="cb59-4"><a href="#cb59-4"></a>                        <span class="sc">&amp;</span> <span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.05</span>)<span class="sc">&lt;=</span>chlorides </span>
+<span id="cb59-5"><a href="#cb59-5"></a>                        <span class="sc">&amp;</span> <span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.95</span>)<span class="sc">&gt;=</span>chlorides)</span>
+<span id="cb59-6"><a href="#cb59-6"></a></span>
+<span id="cb59-7"><a href="#cb59-7"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb59-8"><a href="#cb59-8"></a>     <span class="fu">cor</span>(residual.sugar, chlorides))</span>
+<span id="cb59-9"><a href="#cb59-9"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb59-10"><a href="#cb59-10"></a>     <span class="fu">cor</span>(residual.sugar, chlorides))</span>
+<span id="cb59-11"><a href="#cb59-11"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">7</span>),</span>
+<span id="cb59-12"><a href="#cb59-12"></a>     <span class="fu">cor</span>(residual.sugar, chlorides))</span>
+<span id="cb59-13"><a href="#cb59-13"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">8</span>),</span>
+<span id="cb59-14"><a href="#cb59-14"></a>     <span class="fu">cor</span>(residual.sugar, chlorides))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.112410296722973
+</div>
+<div class="cell-output cell-output-display">
+0.197972817731615
+</div>
+<div class="cell-output cell-output-display">
+0.348869425502618
+</div>
+<div class="cell-output cell-output-display">
+0.417167001300737
+</div>
+</div>
+<p>Кореляції трохи покращилися після видалення крайніх квантилів:</p>
+<ul>
+<li>0,112 для якості 5</li>
+<li>0,197 для якості 6</li>
+<li>0,348 для якості 7</li>
+<li>0,417 для якості 8</li>
+</ul>
+<p>Я думаю, що цей взаємозв’язок між залишковим цукром і хлоридами варто дослідити, щоб побачити, чи можуть інші змінні вплинути на нього. Отже, давайте зіставимо хлориди з цукром і додамо алкоголь як колір і використаємо це як основу для інших графіків.</p>
+</section>
+<section id="хлориди-залишковий-цукор-і-алкоголь-за-якістю" class="level3" data-number="27.5.4">
+<h3 data-number="27.5.4" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-алкоголь-за-якістю"><span class="header-section-number">27.5.4</span> Хлориди, залишковий цукор і алкоголь за якістю</h3>
+<div id="d74bfcb4-53e5-4aee-88f0-b3ae581d5e7f" class="cell" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>white_wines_quant<span class="sc">$</span>alcohol.bucket <span class="ot">=</span> <span class="fu">cut</span>(white_wines_quant<span class="sc">$</span>alcohol,</span>
+<span id="cb60-2"><a href="#cb60-2"></a>                            <span class="fu">c</span>(<span class="dv">8</span>, <span class="fl">9.5</span>, <span class="dv">11</span>, <span class="fl">12.5</span>, <span class="dv">14</span>))</span>
+<span id="cb60-3"><a href="#cb60-3"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(quality), <span class="at">y =</span> volatile.acidity ), <span class="at">data =</span> white_wines_quant) <span class="sc">+</span> </span>
+<span id="cb60-4"><a href="#cb60-4"></a>   <span class="fu">geom_boxplot</span>( <span class="fu">aes</span>(<span class="at">fill=</span> alcohol.bucket))  <span class="sc">+</span></span>
+<span id="cb60-5"><a href="#cb60-5"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">type=</span><span class="st">'seq'</span>, <span class="at">guide=</span><span class="fu">guide_legend</span>(<span class="at">title=</span><span class="st">'Quality'</span>))</span>
+<span id="cb60-6"><a href="#cb60-6"></a></span>
+<span id="cb60-7"><a href="#cb60-7"></a></span>
+<span id="cb60-8"><a href="#cb60-8"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span>residual.sugar, <span class="at">y =</span> chlorides, <span class="at">color =</span> <span class="fu">factor</span>(quality)), </span>
+<span id="cb60-9"><a href="#cb60-9"></a>       <span class="at">data =</span> white_wines_quant) <span class="sc">+</span></span>
+<span id="cb60-10"><a href="#cb60-10"></a>      <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb60-11"><a href="#cb60-11"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>,<span class="at">size=</span><span class="dv">1</span>)  <span class="sc">+</span></span>
+<span id="cb60-12"><a href="#cb60-12"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type=</span><span class="st">'seq'</span>, <span class="at">guide=</span><span class="fu">guide_legend</span>(<span class="at">title=</span><span class="st">'Quality'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-41-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-41-output-3.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ми можемо побачити, як і раніше, що чим нижчий вміст хлоридів, тим кращий алкоголь. Крім того, низький рівень алкоголю, здається, має менше цукру і високий вміст хлоридів.</p>
+<div id="1c0c1ff1-b1ea-4413-9c0a-65f13da428e0" class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span>
+<span id="cb62-2"><a href="#cb62-2"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb62-3"><a href="#cb62-3"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span>
+<span id="cb62-4"><a href="#cb62-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb62-5"><a href="#cb62-5"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span>
+<span id="cb62-6"><a href="#cb62-6"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">7</span>),</span>
+<span id="cb62-7"><a href="#cb62-7"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span>
+<span id="cb62-8"><a href="#cb62-8"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">8</span>),</span>
+<span id="cb62-9"><a href="#cb62-9"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.299601532893232
+</div>
+<div class="cell-output cell-output-display">
+-0.350255657211274
+</div>
+<div class="cell-output cell-output-display">
+-0.330941786318977
+</div>
+<div class="cell-output cell-output-display">
+-0.295743178557349
+</div>
+<div class="cell-output cell-output-display">
+-0.287638527567753
+</div>
+</div>
+<p>Кореляція між залишковим цукром/хлоридами та алкоголем для підмножини становить -0,299, що є низьким показником. Розбиваючи за якістю, ми маємо:</p>
+<ul>
+<li>-0,350 для якості 5</li>
+<li>-0,330 для якості 6</li>
+<li>-0,295 для якості 7</li>
+<li>-0,287 для якості 8</li>
+</ul>
+<p>Отже, кореляція не сильно змінюється залежно від якості. У нас немає специфічного взаємозв’язку для деяких якостей.</p>
+</section>
+<section id="змінні-кислотності-та-якість" class="level3" data-number="27.5.5">
+<h3 data-number="27.5.5" class="anchored" data-anchor-id="змінні-кислотності-та-якість"><span class="header-section-number">27.5.5</span> Змінні кислотності та якість</h3>
+<p>Давайте повернемося до наших змінних кислотності:</p>
+<div id="a117a719-05ab-44ff-830c-b6781bdf63e8" class="cell" data-execution_count="95">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>ggplot_base_acidity<span class="ot">&lt;-</span><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl), <span class="at">data =</span> white_wines)</span>
+<span id="cb63-2"><a href="#cb63-2"></a></span>
+<span id="cb63-3"><a href="#cb63-3"></a><span class="co">#fixed acidity</span></span>
+<span id="cb63-4"><a href="#cb63-4"></a>ggplot_base_acidity <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> fixed.acidity), <span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb63-6"><a href="#cb63-6"></a>  <span class="fu">ggtitle</span>(<span class="st">"Fixed acidity by quality"</span>)</span>
+<span id="cb63-7"><a href="#cb63-7"></a></span>
+<span id="cb63-8"><a href="#cb63-8"></a><span class="co">#volatile acidity</span></span>
+<span id="cb63-9"><a href="#cb63-9"></a>ggplot_base_acidity <span class="sc">+</span></span>
+<span id="cb63-10"><a href="#cb63-10"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> volatile.acidity), <span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb63-11"><a href="#cb63-11"></a>  <span class="fu">ggtitle</span>(<span class="st">"Volatile acidity by quality"</span>)</span>
+<span id="cb63-12"><a href="#cb63-12"></a></span>
+<span id="cb63-13"><a href="#cb63-13"></a><span class="co">#citric acidity</span></span>
+<span id="cb63-14"><a href="#cb63-14"></a>ggplot_base_acidity <span class="sc">+</span></span>
+<span id="cb63-15"><a href="#cb63-15"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> citric.acid), <span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb63-16"><a href="#cb63-16"></a>  <span class="fu">ggtitle</span>(<span class="st">"Citric acid by quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-43-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-43-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-43-output-3.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ці діаграми розмаху не дуже допомагають у дослідженні. Давайте перевіримо кореляції.</p>
+<div id="60d978f7-03b9-4a53-b441-fd0493051144" class="cell" data-execution_count="96">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a><span class="fu">with</span>(white_wines, <span class="fu">cor</span>(quality, fixed.acidity))</span>
+<span id="cb64-2"><a href="#cb64-2"></a><span class="fu">with</span>(white_wines, <span class="fu">cor</span>(quality, volatile.acidity))</span>
+<span id="cb64-3"><a href="#cb64-3"></a><span class="fu">with</span>(white_wines, <span class="fu">cor</span>(quality, citric.acid))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.113662830713018
+</div>
+<div class="cell-output cell-output-display">
+-0.194722968921134
+</div>
+<div class="cell-output cell-output-display">
+-0.00920909088397543
+</div>
+</div>
+<p>Кореляція показує, що лимонна кислота дуже слабо корелює з якістю (-0,009). З іншого боку, летка кислотність (-0,19) і фіксована кислотність (-0,11) дещо присутні, особливо летюча кислотність. Така кислотність негативно корелює з якістю, що означає, що зі збільшенням якості летюча кислотність зменшується. Оцтовий смак, який приносить летка кислотність, дійсно шкодить якості.</p>
+<p>Отже, тепер у нас є алкоголь, фіксована кислотність і летка кислотність, які досить сильно корелюють з якістю. Я повернуся до попередньої діаграми залишкового цукру та хлоридів і додам лимонну кислоту/летку кислотність, щоб побачити, чи зможу я отримати більше інформації.</p>
+</section>
+<section id="хлориди-залишковий-цукор-і-кислотність-за-якістю" class="level3" data-number="27.5.6">
+<h3 data-number="27.5.6" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-кислотність-за-якістю"><span class="header-section-number">27.5.6</span> Хлориди, залишковий цукор і кислотність за якістю</h3>
+<div id="c16d8cc7-2b92-4d2f-b925-572b47589593" class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a>sugar.chlorides<span class="ot">&lt;-</span><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residual.sugar, <span class="at">y =</span> chlorides), </span>
+<span id="cb65-2"><a href="#cb65-2"></a>                        <span class="at">data =</span> white_wines_quant) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>quality.lvl, <span class="at">scales =</span> <span class="st">'free'</span>)</span>
+<span id="cb65-4"><a href="#cb65-4"></a></span>
+<span id="cb65-5"><a href="#cb65-5"></a>sugar.chlorides <span class="sc">+</span></span>
+<span id="cb65-6"><a href="#cb65-6"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>volatile.acidity), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb65-7"><a href="#cb65-7"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"yellow"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb65-8"><a href="#cb65-8"></a>  <span class="fu">ggtitle</span>(<span class="st">'Chlorides, residual sugar &amp; volatile acidity facetted by quality'</span>)</span>
+<span id="cb65-9"><a href="#cb65-9"></a></span>
+<span id="cb65-10"><a href="#cb65-10"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, volatile.acidity))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.0818414498956549
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-45-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ми можемо побачити, що зі збільшенням рівня леткої кислотності якість, здається, трохи знижується (-0,19), що показує незначну негативну кореляцію.</p>
+<div id="3009eb1a-58d0-4e85-a291-fb324c6e2784" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>citric.acid), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb66-3"><a href="#cb66-3"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb66-4"><a href="#cb66-4"></a>  <span class="fu">ggtitle</span>(<span class="st">'Chlorides, residual sugar &amp; citric acid facetted by quality'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-46-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Лимонна кислота і якість білого вина дужепов’язані. Здається, вирівнюються на всіх рівнях.</p>
+<div id="9c8f81b6-f0e2-4168-8920-65108f1f6b41" class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb67-2"><a href="#cb67-2"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb67-3"><a href="#cb67-3"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb67-4"><a href="#cb67-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb67-5"><a href="#cb67-5"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb67-6"><a href="#cb67-6"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">7</span>),</span>
+<span id="cb67-7"><a href="#cb67-7"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb67-8"><a href="#cb67-8"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">8</span>),</span>
+<span id="cb67-9"><a href="#cb67-9"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.0994882466327046
+</div>
+<div class="cell-output cell-output-display">
+0.205085454808991
+</div>
+<div class="cell-output cell-output-display">
+0.0291507936288976
+</div>
+<div class="cell-output cell-output-display">
+0.00739929991358686
+</div>
+<div class="cell-output cell-output-display">
+0.0828935988213208
+</div>
+</div>
+<p>Кореляції показують, що насправді нічого немає. Кореляція для нашої підмножини становить 0,09. Розбиваючи за якістю:</p>
+<ul>
+<li>0,20 для якості 5</li>
+<li>0,02 для якості 6</li>
+<li>0,007 для якості 7</li>
+<li>-0,08 для якості 8</li>
+</ul>
+</section>
+<section id="хлориди-залишковий-цукор-і-щільність-за-якістю" class="level3" data-number="27.5.7">
+<h3 data-number="27.5.7" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-щільність-за-якістю"><span class="header-section-number">27.5.7</span> Хлориди, залишковий цукор і щільність за якістю</h3>
+<p>Щільність пов’язана з алкоголем, тому давайте подивимося, чи можемо ми знайти щось тут.</p>
+<div id="403934d6-b405-4275-a36a-694b13d23aae" class="cell" data-execution_count="103">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb68-2"><a href="#cb68-2"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>density), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb68-3"><a href="#cb68-3"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.9975</span>) <span class="sc">+</span></span>
+<span id="cb68-4"><a href="#cb68-4"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by residual sugar and density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-48-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Є певна тенденція: краща якість вина має вищий залишковий цукор і вищу щільність.</p>
+<div id="b5d852b9-145a-430d-b907-5834e312ce28" class="cell" data-execution_count="105">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, density))</span>
+<span id="cb69-2"><a href="#cb69-2"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span>
+<span id="cb69-3"><a href="#cb69-3"></a></span>
+<span id="cb69-4"><a href="#cb69-4"></a></span>
+<span id="cb69-5"><a href="#cb69-5"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb69-6"><a href="#cb69-6"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, density))</span>
+<span id="cb69-7"><a href="#cb69-7"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb69-8"><a href="#cb69-8"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.672887037704576
+</div>
+<div class="cell-output cell-output-display">
+-0.299601532893232
+</div>
+<div class="cell-output cell-output-display">
+0.790192212823227
+</div>
+<div class="cell-output cell-output-display">
+-0.350255657211274
+</div>
+</div>
+<p>Щільність більше пов’язана зі співвідношенням залишкового цукру до хлоридів, ніж з алкоголем: 0,67 проти -0,29. Ми маємо той самий феномен для якості 5: 0,79 для щільності проти -0,35 для алкоголю.</p>
+</section>
+<section id="хлориди-залишковий-цукор-і-сульфати-за-якістю" class="level3" data-number="27.5.8">
+<h3 data-number="27.5.8" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-сульфати-за-якістю"><span class="header-section-number">27.5.8</span> Хлориди, залишковий цукор і сульфати за якістю</h3>
+<div id="76983481-ec14-4bde-88f1-9953ebc13b16" class="cell" data-execution_count="107">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="co">#adding a limit on the sulphates as there seems to be outlier far off</span></span>
+<span id="cb70-2"><a href="#cb70-2"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb70-3"><a href="#cb70-3"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>sulphates), <span class="at">size =</span><span class="fl">0.7</span>, </span>
+<span id="cb70-4"><a href="#cb70-4"></a>              <span class="at">data =</span> <span class="fu">subset</span>(white_wines, </span>
+<span id="cb70-5"><a href="#cb70-5"></a>                            sulphates<span class="sc">&lt;</span><span class="fu">quantile</span>(white_wines<span class="sc">$</span>sulphates,<span class="fl">0.95</span>))) <span class="sc">+</span></span>
+<span id="cb70-6"><a href="#cb70-6"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb70-7"><a href="#cb70-7"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by residual sugar and sulphates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-50-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Здається, що чим більше залишкового цукру та хлоридів у вині, тим більше сульфатів.</p>
+<div id="f6435587-738a-4240-8707-dd34d9f7b821" class="cell" data-execution_count="109">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb71-2"><a href="#cb71-2"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb71-3"><a href="#cb71-3"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb71-4"><a href="#cb71-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb71-5"><a href="#cb71-5"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb71-6"><a href="#cb71-6"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">7</span>),</span>
+<span id="cb71-7"><a href="#cb71-7"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span>
+<span id="cb71-8"><a href="#cb71-8"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">8</span>),</span>
+<span id="cb71-9"><a href="#cb71-9"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, citric.acid))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.0994882466327046
+</div>
+<div class="cell-output cell-output-display">
+0.205085454808991
+</div>
+<div class="cell-output cell-output-display">
+0.0291507936288976
+</div>
+<div class="cell-output cell-output-display">
+0.00739929991358686
+</div>
+<div class="cell-output cell-output-display">
+0.0828935988213208
+</div>
+</div>
+<p>Кореляції показують, що насправді нічого немає. Кореляція для нашої підмножини становить 0,09. Розбиваючи за якістю:</p>
+<ul>
+<li>0,20 для якості 5</li>
+<li>0,02 для якості 6</li>
+<li>0,00 для якості 7</li>
+<li>0,08 для якості 8</li>
+</ul>
+<hr>
+</section>
+<section id="хлориди-залишковий-цукор-і-щільність-за-якістю-1" class="level3" data-number="27.5.9">
+<h3 data-number="27.5.9" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-щільність-за-якістю-1"><span class="header-section-number">27.5.9</span> Хлориди, залишковий цукор і щільність за якістю</h3>
+<p>Щільність пов’язана з алкоголем, тому давайте подивимося, чи можемо ми знайти щось тут.</p>
+<div id="58d39e86-8301-46d0-a8e1-f31b1622158e" class="cell" data-execution_count="111">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb72-2"><a href="#cb72-2"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>density), <span class="at">size =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb72-3"><a href="#cb72-3"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.995</span>) <span class="sc">+</span></span>
+<span id="cb72-4"><a href="#cb72-4"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by residual sugar and density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-52-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ми отримуємо графік, де менш щільні вина знаходяться з лівого боку графіка, тоді як більш щільні вина розташовані в правій області на всіх рівнях якості.</p>
+<div id="9f1a9960-85ce-4e5a-b5ff-82ef35954d7f" class="cell" data-execution_count="112">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, density))</span>
+<span id="cb73-2"><a href="#cb73-2"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span>
+<span id="cb73-3"><a href="#cb73-3"></a></span>
+<span id="cb73-4"><a href="#cb73-4"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb73-5"><a href="#cb73-5"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, density))</span>
+<span id="cb73-6"><a href="#cb73-6"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb73-7"><a href="#cb73-7"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, alcohol))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.672887037704576
+</div>
+<div class="cell-output cell-output-display">
+-0.299601532893232
+</div>
+<div class="cell-output cell-output-display">
+0.690810668905907
+</div>
+<div class="cell-output cell-output-display">
+-0.330941786318977
+</div>
+</div>
+<p>Щільність більше пов’язана зі співвідношенням залишкового цукру до хлоридів, ніж з алкоголем: 0,67 проти -0,29. Ми маємо той самий феномен для якості 6 (0,69 для щільності проти -0,33 для алкоголю).</p>
+</section>
+<section id="хлориди-залишковий-цукор-і-сульфати-за-якістю-1" class="level3" data-number="27.5.10">
+<h3 data-number="27.5.10" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-сульфати-за-якістю-1"><span class="header-section-number">27.5.10</span> Хлориди, залишковий цукор і сульфати за якістю</h3>
+<div id="77c6a60e-3286-4699-8012-7ecdc2509990" class="cell" data-execution_count="113">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a><span class="co">#adding a limit on the sulphates as there seems to be outlier far off</span></span>
+<span id="cb74-2"><a href="#cb74-2"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb74-3"><a href="#cb74-3"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>sulphates), <span class="at">size =</span> <span class="fl">0.4</span>,</span>
+<span id="cb74-4"><a href="#cb74-4"></a>              <span class="at">data =</span> <span class="fu">subset</span>(white_wines, </span>
+<span id="cb74-5"><a href="#cb74-5"></a>                            sulphates<span class="sc">&lt;</span><span class="fu">quantile</span>(white_wines<span class="sc">$</span>sulphates,<span class="fl">0.95</span>))) <span class="sc">+</span></span>
+<span id="cb74-6"><a href="#cb74-6"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb74-7"><a href="#cb74-7"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by residual sugar and sulphates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-54-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Здається, немає чіткої картини взаємозв’язку сульфатів з якістю, а також з хлоридами та залишковим цукром.</p>
+<div id="a8877a26-48b2-423d-a7c3-bf0ef9485c62" class="cell" data-execution_count="114">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, sulphates))</span>
+<span id="cb75-2"><a href="#cb75-2"></a></span>
+<span id="cb75-3"><a href="#cb75-3"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">5</span>),</span>
+<span id="cb75-4"><a href="#cb75-4"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, sulphates))</span>
+<span id="cb75-5"><a href="#cb75-5"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb75-6"><a href="#cb75-6"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, sulphates))</span>
+<span id="cb75-7"><a href="#cb75-7"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">7</span>),</span>
+<span id="cb75-8"><a href="#cb75-8"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, sulphates))</span>
+<span id="cb75-9"><a href="#cb75-9"></a><span class="fu">with</span>(<span class="fu">subset</span>(white_wines_quant, quality.lvl<span class="sc">==</span><span class="dv">8</span>),</span>
+<span id="cb75-10"><a href="#cb75-10"></a>     <span class="fu">cor</span>(residual.sugar_chlorides, sulphates))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-0.0753957002724575
+</div>
+<div class="cell-output cell-output-display">
+0.0222775535302433
+</div>
+<div class="cell-output cell-output-display">
+-0.0783773189493531
+</div>
+<div class="cell-output cell-output-display">
+-0.140269643837553
+</div>
+<div class="cell-output cell-output-display">
+-0.271830882076931
+</div>
+</div>
+<p>Кореляція підтверджує це враження з кореляцією -0,07 для підмножини між залишковим цукром/хлоридами та сульфатами. Розбиваючи за якістю:</p>
+<ul>
+<li>0,02 для якості 5</li>
+<li>-0,07 для якості 6</li>
+<li>-0,14 для якості 7</li>
+<li>-0,27 для якості 8</li>
+</ul>
+<p>Кореляції за якістю низькі і збільшуються для якості 8, але ця якість 8 має лише кілька точок даних.</p>
+<div id="1eddc7c8-c34c-4423-9766-199220732d16" class="cell" data-execution_count="116">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> sulphates), </span>
+<span id="cb76-2"><a href="#cb76-2"></a>       <span class="at">data =</span> <span class="fu">subset</span>(white_wines, </span>
+<span id="cb76-3"><a href="#cb76-3"></a>                     sulphates<span class="sc">&lt;</span><span class="fu">quantile</span>(white_wines<span class="sc">$</span>sulphates,<span class="fl">0.95</span>))) <span class="sc">+</span></span>
+<span id="cb76-4"><a href="#cb76-4"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb76-5"><a href="#cb76-5"></a>  <span class="fu">ggtitle</span>(<span class="st">"Sulphates by quality, with sulphates&lt;0.95)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-56-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Тут немає сильної кореляції.</p>
+<div id="43f3a380-93b3-4fbc-b4e2-3b1a0d813e88" class="cell" data-execution_count="119">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(quality, sulphates))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.0521672041266398
+</div>
+</div>
+<p>Кореляція підтверджує це (0,05), що немає сильної залежності між якістю та сульфатами.</p>
+<p>Давайте тепер подивимося на сірку.</p>
+</section>
+<section id="хлориди-залишковий-цукор-і-сірка-за-якістю" class="level3" data-number="27.5.11">
+<h3 data-number="27.5.11" class="anchored" data-anchor-id="хлориди-залишковий-цукор-і-сірка-за-якістю"><span class="header-section-number">27.5.11</span> Хлориди, залишковий цукор і сірка за якістю</h3>
+<div id="0db6c963-d0a4-4e96-ab71-b9b9acbbbbb7" class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a><span class="co"># subset to filter outlier</span></span>
+<span id="cb78-2"><a href="#cb78-2"></a>      </span>
+<span id="cb78-3"><a href="#cb78-3"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb78-4"><a href="#cb78-4"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>free.sulfur.dioxide), <span class="at">size =</span> <span class="fl">0.7</span>, </span>
+<span id="cb78-5"><a href="#cb78-5"></a>              <span class="at">data =</span> <span class="fu">subset</span>(white_wines, </span>
+<span id="cb78-6"><a href="#cb78-6"></a>                     free.sulfur.dioxide<span class="sc">&lt;</span><span class="fu">quantile</span>(white_wines<span class="sc">$</span>free.sulfur.dioxide,</span>
+<span id="cb78-7"><a href="#cb78-7"></a>                                                  <span class="fl">0.95</span>))) <span class="sc">+</span></span>
+<span id="cb78-8"><a href="#cb78-8"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb78-9"><a href="#cb78-9"></a>  <span class="fu">ggtitle</span>(<span class="st">'chlorides by residual sugar &amp; </span></span>
+<span id="cb78-10"><a href="#cb78-10"></a><span class="st">          free sulfur dioxide facetted by quality'</span>)</span>
+<span id="cb78-11"><a href="#cb78-11"></a></span>
+<span id="cb78-12"><a href="#cb78-12"></a></span>
+<span id="cb78-13"><a href="#cb78-13"></a><span class="co"># subset to filter outlier</span></span>
+<span id="cb78-14"><a href="#cb78-14"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb78-15"><a href="#cb78-15"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>total.sulfur.dioxide), <span class="at">size =</span> <span class="fl">0.5</span>, </span>
+<span id="cb78-16"><a href="#cb78-16"></a>              <span class="at">data =</span> <span class="fu">subset</span>(white_wines, </span>
+<span id="cb78-17"><a href="#cb78-17"></a>                     total.sulfur.dioxide <span class="sc">&lt;</span> </span>
+<span id="cb78-18"><a href="#cb78-18"></a>                       <span class="fu">quantile</span>(white_wines<span class="sc">$</span>total.sulfur.dioxide, <span class="fl">0.95</span>))) <span class="sc">+</span></span>
+<span id="cb78-19"><a href="#cb78-19"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb78-20"><a href="#cb78-20"></a>  <span class="fu">ggtitle</span>(<span class="st">'chlorides by residual sugar &amp; total sulfur dioxide facetted by quality'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-58-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-58-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Обидва графіки показують рівні сірки на всіх рівнях якості та на всіх рівнях залишкового цукру та хлоридів. Існує слабка позитивна залежність між цими змінними.</p>
+<div id="e43c7c17-a66a-4767-9e7c-8b11be3a5344" class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, free.sulfur.dioxide))</span>
+<span id="cb79-2"><a href="#cb79-2"></a><span class="fu">with</span>(white_wines_quant, <span class="fu">cor</span>(residual.sugar_chlorides, total.sulfur.dioxide))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.272855682251137
+</div>
+<div class="cell-output cell-output-display">
+0.302895112462388
+</div>
+</div>
+<p>Кореляції дійсно слабко позитивні:</p>
+<ul>
+<li>0,27 між залишковим цукром/хлоридами та вільним діоксидом сірки</li>
+<li>0,30 між залишковим цукром/хлоридами та загальним діоксидом сірки</li>
+</ul>
+<p>Перш за все, у наборі даних є викиди. Я намагався видалити їх, коли їх значення здавалося дійсно поза межами. Але це також може підкреслити різноманітність вин. Оскільки я не впевнений, наступні графіки базуються на всьому наборі даних. Загалом, немає дійсно сильних кореляцій між якістю та іншими змінними, представленими тут. Але я міг зрозуміти деякі взаємозв’язки щодо смаків:</p>
+</section>
+<section id="смак-оцту-не-дуже-шукають" class="level3" data-number="27.5.12">
+<h3 data-number="27.5.12" class="anchored" data-anchor-id="смак-оцту-не-дуже-шукають"><span class="header-section-number">27.5.12</span> Смак оцту не дуже шукають</h3>
+<div id="d81ba562-ee43-4534-85c6-f2bf3d9bbf8f" class="cell" data-execution_count="123">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> volatile.acidity, <span class="at">fill=</span>quality.lvl), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb80-2"><a href="#cb80-2"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y=</span>..scaled..), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb80-3"><a href="#cb80-3"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">type =</span> <span class="st">'seq'</span>, <span class="at">palette =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb80-4"><a href="#cb80-4"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Volatile acidity (g / dm^3)'</span>, </span>
+<span id="cb80-5"><a href="#cb80-5"></a>       <span class="at">y =</span> <span class="st">'Scaled density'</span>,  </span>
+<span id="cb80-6"><a href="#cb80-6"></a>       <span class="at">fill=</span><span class="st">'Quality'</span>) <span class="sc">+</span></span>
+<span id="cb80-7"><a href="#cb80-7"></a>  <span class="fu">ggtitle</span>(<span class="st">"Volatile acidity by quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-60-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>volatile.acidity = Смак оцту, насправді неприємний</em></p>
+<p>Щільність була масштабована так, щоб низькі кількості екстремальної якості не впливали на загальний розподіл. З підвищенням якості вин летка кислотність знижується. Кореляція не така сильна, -0,19. Негативний знак означає, що чим вища летка кислотність (а отже, і смак оцту), тим нижча якість. Це не завжди так. Це те, чого можна очікувати. Коли ви купуєте дешеве вино (яке не завжди, але найчастіше є нижчої якості), воно найчастіше має різкий запах і смак, як оцет.</p>
+</section>
+<section id="лимонна-кислота-неефективна-для-якості-білого-вина" class="level3" data-number="27.5.13">
+<h3 data-number="27.5.13" class="anchored" data-anchor-id="лимонна-кислота-неефективна-для-якості-білого-вина"><span class="header-section-number">27.5.13</span> Лимонна кислота неефективна для якості білого вина</h3>
+<p><em>лимонна кислота: у невеликих кількостях лимонна кислота може додати винам “свіжості” та смаку</em></p>
+<div id="e24af317-57a6-4056-8159-5649aeb25505" class="cell" data-execution_count="125">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> citric.acid), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb81-2"><a href="#cb81-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb81-3"><a href="#cb81-3"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span><span class="fl">0.3</span>, <span class="at">outlier.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  </span>
+<span id="cb81-4"><a href="#cb81-4"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Quality level'</span>, </span>
+<span id="cb81-5"><a href="#cb81-5"></a>       <span class="at">y =</span> <span class="st">'Citric acid (g / dm^3)'</span>) <span class="sc">+</span></span>
+<span id="cb81-6"><a href="#cb81-6"></a>  <span class="fu">ggtitle</span>(<span class="st">"Citric Acid by quality (red outliers)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-61-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>лимонна кислота не відіграє такої значної ролі у підвищенні якості.</p>
+</section>
+<section id="отримайте-високий-рівень-алкоголю-та-низький-рівень-сульфатів-для-кращих-білих-вин" class="level3" data-number="27.5.14">
+<h3 data-number="27.5.14" class="anchored" data-anchor-id="отримайте-високий-рівень-алкоголю-та-низький-рівень-сульфатів-для-кращих-білих-вин"><span class="header-section-number">27.5.14</span> Отримайте високий рівень алкоголю та низький рівень сульфатів для кращих білих вин</h3>
+<div id="5d7849a0-aad4-496a-8138-fc0a3e4ad98a" class="cell" data-execution_count="127">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sulphates, <span class="at">y =</span> alcohol, <span class="at">color =</span> quality.lvl), </span>
+<span id="cb82-2"><a href="#cb82-2"></a>       <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb82-3"><a href="#cb82-3"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb82-4"><a href="#cb82-4"></a>  <span class="fu">stat_smooth</span>(<span class="fu">aes</span>(<span class="at">fill =</span> quality.lvl),</span>
+<span id="cb82-5"><a href="#cb82-5"></a>              <span class="at">level =</span> <span class="fl">0.75</span>, <span class="at">size =</span> <span class="fl">1.2</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">method =</span> <span class="st">'loess'</span>) <span class="sc">+</span></span>
+<span id="cb82-6"><a href="#cb82-6"></a>  <span class="fu">coord_cartesian</span>() <span class="sc">+</span></span>
+<span id="cb82-7"><a href="#cb82-7"></a>  <span class="fu">xlim</span>(<span class="fl">0.4</span>,<span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb82-8"><a href="#cb82-8"></a>  <span class="fu">ylim</span>(<span class="dv">6</span>,<span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb82-9"><a href="#cb82-9"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">type =</span> <span class="st">'seq'</span>, <span class="at">palette =</span> <span class="dv">2</span>, <span class="at">guide =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb82-10"><a href="#cb82-10"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type =</span> <span class="st">'seq'</span>, <span class="at">palette =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb82-11"><a href="#cb82-11"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Sulphates (g / dm3)'</span>, </span>
+<span id="cb82-12"><a href="#cb82-12"></a>       <span class="at">y =</span> <span class="st">'Alcohol (%/volume)'</span>, </span>
+<span id="cb82-13"><a href="#cb82-13"></a>       <span class="at">color =</span> <span class="st">'Quality'</span>) <span class="sc">+</span></span>
+<span id="cb82-14"><a href="#cb82-14"></a>  <span class="fu">ggtitle</span>(<span class="st">"Alcohol by sulphates and quality (.75 confidence interval)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'
+Warning message:
+"Removed 1157 rows containing non-finite outside the scale range (`stat_smooth()`)."
+Warning message in simpleLoess(y, x, w, span, degree = degree, parametric = parametric, :
+"span too small.   fewer data values than degrees of freedom."
+Warning message in simpleLoess(y, x, w, span, degree = degree, parametric = parametric, :
+"pseudoinverse used at 0.41905"
+Warning message in simpleLoess(y, x, w, span, degree = degree, parametric = parametric, :
+"neighborhood radius 0.06095"
+Warning message in simpleLoess(y, x, w, span, degree = degree, parametric = parametric, :
+"reciprocal condition number  0"
+Warning message in simpleLoess(y, x, w, span, degree = degree, parametric = parametric, :
+"There are other near singularities as well. 0.022786"
+Warning message in sqrt(sum.squares/one.delta):
+"NaNs produced"
+Warning message in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x else if (is.data.frame(newdata)) as.matrix(model.frame(delete.response(terms(object)), :
+"span too small.   fewer data values than degrees of freedom."
+Warning message in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x else if (is.data.frame(newdata)) as.matrix(model.frame(delete.response(terms(object)), :
+"pseudoinverse used at 0.41905"
+Warning message in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x else if (is.data.frame(newdata)) as.matrix(model.frame(delete.response(terms(object)), :
+"neighborhood radius 0.06095"
+Warning message in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x else if (is.data.frame(newdata)) as.matrix(model.frame(delete.response(terms(object)), :
+"reciprocal condition number  0"
+Warning message in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x else if (is.data.frame(newdata)) as.matrix(model.frame(delete.response(terms(object)), :
+"There are other near singularities as well. 0.022786"
+Warning message in stats::qt(level/2 + 0.5, pred$df):
+"NaNs produced"
+Warning message:
+"Removed 1243 rows containing missing values or values outside the scale range (`geom_point()`)."
+Warning message in max(ids, na.rm = TRUE):
+"no non-missing arguments to max; returning -Inf"</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-62-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Цей графік показує згладжування алкоголю за сульфатами для всіх якостей. Якість і алкоголь мають сильну кореляцію.</p>
+<p>Вина низької якості (3) сильно варіюються, але загальна тенденція полягає в тому, що вони мають низький вміст алкоголю, і рівень алкоголю знижується зі збільшенням рівня сульфатів. Якості від 4 до 7 загалом рівні, і єдині відмінності походять від рівня алкоголю. Вина якості 7 і 8 особливі тим, що вони згруповані у верхньому лівому куті. Взаємозв’язок не є рівним, як у інших якостей (крім 3), але ці вина мають високий вміст алкоголю та менше сульфатів.</p>
+</section>
+<section id="зверніть-увагу-на-меншу-присутність-хлоридів-для-кращого-вина" class="level3" data-number="27.5.15">
+<h3 data-number="27.5.15" class="anchored" data-anchor-id="зверніть-увагу-на-меншу-присутність-хлоридів-для-кращого-вина"><span class="header-section-number">27.5.15</span> Зверніть увагу на меншу присутність хлоридів для кращого вина</h3>
+<p><em>лимонна кислота: кількість солі у вашому вині</em></p>
+<div id="627ca889-ed46-4688-a2ef-eb85ae8b141e" class="cell" data-execution_count="128">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> chlorides), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb84-2"><a href="#cb84-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb84-3"><a href="#cb84-3"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">trans =</span> <span class="st">'log10'</span>) <span class="sc">+</span></span>
+<span id="cb84-4"><a href="#cb84-4"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span><span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  </span>
+<span id="cb84-5"><a href="#cb84-5"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Quality level'</span>, </span>
+<span id="cb84-6"><a href="#cb84-6"></a>       <span class="at">y =</span> <span class="st">'Citric acid (g / dm^3)'</span>) <span class="sc">+</span></span>
+<span id="cb84-7"><a href="#cb84-7"></a>  <span class="fu">ggtitle</span>(<span class="st">"Citric Acid by quality (red outliers)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-63-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="остаточні-графіки-та-підсумок" class="level1" data-number="28">
+<h1 data-number="28"><span class="header-section-number">28</span> Остаточні графіки та підсумок</h1>
+<p>У наведеному вище аналізі я намагався задокументувати свої проблеми та рішення. Я повторю три з наведених вище графіків і поясню, чому вони є важливими.</p>
+<div id="6d86b3fa-bd6e-4dc5-95d0-ea0c6d294cd8" class="cell" data-execution_count="129">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1"></a><span class="co">#adding ratio of residual.sugar/chlorides to white_wines dataframe</span></span>
+<span id="cb85-2"><a href="#cb85-2"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span>residual.sugar, <span class="at">y =</span> chlorides, <span class="at">color =</span> <span class="fu">factor</span>(quality)), </span>
+<span id="cb85-3"><a href="#cb85-3"></a>       <span class="at">data =</span> white_wines_quant) <span class="sc">+</span></span>
+<span id="cb85-4"><a href="#cb85-4"></a>      <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb85-5"><a href="#cb85-5"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>,<span class="at">size=</span><span class="dv">1</span>)  <span class="sc">+</span></span>
+<span id="cb85-6"><a href="#cb85-6"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type=</span><span class="st">'seq'</span>, <span class="at">guide=</span><span class="fu">guide_legend</span>(<span class="at">title=</span><span class="st">'Quality'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-64-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Я включаю цей графік, тому що це був наш перший сильний доказ якості алкоголю. Ми можемо бачити, як і раніше, що чим нижчий вміст хлоридів, тим кращий алкоголь. Крім того, низький рівень алкоголю, здається, має менше цукру та високий вміст хлоридів.</p>
+<p>Цей графік викликав у мене інтерес до вивчення взаємозв’язку хлоридів і кислот.</p>
+<div id="0ddeedc6-21be-44fb-aac7-16907f2e636c" class="cell" data-execution_count="131">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1"></a>sugar.chlorides<span class="sc">+</span></span>
+<span id="cb87-2"><a href="#cb87-2"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>citric.acid), <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb87-3"><a href="#cb87-3"></a>  <span class="fu">scale_colour_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">high=</span><span class="st">"blue"</span>, <span class="at">midpoint=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb87-4"><a href="#cb87-4"></a>  <span class="fu">ggtitle</span>(<span class="st">'Chlorides, residual sugar &amp; citric acid facetted by quality'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-65-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>лимонна кислота та якість білого вина дуже мало пов’язані. Наприкінці аналізу ми підтвердили це, побудувавши діаграму розмаху лимонної кислоти, яка показала, що вона не відіграє значної ролі у підвищенні якості білого вина.</p>
+<div id="c13c27dd-f0be-4bd5-8402-03bd0bfc4d42" class="cell" data-execution_count="133">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> quality.lvl, <span class="at">y =</span> chlorides), <span class="at">data =</span> white_wines) <span class="sc">+</span></span>
+<span id="cb88-2"><a href="#cb88-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">'orange'</span>) <span class="sc">+</span></span>
+<span id="cb88-3"><a href="#cb88-3"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">'red'</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb88-4"><a href="#cb88-4"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.y =</span> <span class="st">"mean"</span>, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">shape =</span> <span class="dv">8</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb88-5"><a href="#cb88-5"></a>  <span class="fu">coord_cartesian</span>() <span class="sc">+</span></span>
+<span id="cb88-6"><a href="#cb88-6"></a>  <span class="fu">ylim</span>(<span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.05</span>),<span class="fu">quantile</span>(white_wines<span class="sc">$</span>chlorides,<span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb88-7"><a href="#cb88-7"></a>  <span class="fu">ggtitle</span>(<span class="st">"Chlorides by quality, red outliers"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message:
+"Removed 469 rows containing non-finite outside the scale range (`stat_boxplot()`)."
+Warning message:
+"Removed 469 rows containing non-finite outside the scale range (`stat_summary()`)."
+Warning message:
+"Removed 504 rows containing missing values or values outside the scale range (`geom_point()`)."</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-66-output-2.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Загальна низхідна тенденція тут із сильною кореляцією говорить нам про те, що менше солі у вині означає кращу якість.</p>
+<section id="підсумки" class="level2" data-number="28.1">
+<h2 data-number="28.1" class="anchored" data-anchor-id="підсумки"><span class="header-section-number">28.1</span> Підсумки</h2>
+<p>У цьому проєкті моя основна увага була зосереджена на проведенні лише дослідницького аналізу.</p>
+<p>Я розпочав аналіз з огляду на загальні дані. Деякі точки даних здавалися дійсно далекими, і під час аналізу я видалив деякі з них. Але в кінцевому підсумку я вирішив залишити їх, оскільки смаки вина можуть сильно відрізнятися. Розглядаючи різні змінні, я вирішив дослідити, що робить вино хорошим. Я почав з розгляду основних факторів, які можуть впливати на смак: алкоголь, хлориди, залишковий цукор і pH. Моїм першим висновком було те, що алкоголь і якість дійсно пов’язані. Потім я перейшов до багатозмінного аналізу, поєднуючи алкоголь з хлоридами та залишковим цукром. Загальні тенденції за якістю виглядали досить схожими, тому я спробував побудувати графік хлоридів із залишковим цукром. Але результат не був таким, як я очікував. Думаючи, що інший фактор може бути пов’язаний з цими двома, я пройшов через змінні кислотності та якості, щоб вибрати летючу кислотність і лимонну кислоту та побудувати їх з хлоридами та залишковим цукром. Я зробив те саме для решти змінних. Я шукав більш складні взаємозв’язки між змінними, але не зміг їх знайти. В цілому, я отримав кілька змінних, що корелюють з якістю:</p>
+<ul>
+<li>Алкоголь</li>
+<li>Летюча кислотність</li>
+<li>Лимонна кислота</li>
+<li>Сульфати</li>
+</ul>
+<p>Обмеження набору даних полягають у відсутності точок для вин нижчої та вищої якості. Крім того, джерело якості невідоме: це професіонал? Магазин? І ми повинні пам’ятати, що смак - це дуже культурна річ (див. <a href="http://www.washingtonpost.com/blogs/wonkblog/wp/2015/03/03/%20a-scientific-explanation-of-what-makes-indian-food-so-delicious/">аналіз індійської їжі</a>), і хороше вино для однієї людини може не бути таким для іншої.</p>
+<p>Останнє, але не менш важливе, ми не маємо віку вина. У Франції однією з перших речей, яку перевіряють у вина, є його вік, оскільки загальновідомо, що старіше вино краще. Ще одна річ, яку я хотів би мати, це назви вин, щоб я міг дізнатися їхні ціни та побачити, як вони співвідносяться з якістю.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/kleban\.github\.io\/data-r\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./train-test-validation-samples.html" class="pagination-link" aria-label="Data Split: Train, Test and Validation sets">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./eda-charts.html" class="pagination-link" aria-label="EDA, робота з ggplot2">
+        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">EDA, робота з ggplot2</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2024, Юрій Клебан</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

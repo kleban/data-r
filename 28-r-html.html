@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Юрій Клебан">
 
-<title>Основи роботи з даними в R - 9&nbsp; Web-pages (HTML)</title>
+<title>9&nbsp; Web-pages (HTML) – Основи роботи з даними в R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,11 +18,12 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -47,54 +48,24 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./etl-dplyr.html" rel="next">
+<link href="./30-r-what-is-dplyr.html" rel="next">
 <link href="./27-r-sql.html" rel="prev">
 <link href="./img/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -112,7 +83,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -121,12 +98,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -137,11 +116,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-r-data-read-intro.html">ТЕМА 2. ЧИТАННЯ ДАНИХ</a></li><li class="breadcrumb-item"><a href="./28-r-html.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -149,174 +133,342 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Основи роботи з даними в R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/kleban/data-r/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
-    <a href="" title="Share" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-share"></i></a>
-    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
-        <li>
-          <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
-            <i class="bi bi-bi-twitter pe-1"></i>
-          Twitter
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
-            <i class="bi bi-bi-facebook pe-1"></i>
-          Facebook
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
-            <i class="bi bi-bi-linkedin pe-1"></i>
-          LinkedIn
-          </a>
-        </li>
-    </ul>
+    <a href="https://github.com/kleban/data-r/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
 </div>
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">Про посібник</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Про посібник</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">Вступ</a>
+  <a href="./00-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Вступ</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 1. ВСТУП ДО РОБОТИ З ДАНИМИ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  <a href="./10-r-data-read-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ТЕМА 2. ЧИТАННЯ ДАНИХ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 2. ЧИТАННЯ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></a>
+  <a href="./20-r-data-read-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Загальна інформація + презентація</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></a>
+  <a href="./22-r-csv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">CSV</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></a>
+  <a href="./23-r-xlsx.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MS Excel (xlsx)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></a>
+  <a href="./24-r-xml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">XML</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></a>
+  <a href="./25-r-api-json.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JSON and API</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></a>
+  <a href="./26-r-google.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Google Services</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></a>
+  <a href="./27-r-sql.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></a>
+  <a href="./28-r-html.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">ТЕМА 3. ВИБІРКА ТА ТРАНСФОРМАЦІЯ ДАНИХ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 3. МАНІПУЛЮВАННЯ ДАНИМИ У <code>dplyr</code></span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./etl-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Manipulate data with <code>dplyr</code></span></a>
+  <a href="./30-r-what-is-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./31-r-data-explore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exploring data with <code>dplyr</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./32-r-data-slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Subset rows with <code>slice()</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./33-r-data-sorting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Sorting with <strong><code>arrange()</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./34-r-data-mutating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Create new variables with <strong><code>mutate()</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-r-data-rename.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Renaming columns with <strong><code>rename()</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./36-r-data-grouping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Grouping columns with <strong><code>dplyr</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./37-r-data-bind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Binding rows and columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./38-r-data-join.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><code>Join()</code>-ing data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./39-r-wide-to-long.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wide-to-long tables</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 4. СПОСОБИ ОЧИСТКИ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-cleaning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Підготовка та очистка даних у R</span></a>
+  <a href="./40-r-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Оцінки якості даних</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./41-r-data-naming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Робота з неіменованими та “поганоіменованими” даними</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./42-r-cleaning-text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Підготовка та очистка текстової інформації</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./43-r-missing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Заміна пропусків у даних (Missing Value Imputation)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./44-r-outliers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Аналіз та обробка статистичних викидів у даних</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 5. КОНСТРУЮВАННЯ ОЗНАК</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./etl-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Feature engineering in R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 6. ПОДІЛ ВИБІРКИ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./train-test-validation-samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Data Split: Train, Test and Validation sets</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">ТЕМА 7. ОГЛЯДОВИЙ АНАЛІЗ ДАНИХ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">EDA на прикладі вина</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda-charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">EDA, робота з ggplot2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda-dlookr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">EDA з dlookR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./edainspectdf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">EDA з використанням inspectdf</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">Список використаних джерел</a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Список використаних джерел</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Зміст</h2>
    
   <ul>
-  <li><a href="#task-3" id="toc-task-3" class="nav-link active" data-scroll-target="#task-3"><span class="toc-section-number">9.1</span>  Task 3</a></li>
-  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="toc-section-number">9.2</span>  Набори даних</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="toc-section-number">9.3</span>  References</a></li>
+  <li><a href="#task-3" id="toc-task-3" class="nav-link active" data-scroll-target="#task-3"><span class="header-section-number">9.1</span> Task 3</a></li>
+  <li><a href="#набори-даних" id="toc-набори-даних" class="nav-link" data-scroll-target="#набори-даних"><span class="header-section-number">9.2</span> Набори даних</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">9.3</span> References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-r-data-read-intro.html">ТЕМА 2. ЧИТАННЯ ДАНИХ</a></li><li class="breadcrumb-item"><a href="./28-r-html.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Web-pages (HTML)</span></h1>
 </div>
 
 
@@ -330,25 +482,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
   </div>
     
+  
     
   </div>
   
 
+
 </header>
+
 
 <p>Sometimes decision making needs scrap data from web sources and pages.</p>
 <p>Let’s try to parse data from <code>Wikipedia</code> as table.</p>
-<div class="cell" data-execution_count="170">
+<div id="8150d2a1" class="cell" data-execution_count="170">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#install.packages("rvest")</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(rvest) <span class="co"># Parsing of HTML/XML files</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Go to web page https://en.wikipedia.org/wiki/List_of_largest_banks and check it.</p>
-<div class="cell" data-execution_count="171">
+<div id="ece191fc" class="cell" data-execution_count="171">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># fix URL</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>url <span class="ot">&lt;-</span> <span class="st">"https://en.wikipedia.org/wiki/List_of_largest_banks"</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co">#url &lt;- "data/List of largest banks - Wikipedia_.html"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="172">
+<div id="3227cd88" class="cell" data-execution_count="172">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># read html content of the page</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
 <span id="cb3-3"><a href="#cb3-3"></a>page</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -359,7 +514,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 [2] &lt;body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject  ...</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="173">
+<div id="e6b936b8" class="cell" data-execution_count="173">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># read all yables on page</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>tables <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(page, <span class="st">"table"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3"></a>tables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -372,7 +527,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>For now, let’s read a table of Total Assets in US Billion</p>
-<div class="cell" data-execution_count="174">
+<div id="899f507b" class="cell" data-execution_count="174">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># with pipe operator</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="co">#tables[2] %&gt;% </span></span>
 <span id="cb7-3"><a href="#cb7-3"></a> <span class="co">#   html_table(fill = TRUE) %&gt;% </span></span>
@@ -381,66 +536,199 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-6"><a href="#cb7-6"></a>assets_table <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">html_table</span>(tables[<span class="dv">2</span>], <span class="at">fill =</span> <span class="cn">TRUE</span>))   </span>
 <span id="cb7-7"><a href="#cb7-7"></a><span class="fu">head</span>(assets_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 6 × 3</caption>
 <thead>
-    <tr><th></th><th scope="col">Rank</th><th scope="col">Bank.name</th><th scope="col">Total.assets.2020..US..billion.</th></tr>
-    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Rank</th>
+<th data-quarto-table-cell-role="th" scope="col">Bank.name</th>
+<th data-quarto-table-cell-role="th" scope="col">Total.assets.2020..US..billion.</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>1</td><td>Industrial and Commercial Bank of China</td><td>5,518.00</td></tr>
-    <tr><th scope="row">2</th><td>2</td><td>China Construction Bank                </td><td>4,400.00</td></tr>
-    <tr><th scope="row">3</th><td>3</td><td>Agricultural Bank of China             </td><td>4,300.00</td></tr>
-    <tr><th scope="row">4</th><td>4</td><td>Bank of China                          </td><td>4,200.00</td></tr>
-    <tr><th scope="row">5</th><td>5</td><td>JPMorgan Chase                         </td><td>3,831.65</td></tr>
-    <tr><th scope="row">6</th><td>6</td><td>Mitsubishi UFJ Financial Group         </td><td>3,175.21</td></tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1</td>
+<td>Industrial and Commercial Bank of China</td>
+<td>5,518.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>2</td>
+<td>China Construction Bank</td>
+<td>4,400.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>3</td>
+<td>Agricultural Bank of China</td>
+<td>4,300.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>4</td>
+<td>Bank of China</td>
+<td>4,200.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>5</td>
+<td>JPMorgan Chase</td>
+<td>3,831.65</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>6</td>
+<td>Mitsubishi UFJ Financial Group</td>
+<td>3,175.21</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Next is reading data of market capitalization table (4th):</p>
-<div class="cell" data-execution_count="175">
+<div id="2e8081a0" class="cell" data-execution_count="175">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>capital_table <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">html_table</span>(tables[<span class="dv">4</span>], <span class="at">fill =</span> <span class="cn">TRUE</span>))   </span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="fu">head</span>(capital_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 6 × 3</caption>
 <thead>
-    <tr><th></th><th scope="col">Rank</th><th scope="col">Bank.name</th><th scope="col">Market.cap.US..billion.</th></tr>
-    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Rank</th>
+<th data-quarto-table-cell-role="th" scope="col">Bank.name</th>
+<th data-quarto-table-cell-role="th" scope="col">Market.cap.US..billion.</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>1</td><td>JPMorgan Chase                         </td><td>368.78</td></tr>
-    <tr><th scope="row">2</th><td>2</td><td>Industrial and Commercial Bank of China</td><td>295.65</td></tr>
-    <tr><th scope="row">3</th><td>3</td><td>Bank of America                        </td><td>279.73</td></tr>
-    <tr><th scope="row">4</th><td>4</td><td>Wells Fargo                            </td><td>214.34</td></tr>
-    <tr><th scope="row">5</th><td>5</td><td>China Construction Bank                </td><td>207.98</td></tr>
-    <tr><th scope="row">6</th><td>6</td><td>Agricultural Bank of China             </td><td>181.49</td></tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1</td>
+<td>JPMorgan Chase</td>
+<td>368.78</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>2</td>
+<td>Industrial and Commercial Bank of China</td>
+<td>295.65</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>3</td>
+<td>Bank of America</td>
+<td>279.73</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>4</td>
+<td>Wells Fargo</td>
+<td>214.34</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>5</td>
+<td>China Construction Bank</td>
+<td>207.98</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>6</td>
+<td>Agricultural Bank of China</td>
+<td>181.49</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>And now let’s <code>merge()</code> this two datasets:</p>
-<div class="cell" data-execution_count="176">
+<div id="a140775f" class="cell" data-execution_count="176">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>merged_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(assets_table, capital_table, <span class="at">by =</span> <span class="st">"Bank.name"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2"></a><span class="fu">head</span>(merged_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 6 × 5</caption>
 <thead>
-    <tr><th></th><th scope="col">Bank.name</th><th scope="col">Rank.x</th><th scope="col">Total.assets.2020..US..billion.</th><th scope="col">Rank.y</th><th scope="col">Market.cap.US..billion.</th></tr>
-    <tr><th></th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Bank.name</th>
+<th data-quarto-table-cell-role="th" scope="col">Rank.x</th>
+<th data-quarto-table-cell-role="th" scope="col">Total.assets.2020..US..billion.</th>
+<th data-quarto-table-cell-role="th" scope="col">Rank.y</th>
+<th data-quarto-table-cell-role="th" scope="col">Market.cap.US..billion.</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>Agricultural Bank of China             </td><td> 3</td><td>4,300.00</td><td> 6</td><td>181.49</td></tr>
-    <tr><th scope="row">2</th><td>Australia and New Zealand Banking Group</td><td>48</td><td>661.72  </td><td>26</td><td> 54.88</td></tr>
-    <tr><th scope="row">3</th><td>Banco Bilbao Vizcaya Argentaria        </td><td>42</td><td>782.16  </td><td>37</td><td> 37.42</td></tr>
-    <tr><th scope="row">4</th><td>Banco Bradesco                         </td><td>79</td><td>345.21  </td><td>18</td><td> 74.67</td></tr>
-    <tr><th scope="row">5</th><td>Banco Santander                        </td><td>16</td><td>1,702.61</td><td>17</td><td> 75.47</td></tr>
-    <tr><th scope="row">6</th><td>Bank of America                        </td><td> 8</td><td>2,434.08</td><td> 3</td><td>279.73</td></tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>Agricultural Bank of China</td>
+<td>3</td>
+<td>4,300.00</td>
+<td>6</td>
+<td>181.49</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>Australia and New Zealand Banking Group</td>
+<td>48</td>
+<td>661.72</td>
+<td>26</td>
+<td>54.88</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>Banco Bilbao Vizcaya Argentaria</td>
+<td>42</td>
+<td>782.16</td>
+<td>37</td>
+<td>37.42</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>Banco Bradesco</td>
+<td>79</td>
+<td>345.21</td>
+<td>18</td>
+<td>74.67</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>Banco Santander</td>
+<td>16</td>
+<td>1,702.61</td>
+<td>17</td>
+<td>75.47</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>Bank of America</td>
+<td>8</td>
+<td>2,434.08</td>
+<td>3</td>
+<td>279.73</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -449,11 +737,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 data-number="9.1" class="anchored" data-anchor-id="task-3"><span class="header-section-number">9.1</span> Task 3</h2>
 <p>From a page https://en.wikipedia.org/wiki/List_of_largest_banks read and <code>merge by country</code> named tables:</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked="">Number of banks in the top 100 by total assets</li>
-<li><input type="checkbox" disabled="" checked="">Total market capital (US$ billion) across the top 70 banks by country</li>
+<li><label><input type="checkbox" checked="">Number of banks in the top 100 by total assets</label></li>
+<li><label><input type="checkbox" checked="">Total market capital (US$ billion) across the top 70 banks by country</label></li>
 </ul>
 <p><strong>Solution</strong></p>
-<div class="cell" data-execution_count="178">
+<div id="982899f2" class="cell" data-execution_count="178">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">library</span>(rvest)</span>
 <span id="cb10-2"><a href="#cb10-2"></a>url <span class="ot">&lt;-</span> <span class="st">"https://en.wikipedia.org/wiki/List_of_largest_banks"</span> <span class="co"># got to url in other tab</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="co">#url &lt;- "data/List of largest banks - Wikipedia_.html"</span></span>
@@ -462,173 +750,632 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-6"><a href="#cb10-6"></a>tables <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(page_data, <span class="st">"table"</span>)</span>
 <span id="cb10-7"><a href="#cb10-7"></a><span class="fu">html_table</span>(tables[<span class="dv">1</span>]) <span class="co">#its not needed table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
 <ol>
-    <li><table class="dataframe table table-sm table-striped">
+    <li>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A tibble: 1 <u+00d7> 2</u+00d7></caption>
 <thead>
-    <tr><th scope="col">X1</th><th scope="col">X2</th></tr>
-    <tr><th scope="col">&lt;lgl&gt;</th><th scope="col">&lt;chr&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">X1</th>
+<th data-quarto-table-cell-role="th" scope="col">X2</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><td>NA</td><td>This article is missing information about Revenue and Employment. Please expand the article to include this information. Further details may exist on the talk page.  (September 2020)</td></tr>
+<tr class="odd">
+<td>NA</td>
+<td>This article is missing information about Revenue and Employment. Please expand the article to include this information. Further details may exist on the talk page. (September 2020)</td>
+</tr>
 </tbody>
 </table>
+
 </li>
 </ol>
 </div>
 </div>
-<div class="cell" data-execution_count="179">
+<div id="8a9a5a7d" class="cell" data-execution_count="179">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">html_table</span>(tables[<span class="dv">3</span>]) <span class="co"># thats solution for "Number of banks in the top 100 by total assets"</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="co">#check the end of table. There are NA record</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="co"># lets remove it</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
 <ol>
-    <li><table class="dataframe table table-sm table-striped">
+    <li>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A tibble: 26 <u+00d7> 3</u+00d7></caption>
 <thead>
-    <tr><th scope="col">Rank</th><th scope="col">Country</th><th scope="col">Number</th></tr>
-    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">Rank</th>
+<th data-quarto-table-cell-role="th" scope="col">Country</th>
+<th data-quarto-table-cell-role="th" scope="col">Number</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><td>1</td><td>China         </td><td>19</td></tr>
-    <tr><td>2</td><td>United States </td><td>11</td></tr>
-    <tr><td>3</td><td>Japan         </td><td> 8</td></tr>
-    <tr><td>4</td><td>United Kingdom</td><td> 6</td></tr>
-    <tr><td>4</td><td>France        </td><td> 6</td></tr>
-    <tr><td>4</td><td>South Korea   </td><td> 6</td></tr>
-    <tr><td>5</td><td>Canada        </td><td> 5</td></tr>
-    <tr><td>5</td><td>Germany       </td><td> 5</td></tr>
-    <tr><td>6</td><td>Australia     </td><td> 4</td></tr>
-    <tr><td>6</td><td>Brazil        </td><td> 4</td></tr>
-    <tr><td>6</td><td>Spain         </td><td> 4</td></tr>
-    <tr><td>7</td><td>Netherlands   </td><td> 3</td></tr>
-    <tr><td>7</td><td>Singapore     </td><td> 3</td></tr>
-    <tr><td>7</td><td>Sweden        </td><td> 3</td></tr>
-    <tr><td>7</td><td>Switzerland   </td><td> 3</td></tr>
-    <tr><td>8</td><td>Italy         </td><td> 2</td></tr>
-    <tr><td>9</td><td>India         </td><td> 1</td></tr>
-    <tr><td>9</td><td>Austria       </td><td> 1</td></tr>
-    <tr><td>9</td><td>Belgium       </td><td> 1</td></tr>
-    <tr><td>9</td><td>Denmark       </td><td> 1</td></tr>
-    <tr><td>9</td><td>Finland       </td><td> 1</td></tr>
-    <tr><td>9</td><td>Norway        </td><td> 1</td></tr>
-    <tr><td>9</td><td>Russia        </td><td> 1</td></tr>
-    <tr><td>9</td><td>Qatar         </td><td> 1</td></tr>
-    <tr><td>9</td><td>NA            </td><td>NA</td></tr>
-    <tr><td>9</td><td>NA            </td><td>NA</td></tr>
+<tr class="odd">
+<td>1</td>
+<td>China</td>
+<td>19</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>United States</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Japan</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>United Kingdom</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>France</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>South Korea</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Canada</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Germany</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Australia</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Brazil</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Spain</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Netherlands</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Singapore</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Sweden</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Switzerland</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Italy</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>India</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Austria</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Belgium</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Denmark</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Finland</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Norway</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Russia</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Qatar</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
 </tbody>
 </table>
+
 </li>
 </ol>
 </div>
 </div>
-<div class="cell" data-execution_count="180">
+<div id="1670e8a2" class="cell" data-execution_count="180">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>table1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">html_table</span>(tables[<span class="dv">3</span>]))</span>
 <span id="cb12-2"><a href="#cb12-2"></a>table1 <span class="ot">&lt;-</span> table1[<span class="sc">!</span><span class="fu">is.na</span>(table1<span class="sc">$</span>Country), ]</span>
 <span id="cb12-3"><a href="#cb12-3"></a>table1 <span class="co"># now it OK!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 24 × 3</caption>
 <thead>
-    <tr><th></th><th scope="col">Rank</th><th scope="col">Country</th><th scope="col">Number</th></tr>
-    <tr><th></th><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;int&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Rank</th>
+<th data-quarto-table-cell-role="th" scope="col">Country</th>
+<th data-quarto-table-cell-role="th" scope="col">Number</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><th scope="row">1</th><td>1</td><td>China         </td><td>19</td></tr>
-    <tr><th scope="row">2</th><td>2</td><td>United States </td><td>11</td></tr>
-    <tr><th scope="row">3</th><td>3</td><td>Japan         </td><td> 8</td></tr>
-    <tr><th scope="row">4</th><td>4</td><td>United Kingdom</td><td> 6</td></tr>
-    <tr><th scope="row">5</th><td>4</td><td>France        </td><td> 6</td></tr>
-    <tr><th scope="row">6</th><td>4</td><td>South Korea   </td><td> 6</td></tr>
-    <tr><th scope="row">7</th><td>5</td><td>Canada        </td><td> 5</td></tr>
-    <tr><th scope="row">8</th><td>5</td><td>Germany       </td><td> 5</td></tr>
-    <tr><th scope="row">9</th><td>6</td><td>Australia     </td><td> 4</td></tr>
-    <tr><th scope="row">10</th><td>6</td><td>Brazil        </td><td> 4</td></tr>
-    <tr><th scope="row">11</th><td>6</td><td>Spain         </td><td> 4</td></tr>
-    <tr><th scope="row">12</th><td>7</td><td>Netherlands   </td><td> 3</td></tr>
-    <tr><th scope="row">13</th><td>7</td><td>Singapore     </td><td> 3</td></tr>
-    <tr><th scope="row">14</th><td>7</td><td>Sweden        </td><td> 3</td></tr>
-    <tr><th scope="row">15</th><td>7</td><td>Switzerland   </td><td> 3</td></tr>
-    <tr><th scope="row">16</th><td>8</td><td>Italy         </td><td> 2</td></tr>
-    <tr><th scope="row">17</th><td>9</td><td>India         </td><td> 1</td></tr>
-    <tr><th scope="row">18</th><td>9</td><td>Austria       </td><td> 1</td></tr>
-    <tr><th scope="row">19</th><td>9</td><td>Belgium       </td><td> 1</td></tr>
-    <tr><th scope="row">20</th><td>9</td><td>Denmark       </td><td> 1</td></tr>
-    <tr><th scope="row">21</th><td>9</td><td>Finland       </td><td> 1</td></tr>
-    <tr><th scope="row">22</th><td>9</td><td>Norway        </td><td> 1</td></tr>
-    <tr><th scope="row">23</th><td>9</td><td>Russia        </td><td> 1</td></tr>
-    <tr><th scope="row">24</th><td>9</td><td>Qatar         </td><td> 1</td></tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1</td>
+<td>China</td>
+<td>19</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>2</td>
+<td>United States</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>3</td>
+<td>Japan</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>4</td>
+<td>United Kingdom</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>4</td>
+<td>France</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>4</td>
+<td>South Korea</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">7</td>
+<td>5</td>
+<td>Canada</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">8</td>
+<td>5</td>
+<td>Germany</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">9</td>
+<td>6</td>
+<td>Australia</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">10</td>
+<td>6</td>
+<td>Brazil</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">11</td>
+<td>6</td>
+<td>Spain</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">12</td>
+<td>7</td>
+<td>Netherlands</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">13</td>
+<td>7</td>
+<td>Singapore</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">14</td>
+<td>7</td>
+<td>Sweden</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">15</td>
+<td>7</td>
+<td>Switzerland</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">16</td>
+<td>8</td>
+<td>Italy</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">17</td>
+<td>9</td>
+<td>India</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">18</td>
+<td>9</td>
+<td>Austria</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">19</td>
+<td>9</td>
+<td>Belgium</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">20</td>
+<td>9</td>
+<td>Denmark</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">21</td>
+<td>9</td>
+<td>Finland</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">22</td>
+<td>9</td>
+<td>Norway</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">23</td>
+<td>9</td>
+<td>Russia</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">24</td>
+<td>9</td>
+<td>Qatar</td>
+<td>1</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
-<div class="cell" data-execution_count="183">
+<div id="20e9a05d" class="cell" data-execution_count="183">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># SOlution for "Total market capital (US$ billion) across the top 70 banks by country"</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="co"># compare this with table on a given page</span></span>
 <span id="cb13-3"><a href="#cb13-3"></a>table2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">html_table</span>(tables[<span class="dv">4</span>]))</span>
 <span id="cb13-4"><a href="#cb13-4"></a>table2 <span class="co"># now it OK!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A data.frame: 50 × 3</caption>
 <thead>
-    <tr><th scope="col">Rank</th><th scope="col">Bank.name</th><th scope="col">Market.cap.US..billion.</th></tr>
-    <tr><th scope="col">&lt;int&gt;</th><th scope="col">&lt;chr&gt;</th><th scope="col">&lt;dbl&gt;</th></tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">Rank</th>
+<th data-quarto-table-cell-role="th" scope="col">Bank.name</th>
+<th data-quarto-table-cell-role="th" scope="col">Market.cap.US..billion.</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
 </thead>
 <tbody>
-    <tr><td> 1</td><td>JPMorgan Chase                         </td><td>368.78</td></tr>
-    <tr><td> 2</td><td>Industrial and Commercial Bank of China</td><td>295.65</td></tr>
-    <tr><td> 3</td><td>Bank of America                        </td><td>279.73</td></tr>
-    <tr><td> 4</td><td>Wells Fargo                            </td><td>214.34</td></tr>
-    <tr><td> 5</td><td>China Construction Bank                </td><td>207.98</td></tr>
-    <tr><td> 6</td><td>Agricultural Bank of China             </td><td>181.49</td></tr>
-    <tr><td> 7</td><td>HSBC Holdings PLC                      </td><td>169.47</td></tr>
-    <tr><td> 8</td><td>Citigroup Inc.                         </td><td>163.58</td></tr>
-    <tr><td> 9</td><td>Bank of China                          </td><td>151.15</td></tr>
-    <tr><td>10</td><td>China Merchants Bank                   </td><td>133.37</td></tr>
-    <tr><td>11</td><td>Royal Bank of Canada                   </td><td>113.80</td></tr>
-    <tr><td>12</td><td>Toronto-Dominion Bank                  </td><td>106.61</td></tr>
-    <tr><td>13</td><td>Commonwealth Bank                      </td><td> 99.77</td></tr>
-    <tr><td>14</td><td>HDFC Bank                              </td><td>105.90</td></tr>
-    <tr><td>15</td><td>U.S. Bancorp                           </td><td> 84.40</td></tr>
-    <tr><td>16</td><td>Goldman Sachs                          </td><td> 78.70</td></tr>
-    <tr><td>17</td><td>Banco Santander                        </td><td> 75.47</td></tr>
-    <tr><td>18</td><td>Banco Bradesco                         </td><td> 74.67</td></tr>
-    <tr><td>19</td><td>Morgan Stanley                         </td><td> 73.93</td></tr>
-    <tr><td>20</td><td>Westpac                                </td><td> 67.84</td></tr>
-    <tr><td>21</td><td>Mitsubishi UFJ Financial Group         </td><td> 66.20</td></tr>
-    <tr><td>22</td><td>Scotiabank                             </td><td> 65.48</td></tr>
-    <tr><td>23</td><td>PNC Financial Services                 </td><td> 63.11</td></tr>
-    <tr><td>24</td><td>Bank of Communications                 </td><td> 61.85</td></tr>
-    <tr><td>25</td><td>BNP Paribas                            </td><td> 59.36</td></tr>
-    <tr><td>26</td><td>Australia and New Zealand Banking Group</td><td> 54.88</td></tr>
-    <tr><td>27</td><td>National Australia Bank                </td><td> 51.68</td></tr>
-    <tr><td>28</td><td>Lloyds Banking Group                   </td><td> 51.19</td></tr>
-    <tr><td>29</td><td>Sumitomo Mitsui Financial Group        </td><td> 49.85</td></tr>
-    <tr><td>30</td><td>Bank of Montreal                       </td><td> 48.12</td></tr>
-    <tr><td>31</td><td>UBS                                    </td><td> 45.92</td></tr>
-    <tr><td>32</td><td>ING Group                              </td><td> 44.97</td></tr>
-    <tr><td>33</td><td>Capital One                            </td><td> 43.22</td></tr>
-    <tr><td>34</td><td>The Bank of New York Mellon            </td><td> 42.58</td></tr>
-    <tr><td>35</td><td>China Minsheng Bank                    </td><td> 39.13</td></tr>
-    <tr><td>36</td><td>China CITIC Bank                       </td><td> 38.55</td></tr>
-    <tr><td>37</td><td>Banco Bilbao Vizcaya Argentaria        </td><td> 37.42</td></tr>
-    <tr><td>38</td><td>Mizuho Financial Group                 </td><td> 36.95</td></tr>
-    <tr><td>39</td><td>Intesa Sanpaolo                        </td><td> 36.90</td></tr>
-    <tr><td>40</td><td>Credit Agricole                        </td><td> 34.89</td></tr>
-    <tr><td>41</td><td>Canadian Imperial Bank of Commerce     </td><td> 34.87</td></tr>
-    <tr><td>42</td><td>Royal Bank of Scotland                 </td><td> 33.95</td></tr>
-    <tr><td>43</td><td>Barclays                               </td><td> 33.26</td></tr>
-    <tr><td>44</td><td>Credit Suisse                          </td><td> 30.75</td></tr>
-    <tr><td>45</td><td>Nordea                                 </td><td> 29.59</td></tr>
-    <tr><td>46</td><td>Standard Chartered                     </td><td> 29.37</td></tr>
-    <tr><td>47</td><td>KBC Bank                               </td><td> 27.40</td></tr>
-    <tr><td>48</td><td>UniCredit                              </td><td> 26.88</td></tr>
-    <tr><td>49</td><td>Societe Generale                       </td><td> 21.27</td></tr>
-    <tr><td>50</td><td>Deutsche Bank                          </td><td> 15.77</td></tr>
+<tr class="odd">
+<td>1</td>
+<td>JPMorgan Chase</td>
+<td>368.78</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Industrial and Commercial Bank of China</td>
+<td>295.65</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Bank of America</td>
+<td>279.73</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Wells Fargo</td>
+<td>214.34</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>China Construction Bank</td>
+<td>207.98</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Agricultural Bank of China</td>
+<td>181.49</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>HSBC Holdings PLC</td>
+<td>169.47</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Citigroup Inc.</td>
+<td>163.58</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Bank of China</td>
+<td>151.15</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>China Merchants Bank</td>
+<td>133.37</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>Royal Bank of Canada</td>
+<td>113.80</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Toronto-Dominion Bank</td>
+<td>106.61</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>Commonwealth Bank</td>
+<td>99.77</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>HDFC Bank</td>
+<td>105.90</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td>U.S. Bancorp</td>
+<td>84.40</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>Goldman Sachs</td>
+<td>78.70</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>Banco Santander</td>
+<td>75.47</td>
+</tr>
+<tr class="even">
+<td>18</td>
+<td>Banco Bradesco</td>
+<td>74.67</td>
+</tr>
+<tr class="odd">
+<td>19</td>
+<td>Morgan Stanley</td>
+<td>73.93</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>Westpac</td>
+<td>67.84</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>Mitsubishi UFJ Financial Group</td>
+<td>66.20</td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>Scotiabank</td>
+<td>65.48</td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>PNC Financial Services</td>
+<td>63.11</td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>Bank of Communications</td>
+<td>61.85</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>BNP Paribas</td>
+<td>59.36</td>
+</tr>
+<tr class="even">
+<td>26</td>
+<td>Australia and New Zealand Banking Group</td>
+<td>54.88</td>
+</tr>
+<tr class="odd">
+<td>27</td>
+<td>National Australia Bank</td>
+<td>51.68</td>
+</tr>
+<tr class="even">
+<td>28</td>
+<td>Lloyds Banking Group</td>
+<td>51.19</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>Sumitomo Mitsui Financial Group</td>
+<td>49.85</td>
+</tr>
+<tr class="even">
+<td>30</td>
+<td>Bank of Montreal</td>
+<td>48.12</td>
+</tr>
+<tr class="odd">
+<td>31</td>
+<td>UBS</td>
+<td>45.92</td>
+</tr>
+<tr class="even">
+<td>32</td>
+<td>ING Group</td>
+<td>44.97</td>
+</tr>
+<tr class="odd">
+<td>33</td>
+<td>Capital One</td>
+<td>43.22</td>
+</tr>
+<tr class="even">
+<td>34</td>
+<td>The Bank of New York Mellon</td>
+<td>42.58</td>
+</tr>
+<tr class="odd">
+<td>35</td>
+<td>China Minsheng Bank</td>
+<td>39.13</td>
+</tr>
+<tr class="even">
+<td>36</td>
+<td>China CITIC Bank</td>
+<td>38.55</td>
+</tr>
+<tr class="odd">
+<td>37</td>
+<td>Banco Bilbao Vizcaya Argentaria</td>
+<td>37.42</td>
+</tr>
+<tr class="even">
+<td>38</td>
+<td>Mizuho Financial Group</td>
+<td>36.95</td>
+</tr>
+<tr class="odd">
+<td>39</td>
+<td>Intesa Sanpaolo</td>
+<td>36.90</td>
+</tr>
+<tr class="even">
+<td>40</td>
+<td>Credit Agricole</td>
+<td>34.89</td>
+</tr>
+<tr class="odd">
+<td>41</td>
+<td>Canadian Imperial Bank of Commerce</td>
+<td>34.87</td>
+</tr>
+<tr class="even">
+<td>42</td>
+<td>Royal Bank of Scotland</td>
+<td>33.95</td>
+</tr>
+<tr class="odd">
+<td>43</td>
+<td>Barclays</td>
+<td>33.26</td>
+</tr>
+<tr class="even">
+<td>44</td>
+<td>Credit Suisse</td>
+<td>30.75</td>
+</tr>
+<tr class="odd">
+<td>45</td>
+<td>Nordea</td>
+<td>29.59</td>
+</tr>
+<tr class="even">
+<td>46</td>
+<td>Standard Chartered</td>
+<td>29.37</td>
+</tr>
+<tr class="odd">
+<td>47</td>
+<td>KBC Bank</td>
+<td>27.40</td>
+</tr>
+<tr class="even">
+<td>48</td>
+<td>UniCredit</td>
+<td>26.88</td>
+</tr>
+<tr class="odd">
+<td>49</td>
+<td>Societe Generale</td>
+<td>21.27</td>
+</tr>
+<tr class="even">
+<td>50</td>
+<td>Deutsche Bank</td>
+<td>15.77</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -685,12 +1432,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
     }
-  });
-  clipboard.on('success', function(e) {
+    return false;
+  }
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -699,17 +1449,73 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/kleban\.github\.io\/data-r\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -719,8 +1525,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -732,48 +1547,311 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./27-r-sql.html" class="pagination-link">
+      <a href="./27-r-sql.html" class="pagination-link" aria-label="SQL (with SQLite sample)">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SQL (with SQLite sample)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./etl-dplyr.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Manipulate data with <code>dplyr</code></span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./30-r-what-is-dplyr.html" class="pagination-link" aria-label="What's `dplyr` package [EN]">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">What’s <code>dplyr</code> package [EN]</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-      <div class="nav-footer-center">Copyright 2023, Юрій Клебан</div>
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2024, Юрій Клебан</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
   </div>
 </footer>
+
 
 
 
